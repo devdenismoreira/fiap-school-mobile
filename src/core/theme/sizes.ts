@@ -20,4 +20,6 @@ export const sizes = {
   tabBar: { height: 64, iconTop: 11, iconToLabel: 4 },
   /** Mudança de aluno: "FECHAR ✕" a 16 pt do topo; título a 209 pt do topo. */
   studentSelection: { closeTop: 16, closeIcon: 24, titleTop: 209 },
+  /** Dropdown: painel de opções 7 pt abaixo do gatilho. */
+  dropdown: { panelGap: 7 },
 } as const;
