@@ -18,4 +18,6 @@ export const sizes = {
   appHeader: { greetingToStudent: 36 },
   /** Barra de abas: 64 pt + área segura; ícone 11 pt abaixo do topo, rótulo 4 pt abaixo do ícone. */
   tabBar: { height: 64, iconTop: 11, iconToLabel: 4 },
+  /** Mudança de aluno: "FECHAR ✕" a 16 pt do topo; título a 209 pt do topo. */
+  studentSelection: { closeTop: 16, closeIcon: 24, titleTop: 209 },
 } as const;
