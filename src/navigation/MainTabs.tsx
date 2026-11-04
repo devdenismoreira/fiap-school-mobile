@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { theme } from '@/core/theme';
 import { AgendaScreen } from '@/modules/classes/screens/AgendaScreen';
@@ -13,12 +14,14 @@ const renderTabBar = (props: Parameters<typeof TabBar>[0]) => (
 );
 
 export function MainTabs() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <Tab.Navigator
       tabBar={renderTabBar}
       screenOptions={{
         headerShown: false,
-        animation: 'fade',
+        animation: reduceMotion ? 'none' : 'fade',
         sceneStyle: { backgroundColor: theme.colors.background },
       }}
     >

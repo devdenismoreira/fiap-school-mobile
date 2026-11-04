@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { useSession } from '@/app/providers/SessionProvider';
 import { Box, theme } from '@/core/theme';
@@ -15,17 +16,21 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  */
 export function RootNavigator() {
   const { state } = useSession();
+  // "Reduzir movimento" do sistema: transições viram troca instantânea.
+  const reduceMotion = useReducedMotion();
 
   if (state.status === 'restoring') {
     // Sem splash no Figma (D-14): fundo preto enquanto restaura.
-    return <Box testID="session-restoring" flex={1} backgroundColor="background" />;
+    return (
+      <Box testID="session-restoring" flex={1} backgroundColor="background" />
+    );
   }
 
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animation: 'fade',
+        animation: reduceMotion ? 'none' : 'fade',
         contentStyle: { backgroundColor: theme.colors.background },
       }}
     >
@@ -37,7 +42,7 @@ export function RootNavigator() {
             component={StudentSelectionScreen}
             options={{
               presentation: 'fullScreenModal',
-              animation: 'slide_from_bottom',
+              animation: reduceMotion ? 'none' : 'slide_from_bottom',
             }}
           />
         </>

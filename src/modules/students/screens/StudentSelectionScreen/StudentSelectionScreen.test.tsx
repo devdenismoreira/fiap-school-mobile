@@ -1,4 +1,5 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { act, fireEvent, screen } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
 
 import { makeGuardian } from '@/test-utils/fixtures';
 import {
@@ -8,9 +9,16 @@ import {
 import { StudentSelectionScreen } from './StudentSelectionScreen';
 
 const mockGoBack = jest.fn();
+const mockListeners: Record<string, () => void> = {};
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual('@react-navigation/native'),
-  useNavigation: () => ({ goBack: mockGoBack }),
+  useNavigation: () => ({
+    goBack: mockGoBack,
+    addListener: (event: string, listener: () => void) => {
+      mockListeners[event] = listener;
+      return () => delete mockListeners[event];
+    },
+  }),
 }));
 
 // Fixture: responsável "Ana" com Rui (RM 100, selecionado) e Bia (RM 200).
@@ -31,6 +39,18 @@ const card = (rm: number) =>
 describe('StudentSelectionScreen', () => {
   beforeEach(() => mockGoBack.mockClear());
 
+  it('ao terminar a transição, leva o foco do leitor de tela ao título', async () => {
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation(() => undefined);
+    await renderScreen();
+
+    await act(async () => mockListeners.transitionEnd?.());
+
+    expect(focus).toHaveBeenCalledWith(expect.anything(), 'focus');
+    focus.mockRestore();
+  });
+
   it('mostra o título e os alunos na ordem do JSON, com o atual marcado', async () => {
     await renderScreen();
 
@@ -39,7 +59,9 @@ describe('StudentSelectionScreen', () => {
         name: 'Escolha o perfil\nque você quer visualizar',
       }),
     ).toBeOnTheScreen();
-    expect(screen.getAllByRole('radio').map(item => item.props.accessibilityLabel)).toEqual([
+    expect(
+      screen.getAllByRole('radio').map(item => item.props.accessibilityLabel),
+    ).toEqual([
       'Rui Teste, 7EF, RM 100, Matutino',
       'Bia Teste, 7EF, RM 200, Matutino',
     ]);
