@@ -14,4 +14,15 @@ jest.mock(
   () => require('react-native-safe-area-context/jest/mock').default,
 );
 
+// O LocalSvg busca o arquivo do asset de forma assíncrona (fetch), o que não
+// existe no Jest. O mock expõe as props para os testes conferirem.
+jest.mock('react-native-svg/css', () => {
+  const { createElement } = require('react');
+  const { View } = require('react-native');
+  return {
+    LocalSvg: (props: object) =>
+      createElement(View, { testID: 'local-svg', ...props }),
+  };
+});
+
 setUpTests();
