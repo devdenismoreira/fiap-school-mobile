@@ -1,13 +1,11 @@
 import { useRef, useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  type HostInstance,
-} from 'react-native';
+import { Modal, Pressable, StyleSheet, type HostInstance } from 'react-native';
+
+import Animated from 'react-native-reanimated';
 
 import { Box, motion, sizes, Text } from '@/core/theme';
-import { Icon } from '@/shared/components/Icon';
+import { dropdownPanelEntering } from '@/shared/animations';
+import { ExpandArrow } from '@/shared/components/ExpandArrow';
 
 export type DropdownOption = {
   value: string;
@@ -83,7 +81,7 @@ export function Dropdown({
           paddingHorizontal={contentPadding}
         >
           <Text variant="body">{selected?.label ?? ''}</Text>
-          <Icon name="arrowDown" style={isOpen ? styles.arrowUp : undefined} />
+          <ExpandArrow expanded={isOpen} />
         </Box>
       </Pressable>
 
@@ -102,47 +100,52 @@ export function Dropdown({
           accessibilityRole="button"
           accessibilityLabel="Fechar lista"
         />
-        <Box
-          position="absolute"
-          backgroundColor="surface"
-          borderRadius="m"
-          paddingVertical="xs"
-          accessibilityRole="menu"
+        <Animated.View
+          entering={anchor ? dropdownPanelEntering : undefined}
           // Até a medição do gatilho chegar, o painel fica invisível.
-          style={
+          style={[
+            styles.panel,
             anchor
               ? {
                   top: anchor.y + anchor.height + sizes.dropdown.panelGap,
                   left: anchor.x,
                   width: anchor.width,
                 }
-              : styles.unmeasured
-          }
+              : styles.unmeasured,
+          ]}
         >
-          {options.map(option => (
-            <Pressable
-              key={option.value}
-              onPress={() => onSelect(option.value)}
-              accessibilityRole="menuitem"
-              accessibilityState={{ selected: option.value === selectedValue }}
-              style={({ pressed }) => pressed && styles.pressed}
-            >
-              {/* 8 + texto (20) + 8 = 36 pt entre opções, como no Figma. */}
-              <Box paddingVertical="xs" paddingHorizontal={contentPadding}>
-                <Text variant="body">{option.label}</Text>
-              </Box>
-            </Pressable>
-          ))}
-        </Box>
+          <Box
+            backgroundColor="surface"
+            borderRadius="m"
+            paddingVertical="xs"
+            accessibilityRole="menu"
+          >
+            {options.map(option => (
+              <Pressable
+                key={option.value}
+                onPress={() => onSelect(option.value)}
+                accessibilityRole="menuitem"
+                accessibilityState={{
+                  selected: option.value === selectedValue,
+                }}
+                style={({ pressed }) => pressed && styles.pressed}
+              >
+                {/* 8 + texto (20) + 8 = 36 pt entre opções, como no Figma. */}
+                <Box paddingVertical="xs" paddingHorizontal={contentPadding}>
+                  <Text variant="body">{option.label}</Text>
+                </Box>
+              </Pressable>
+            ))}
+          </Box>
+        </Animated.View>
       </Modal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  // No Figma a seta aberta é a mesma imagem espelhada na vertical.
-  arrowUp: {
-    transform: [{ scaleY: -1 }],
+  panel: {
+    position: 'absolute',
   },
   unmeasured: {
     opacity: 0,

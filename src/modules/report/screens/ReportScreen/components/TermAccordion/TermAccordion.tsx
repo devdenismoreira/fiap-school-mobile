@@ -1,7 +1,13 @@
 import { Pressable, StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { Box, Card, motion, Text } from '@/core/theme';
-import { Icon } from '@/shared/components/Icon';
+import {
+  fadeInNormal,
+  fadeOutFast,
+  layoutTransition,
+} from '@/shared/animations';
+import { ExpandArrow } from '@/shared/components/ExpandArrow';
 import type { ReportTerm } from '../../useReportViewModel';
 import { SubjectRow } from '../SubjectRow';
 
@@ -16,9 +22,13 @@ type TermAccordionProps = {
  * Aberto, lista as disciplinas 16 pt abaixo, 20 pt entre si, e deixa 32 pt
  * até o próximo card (16 aqui + 16 do espaçamento entre trimestres).
  */
-export function TermAccordion({ term, onToggle, onToggleSubject }: TermAccordionProps) {
+export function TermAccordion({
+  term,
+  onToggle,
+  onToggleSubject,
+}: TermAccordionProps) {
   return (
-    <Box>
+    <Animated.View layout={layoutTransition}>
       <Pressable
         onPress={onToggle}
         accessibilityRole="button"
@@ -37,32 +47,28 @@ export function TermAccordion({ term, onToggle, onToggleSubject }: TermAccordion
           <Text variant="bodyBold" color="primary">
             {term.label}
           </Text>
-          <Icon
-            name="arrowDown"
-            style={term.isExpanded ? styles.arrowUp : undefined}
-          />
+          <ExpandArrow expanded={term.isExpanded} />
         </Card>
       </Pressable>
 
       {term.isExpanded ? (
-        <Box marginTop="m" marginBottom="m" paddingHorizontal="sm" gap="ml">
-          {term.subjects.map(subject => (
-            <SubjectRow
-              key={subject.key}
-              subject={subject}
-              onToggle={() => onToggleSubject(subject.key)}
-            />
-          ))}
-        </Box>
+        <Animated.View entering={fadeInNormal} exiting={fadeOutFast}>
+          <Box marginTop="m" marginBottom="m" paddingHorizontal="sm" gap="ml">
+            {term.subjects.map(subject => (
+              <SubjectRow
+                key={subject.key}
+                subject={subject}
+                onToggle={() => onToggleSubject(subject.key)}
+              />
+            ))}
+          </Box>
+        </Animated.View>
       ) : null}
-    </Box>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  arrowUp: {
-    transform: [{ scaleY: -1 }],
-  },
   pressed: {
     opacity: motion.pressedOpacity,
   },

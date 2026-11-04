@@ -1,7 +1,13 @@
 import { Pressable, StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { Box, motion, sizes, Text } from '@/core/theme';
-import { Icon } from '@/shared/components/Icon';
+import {
+  fadeInNormal,
+  fadeOutFast,
+  layoutTransition,
+} from '@/shared/animations';
+import { ExpandArrow } from '@/shared/components/ExpandArrow';
 import type { ReportSubject } from '../../useReportViewModel';
 
 type SubjectRowProps = {
@@ -22,7 +28,7 @@ export function SubjectRow({ subject, onToggle }: SubjectRowProps) {
     : 'Nota não lançada, faltas não lançadas';
 
   return (
-    <Box>
+    <Animated.View layout={layoutTransition}>
       <Pressable
         testID={`subject-row-${subject.key}`}
         onPress={onToggle}
@@ -41,37 +47,33 @@ export function SubjectRow({ subject, onToggle }: SubjectRowProps) {
           <Text variant="captionMedium" flexShrink={1}>
             {subject.name.toLocaleUpperCase('pt-BR')}
           </Text>
-          <Icon
-            name="arrowDown"
-            style={subject.isExpanded ? styles.arrowUp : undefined}
-          />
+          <ExpandArrow expanded={subject.isExpanded} />
         </Box>
       </Pressable>
 
       {subject.isExpanded ? (
-        <Box marginTop="s" accessible accessibilityLabel={detailsLabel}>
-          <Box flexDirection="row">
-            <Text variant="captionMedium">Nota:</Text>
-            <Text variant="captionMedium" marginLeft="sm">
-              {subject.grade}
-            </Text>
+        <Animated.View entering={fadeInNormal} exiting={fadeOutFast}>
+          <Box marginTop="s" accessible accessibilityLabel={detailsLabel}>
+            <Box flexDirection="row">
+              <Text variant="captionMedium">Nota:</Text>
+              <Text variant="captionMedium" marginLeft="sm">
+                {subject.grade}
+              </Text>
+            </Box>
+            <Box flexDirection="row" marginTop="xxs">
+              <Text variant="captionMedium">Faltas:</Text>
+              <Text variant="captionMedium" marginLeft="sm">
+                {subject.absences}
+              </Text>
+            </Box>
           </Box>
-          <Box flexDirection="row" marginTop="xxs">
-            <Text variant="captionMedium">Faltas:</Text>
-            <Text variant="captionMedium" marginLeft="sm">
-              {subject.absences}
-            </Text>
-          </Box>
-        </Box>
+        </Animated.View>
       ) : null}
-    </Box>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  arrowUp: {
-    transform: [{ scaleY: -1 }],
-  },
   pressed: {
     opacity: motion.pressedOpacity,
   },
