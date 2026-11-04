@@ -22,4 +22,8 @@ export const sizes = {
   studentSelection: { closeTop: 16, closeIcon: 24, titleTop: 209 },
   /** Dropdown: painel de opções 7 pt abaixo do gatilho. */
   dropdown: { panelGap: 7 },
+  /** Item de aula: marcador de 6 pt alinhado à linha do horário (5 pt do topo). */
+  classItem: { dotOffset: 5 },
+  /** Ilustração "sem aulas": caixa 328 × 208 recortando a imagem de 328 × 290 pelo topo. */
+  noClassroom: { width: 328, height: 208, imageHeight: 290 },
 } as const;
