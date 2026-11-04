@@ -1,4 +1,10 @@
-import { createBox, createText } from '@shopify/restyle';
+import {
+  createBox,
+  createRestyleComponent,
+  createText,
+  createVariant,
+  type VariantProps,
+} from '@shopify/restyle';
 import type { ComponentProps } from 'react';
 
 import type { Theme } from './theme';
@@ -17,3 +23,12 @@ export function Text(props: TextProps) {
     <RestyleText maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER} {...props} />
   );
 }
+
+export type CardProps = VariantProps<Theme, 'cardVariants'> &
+  ComponentProps<typeof Box>;
+
+/** Box com as variantes de card do tema (`variant="raised"`). */
+export const Card = createRestyleComponent<CardProps, Theme>(
+  [createVariant({ themeKey: 'cardVariants' })],
+  Box,
+);

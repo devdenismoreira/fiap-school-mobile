@@ -1,6 +1,7 @@
 import { createTheme } from '@shopify/restyle';
 
 import { fonts } from './fonts';
+import { sizes } from './sizes';
 
 // Valores brutos do Figma (o arquivo não publica variáveis nem estilos).
 const palette = {
@@ -79,6 +80,15 @@ export const theme = createTheme({
     caption: { fontFamily: fonts.regular, fontSize: 12, lineHeight: 15 },
     captionMedium: { fontFamily: fonts.medium, fontSize: 12, lineHeight: 15 },
     tabLabel: { fontFamily: fonts.bold, fontSize: 10, lineHeight: 12 },
+  },
+  // Cards de aluno (Mudança de aluno) e de trimestre (Boletim): mesmo visual no Figma.
+  cardVariants: {
+    defaults: {},
+    raised: {
+      backgroundColor: 'surfaceRaised',
+      borderRadius: 'm',
+      height: sizes.cardHeight,
+    },
   },
 });
 
