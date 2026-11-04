@@ -10,7 +10,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import logo from '../../../assets/images/logo.png';
-import { Box, sizes, Text, theme } from '../../../core/theme';
+import { Box, sizes, Text } from '../../../core/theme';
 import { PrimaryButton } from '../../../shared/components/PrimaryButton';
 import { useKeyboardVisible } from '../../../shared/hooks/useKeyboardVisible';
 import { UnderlineInput } from '../components/UnderlineInput';
@@ -49,7 +49,7 @@ export function LoginScreen() {
           <Box
             alignItems="center"
             paddingHorizontal="xxxl"
-            style={{ paddingTop: insets.top + theme.spacing.giant }}
+            style={{ paddingTop: insets.top + sizes.loginLogoTop }}
           >
             <Image
               source={logo}
