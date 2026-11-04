@@ -49,6 +49,18 @@ describe('AsyncStorageSessionRepository', () => {
     });
   });
 
+  it('aceita sessão sem aluno selecionado (responsável sem alunos)', async () => {
+    const { storage } = createMemoryStorage();
+    const repository = new AsyncStorageSessionRepository(storage);
+
+    await repository.save({ guardianId: 1, selectedStudentRm: null });
+
+    await expect(repository.load()).resolves.toEqual({
+      guardianId: 1,
+      selectedStudentRm: null,
+    });
+  });
+
   it('retorna null quando não há sessão', async () => {
     const { storage } = createMemoryStorage();
     await expect(

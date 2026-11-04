@@ -31,7 +31,7 @@ function parseSession(raw: string): StoredSession | null {
   if (
     version !== SESSION_VERSION ||
     !isPositiveInteger(guardianId) ||
-    !isPositiveInteger(selectedStudentRm)
+    !(selectedStudentRm === null || isPositiveInteger(selectedStudentRm))
   ) {
     return null;
   }
