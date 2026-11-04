@@ -26,4 +26,6 @@ export const sizes = {
   classItem: { dotOffset: 5 },
   /** Ilustração "sem aulas": caixa 328 × 208 recortando a imagem de 328 × 290 pelo topo. */
   noClassroom: { width: 328, height: 208, imageHeight: 290 },
+  /** Linha de disciplina do Boletim: 17 pt de altura, 20 pt entre linhas. */
+  subjectRow: { height: 17 },
 } as const;
