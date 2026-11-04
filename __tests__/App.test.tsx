@@ -121,6 +121,30 @@ describe('App (fluxo de sessão e navegação)', () => {
     expect(tab('BOLETIM')).toBeSelected();
   });
 
+  it('trocar de aluno volta à aba de origem com o cabeçalho do novo aluno e persiste', async () => {
+    await storeSession(guardian.id, firstStudent.rm);
+    await renderApp();
+    await sectionTitle('AGENDA');
+    await fireEvent.press(tab('BOLETIM'));
+    await sectionTitle('BOLETIM');
+
+    await fireEvent.press(screen.getByRole('button', { name: 'TROCAR PERFIL' }));
+    const fullName = `${secondStudent.primeiroNome} ${secondStudent.sobrenome}`;
+    await fireEvent.press(
+      await screen.findByRole('radio', { name: new RegExp(`^${fullName},`) }),
+    );
+
+    await waitFor(() =>
+      expect(screen.queryByText(/Escolha o perfil/)).toBeNull(),
+    );
+    expect(tab('BOLETIM')).toBeSelected();
+    expect(screen.getByText(studentInfo(secondStudent))).toBeOnTheScreen();
+    expect(screen.queryByText(studentInfo(firstStudent))).toBeNull();
+    expect(
+      JSON.parse((await AsyncStorage.getItem(SESSION_STORAGE_KEY))!),
+    ).toMatchObject({ selectedStudentRm: secondStudent.rm });
+  });
+
   it('responsável com 1 aluno não vê TROCAR PERFIL', async () => {
     await storeSession(singleStudentGuardian.id, singleStudentGuardian.alunos[0].rm);
     await renderApp();

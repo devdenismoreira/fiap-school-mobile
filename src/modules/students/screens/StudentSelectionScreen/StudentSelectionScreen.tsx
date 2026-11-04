@@ -1,15 +1,16 @@
-import { useNavigation } from '@react-navigation/native';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Box, motion, sizes, Text, theme } from '@/core/theme';
 import { Icon } from '@/shared/components/Icon';
+import { StudentCard } from './components/StudentCard';
+import { useStudentSelectionViewModel } from './useStudentSelectionViewModel';
 
 const { closeTop, closeIcon, titleTop } = sizes.studentSelection;
 
-/** Tela "Mudança de aluno" (Figma 2:5). Os cards dos alunos entram na T06. */
+/** Tela "Mudança de aluno" (Figma 2:5), aberta acima das abas. */
 export function StudentSelectionScreen() {
-  const navigation = useNavigation();
+  const { students, selectedRm, select, close } = useStudentSelectionViewModel();
   const insets = useSafeAreaInsets();
 
   return (
@@ -21,7 +22,7 @@ export function StudentSelectionScreen() {
         style={styles.closeRow}
       >
         <Pressable
-          onPress={() => navigation.goBack()}
+          onPress={close}
           accessibilityRole="button"
           accessibilityLabel="FECHAR"
           hitSlop={10}
@@ -36,14 +37,38 @@ export function StudentSelectionScreen() {
         </Pressable>
       </Box>
 
-      <Text
-        variant="headline"
-        textAlign="center"
-        accessibilityRole="header"
-        style={styles.title}
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: insets.bottom + theme.spacing.m },
+        ]}
+        showsVerticalScrollIndicator={false}
       >
-        {'Escolha o perfil\nque você quer visualizar'}
-      </Text>
+        <Text
+          variant="headline"
+          textAlign="center"
+          accessibilityRole="header"
+          style={styles.title}
+        >
+          {'Escolha o perfil\nque você quer visualizar'}
+        </Text>
+
+        <Box
+          marginTop="huge"
+          paddingHorizontal="m"
+          gap="m"
+          accessibilityRole="radiogroup"
+        >
+          {students.map(student => (
+            <StudentCard
+              key={student.rm}
+              student={student}
+              selected={student.rm === selectedRm}
+              onPress={() => select(student.rm)}
+            />
+          ))}
+        </Box>
+      </ScrollView>
     </Box>
   );
 }
@@ -54,6 +79,9 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     marginLeft: theme.spacing.xs,
+  },
+  content: {
+    flexGrow: 1,
   },
   title: {
     marginTop: titleTop - closeTop - closeIcon,
