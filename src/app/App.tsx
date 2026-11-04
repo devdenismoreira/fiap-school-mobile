@@ -1,14 +1,31 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 
-import { Box } from '../core/theme';
+import { navigationTheme } from '../navigation/navigationTheme';
+import { RootNavigator } from '../navigation/RootNavigator';
+import { createDependencies } from './bootstrap/dependencies';
 import { AppProviders } from './providers/AppProviders';
+import {
+  SessionProvider,
+  type SessionDependencies,
+} from './providers/SessionProvider';
 
-// Placeholder: a navegação e as telas entram nas tarefas T04–T05.
-export default function App() {
+const defaultDependencies = createDependencies();
+
+type AppProps = {
+  /** Permite injetar dependências nos testes. */
+  dependencies?: SessionDependencies;
+};
+
+export default function App({ dependencies = defaultDependencies }: AppProps) {
   return (
     <AppProviders>
       <StatusBar barStyle="light-content" />
-      <Box testID="app-root" flex={1} backgroundColor="background" />
+      <SessionProvider dependencies={dependencies}>
+        <NavigationContainer theme={navigationTheme}>
+          <RootNavigator />
+        </NavigationContainer>
+      </SessionProvider>
     </AppProviders>
   );
 }
