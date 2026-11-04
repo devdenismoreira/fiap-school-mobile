@@ -41,6 +41,7 @@ export const theme = createTheme({
     xxl: 40,
     xxxl: 48,
     huge: 64,
+    giant: 80,
   },
   borderRadii: {
     none: 0,
