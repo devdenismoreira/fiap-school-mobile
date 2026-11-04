@@ -1,13 +1,13 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 
-import { InvalidCredentialsError } from '../../../core/errors/InvalidCredentialsError';
-import { theme } from '../../../core/theme';
-import { makeGuardian } from '../../../test-utils/fixtures';
+import { InvalidCredentialsError } from '../../../../core/errors/InvalidCredentialsError';
+import { theme } from '../../../../core/theme';
+import { makeGuardian } from '../../../../test-utils/fixtures';
 import {
   makeSessionDependencies,
   renderWithSession,
-} from '../../../test-utils/renderWithSession';
+} from '../../../../test-utils/renderWithSession';
 import { LoginScreen } from './LoginScreen';
 
 // CPF fictício com dígitos verificadores válidos (não pertence ao JSON).

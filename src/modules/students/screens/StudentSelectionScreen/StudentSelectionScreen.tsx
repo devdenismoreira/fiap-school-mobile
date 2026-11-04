@@ -2,8 +2,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Box, motion, sizes, Text, theme } from '../../../core/theme';
-import { Icon } from '../../../shared/components/Icon';
+import { Box, motion, sizes, Text, theme } from '../../../../core/theme';
+import { Icon } from '../../../../shared/components/Icon';
 
 const { closeTop, closeIcon, titleTop } = sizes.studentSelection;
 

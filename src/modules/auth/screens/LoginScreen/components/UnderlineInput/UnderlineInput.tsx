@@ -13,7 +13,7 @@ import {
   sizes,
   Text,
   type Theme,
-} from '../../../core/theme';
+} from '../../../../../../core/theme';
 
 type UnderlineInputProps = Omit<TextInputProps, 'style'> & {
   label: string;

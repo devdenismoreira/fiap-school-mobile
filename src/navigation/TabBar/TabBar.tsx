@@ -2,9 +2,9 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Box, sizes, Text } from '../core/theme';
-import { Icon, type IconName } from '../shared/components/Icon';
-import type { MainTabParamList } from './types';
+import { Box, sizes, Text } from '../../core/theme';
+import { Icon, type IconName } from '../../shared/components/Icon';
+import type { MainTabParamList } from '../types';
 
 const TABS: Record<
   keyof MainTabParamList,

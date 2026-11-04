@@ -1,14 +1,14 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import { LocalSvg } from 'react-native-svg/css';
 
-import calendarActive from '../../assets/icons/calendar-active.svg';
-import calendarInactive from '../../assets/icons/calendar-inactive.svg';
-import checkFileActive from '../../assets/icons/check-file-active.svg';
-import checkFileInactive from '../../assets/icons/check-file-inactive.svg';
-import close from '../../assets/icons/close.svg';
-import downArrow from '../../assets/icons/down-arrow.svg';
-import logout from '../../assets/icons/logout.svg';
-import { Box } from '../../core/theme';
+import calendarActive from '../../../assets/icons/calendar-active.svg';
+import calendarInactive from '../../../assets/icons/calendar-inactive.svg';
+import checkFileActive from '../../../assets/icons/check-file-active.svg';
+import checkFileInactive from '../../../assets/icons/check-file-inactive.svg';
+import close from '../../../assets/icons/close.svg';
+import downArrow from '../../../assets/icons/down-arrow.svg';
+import logout from '../../../assets/icons/logout.svg';
+import { Box } from '../../../core/theme';
 
 // `frame` é a caixa do ícone no Figma; `width`/`height` são as dimensões do
 // próprio SVG exportado, que fica centralizado na caixa sem ser esticado.

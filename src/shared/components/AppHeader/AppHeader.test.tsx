@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 
-import type { Guardian } from '../../domain/entities/Guardian';
-import { makeGuardian, makeStudent } from '../../test-utils/fixtures';
+import type { Guardian } from '../../../domain/entities/Guardian';
+import { makeGuardian, makeStudent } from '../../../test-utils/fixtures';
 import {
   makeSessionDependencies,
   renderWithSession,
-} from '../../test-utils/renderWithSession';
+} from '../../../test-utils/renderWithSession';
 import { AppHeader } from './AppHeader';
 
 const mockNavigate = jest.fn();

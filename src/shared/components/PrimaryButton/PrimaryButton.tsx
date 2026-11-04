@@ -1,7 +1,7 @@
 import { useTheme } from '@shopify/restyle';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Box, motion, sizes, Text, type Theme } from '../../core/theme';
+import { Box, motion, sizes, Text, type Theme } from '../../../core/theme';
 
 type PrimaryButtonProps = {
   label: string;
