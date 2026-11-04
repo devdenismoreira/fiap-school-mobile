@@ -7,17 +7,16 @@ import {
   StyleSheet,
   type TextInputInstance,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import logo from '@/assets/images/logo.png';
 import { Box, sizes, Text } from '@/core/theme';
+import { fadeInFast, fadeOutFast } from '@/shared/animations';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useKeyboardVisible } from '@/shared/hooks/useKeyboardVisible';
 import { UnderlineInput } from './components/UnderlineInput';
-import {
-  LOGIN_ERROR_MESSAGE,
-  useLoginViewModel,
-} from './useLoginViewModel';
+import { LOGIN_ERROR_MESSAGE, useLoginViewModel } from './useLoginViewModel';
 
 /** Máscara completa `000.000.000-00` tem 14 caracteres. */
 const CPF_MASKED_LENGTH = 14;
@@ -93,11 +92,13 @@ export function LoginScreen() {
             </Box>
 
             {viewModel.hasError ? (
-              <Box marginTop="xl">
-                <Text variant="bodyMedium" color="primary" textAlign="center">
-                  {LOGIN_ERROR_MESSAGE}
-                </Text>
-              </Box>
+              <Animated.View entering={fadeInFast} exiting={fadeOutFast}>
+                <Box marginTop="xl">
+                  <Text variant="bodyMedium" color="primary" textAlign="center">
+                    {LOGIN_ERROR_MESSAGE}
+                  </Text>
+                </Box>
+              </Animated.View>
             ) : null}
           </Box>
         </ScrollView>

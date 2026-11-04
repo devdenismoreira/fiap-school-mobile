@@ -1,7 +1,9 @@
 import { useTheme } from '@shopify/restyle';
 import { Pressable, StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { Box, motion, sizes, Text, type Theme } from '@/core/theme';
+import { fadeInFast, fadeOutFast } from '@/shared/animations';
 
 type PrimaryButtonProps = {
   label: string;
@@ -44,9 +46,14 @@ export function PrimaryButton({
         justifyContent="center"
       >
         {loading ? null : (
-          <Text variant="button" color={disabled ? 'textDisabled' : 'onPrimary'}>
-            {label}
-          </Text>
+          <Animated.View entering={fadeInFast} exiting={fadeOutFast}>
+            <Text
+              variant="button"
+              color={disabled ? 'textDisabled' : 'onPrimary'}
+            >
+              {label}
+            </Text>
+          </Animated.View>
         )}
       </Box>
     </Pressable>
