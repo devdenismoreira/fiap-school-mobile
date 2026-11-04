@@ -15,4 +15,6 @@ export const sizes = {
   loginLogoTop: 100,
   /** Campo do Login: rótulo (24) + 25 + valor (39) + 7 + linha (1) = 96 pt. */
   underlineInput: { labelToValue: 25, valueHeight: 39, valueToLine: 7 },
+  /** Cabeçalho: barra (48) + 16 + saudação (29) + 36 + nome (20) + 8 + info (20) = 177 pt. */
+  appHeader: { greetingToStudent: 36 },
 } as const;
