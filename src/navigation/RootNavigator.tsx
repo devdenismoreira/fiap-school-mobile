@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSession } from '../app/providers/SessionProvider';
 import { Box, theme } from '../core/theme';
 import { LoginScreen } from '../modules/auth/screens/LoginScreen';
-import { MainPlaceholderScreen } from './MainPlaceholderScreen';
+import { MainTabs } from './MainTabs';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,7 +29,7 @@ export function RootNavigator() {
       }}
     >
       {state.status === 'signedIn' ? (
-        <Stack.Screen name="Main" component={MainPlaceholderScreen} />
+        <Stack.Screen name="Main" component={MainTabs} />
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />
       )}

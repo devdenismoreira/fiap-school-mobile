@@ -3,7 +3,6 @@
 // (a barra de ações do cabeçalho começa em y = 0 nos frames).
 export const sizes = {
   actionBarHeight: 48,
-  tabBarHeight: 64,
   primaryButtonHeight: 60,
   dropdownHeight: 45,
   cardHeight: 90,
@@ -17,4 +16,6 @@ export const sizes = {
   underlineInput: { labelToValue: 25, valueHeight: 39, valueToLine: 7 },
   /** Cabeçalho: barra (48) + 16 + saudação (29) + 36 + nome (20) + 8 + info (20) = 177 pt. */
   appHeader: { greetingToStudent: 36 },
+  /** Barra de abas: 64 pt + área segura; ícone 11 pt abaixo do topo, rótulo 4 pt abaixo do ícone. */
+  tabBar: { height: 64, iconTop: 11, iconToLabel: 4 },
 } as const;
