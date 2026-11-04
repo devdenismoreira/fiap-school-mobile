@@ -1,4 +1,4 @@
-import type { Guardian } from '../entities/Guardian';
+import type { Guardian } from '@/domain/entities/Guardian';
 
 export interface GuardianRepository {
   /** Retorna `null` para qualquer divergência, sem indicar qual campo falhou. */

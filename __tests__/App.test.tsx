@@ -7,10 +7,10 @@ import {
 } from '@testing-library/react-native';
 
 import App from '../App';
-import { createDependencies } from '../src/app/bootstrap/dependencies';
-import { onlyDigits } from '../src/core/utils/cpf';
-import responsaveis from '../src/data/datasources/local/responsaveis.json';
-import { SESSION_STORAGE_KEY } from '../src/data/repositories/AsyncStorageSessionRepository';
+import { createDependencies } from '@/app/bootstrap/dependencies';
+import { onlyDigits } from '@/core/utils/cpf';
+import responsaveis from '@/data/datasources/local/responsaveis.json';
+import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
 
 // Dados reais do fixture, lidos em tempo de execução (nada de credenciais no teste).
 const [guardian, singleStudentGuardian] = responsaveis;

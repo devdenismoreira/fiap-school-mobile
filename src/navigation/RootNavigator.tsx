@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { useSession } from '../app/providers/SessionProvider';
-import { Box, theme } from '../core/theme';
-import { LoginScreen } from '../modules/auth/screens/LoginScreen';
-import { StudentSelectionScreen } from '../modules/students/screens/StudentSelectionScreen';
+import { useSession } from '@/app/providers/SessionProvider';
+import { Box, theme } from '@/core/theme';
+import { LoginScreen } from '@/modules/auth/screens/LoginScreen';
+import { StudentSelectionScreen } from '@/modules/students/screens/StudentSelectionScreen';
 import { MainTabs } from './MainTabs';
 import type { RootStackParamList } from './types';
 

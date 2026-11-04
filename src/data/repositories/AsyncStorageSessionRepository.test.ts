@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { KeyValueStorage } from '../../core/storage/keyValueStorage';
+import type { KeyValueStorage } from '@/core/storage/keyValueStorage';
 import {
   AsyncStorageSessionRepository,
   SESSION_STORAGE_KEY,

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
-import { useSession } from '../../../../app/providers/SessionProvider';
-import { CPF_LENGTH, formatCpf, normalizeCpf } from '../../../../core/utils/cpf';
+import { useSession } from '@/app/providers/SessionProvider';
+import { CPF_LENGTH, formatCpf, normalizeCpf } from '@/core/utils/cpf';
 
 /** Texto do frame "Login - feedback de erro" do Figma (quebra de linha incluída). */
 export const LOGIN_ERROR_MESSAGE =

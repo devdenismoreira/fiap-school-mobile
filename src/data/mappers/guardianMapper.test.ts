@@ -1,4 +1,4 @@
-import type { ResponsavelDTO } from '../datasources/dtos';
+import type { ResponsavelDTO } from '@/data/datasources/dtos';
 import { toGuardian } from './guardianMapper';
 
 const dto: ResponsavelDTO = {

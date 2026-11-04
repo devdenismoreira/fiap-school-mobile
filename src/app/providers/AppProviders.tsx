@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { theme } from '../../core/theme';
+import { theme } from '@/core/theme';
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (

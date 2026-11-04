@@ -1,6 +1,6 @@
-import { onlyDigits } from '../../../core/utils/cpf';
-import type { GuardianDataSource } from '../GuardianDataSource';
-import type { ResponsavelDTO } from '../dtos';
+import { onlyDigits } from '@/core/utils/cpf';
+import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
+import type { ResponsavelDTO } from '@/data/datasources/dtos';
 import responsaveis from './responsaveis.json';
 
 /** Registro bruto do JSON, com credenciais. Não sai deste arquivo. */

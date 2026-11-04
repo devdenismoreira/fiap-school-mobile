@@ -1,7 +1,7 @@
-import { InvalidCredentialsError } from '../../core/errors/InvalidCredentialsError';
-import { isValidCpf, normalizeCpf } from '../../core/utils/cpf';
-import type { Guardian } from '../entities/Guardian';
-import type { GuardianRepository } from '../repositories/GuardianRepository';
+import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { isValidCpf, normalizeCpf } from '@/core/utils/cpf';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
 
 export type AuthenticateGuardian = (
   cpfInput: string,

@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 
-import { navigationTheme } from '../navigation/navigationTheme';
-import { RootNavigator } from '../navigation/RootNavigator';
+import { navigationTheme } from '@/navigation/navigationTheme';
+import { RootNavigator } from '@/navigation/RootNavigator';
 import { createDependencies } from './bootstrap/dependencies';
 import { AppProviders } from './providers/AppProviders';
 import {

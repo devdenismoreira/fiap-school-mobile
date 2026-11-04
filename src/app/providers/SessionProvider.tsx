@@ -6,12 +6,12 @@ import {
   type PropsWithChildren,
 } from 'react';
 
-import type { Guardian } from '../../domain/entities/Guardian';
-import type { StoredSession } from '../../domain/entities/Session';
-import type { Student } from '../../domain/entities/Student';
-import type { SessionRepository } from '../../domain/repositories/SessionRepository';
-import type { AuthenticateGuardian } from '../../domain/usecases/authenticateGuardian';
-import type { RestoreSession } from '../../domain/usecases/restoreSession';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { StoredSession } from '@/domain/entities/Session';
+import type { Student } from '@/domain/entities/Student';
+import type { SessionRepository } from '@/domain/repositories/SessionRepository';
+import type { AuthenticateGuardian } from '@/domain/usecases/authenticateGuardian';
+import type { RestoreSession } from '@/domain/usecases/restoreSession';
 
 export type SessionState =
   | { status: 'restoring' }

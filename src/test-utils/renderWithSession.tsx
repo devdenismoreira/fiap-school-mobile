@@ -5,8 +5,8 @@ import type { PropsWithChildren, ReactElement } from 'react';
 import {
   SessionProvider,
   type SessionDependencies,
-} from '../app/providers/SessionProvider';
-import { theme } from '../core/theme';
+} from '@/app/providers/SessionProvider';
+import { theme } from '@/core/theme';
 import { makeGuardian } from './fixtures';
 
 export function makeSessionDependencies(

@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { theme } from '../core/theme';
-import { AgendaScreen } from '../modules/classes/screens/AgendaScreen';
-import { ReportScreen } from '../modules/report/screens/ReportScreen';
+import { theme } from '@/core/theme';
+import { AgendaScreen } from '@/modules/classes/screens/AgendaScreen';
+import { ReportScreen } from '@/modules/report/screens/ReportScreen';
 import { TabBar } from './TabBar';
 import type { MainTabParamList } from './types';
 

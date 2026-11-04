@@ -1,6 +1,6 @@
-import type { Guardian } from '../entities/Guardian';
-import type { GuardianRepository } from '../repositories/GuardianRepository';
-import type { SessionRepository } from '../repositories/SessionRepository';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
+import type { SessionRepository } from '@/domain/repositories/SessionRepository';
 
 export type RestoredSession = {
   guardian: Guardian;

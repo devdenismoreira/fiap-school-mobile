@@ -1,7 +1,7 @@
-import { onlyDigits } from '../../core/utils/cpf';
-import type { GuardianDataSource } from '../datasources/GuardianDataSource';
-import { GuardianLocalDataSource } from '../datasources/local/GuardianLocalDataSource';
-import responsaveis from '../datasources/local/responsaveis.json';
+import { onlyDigits } from '@/core/utils/cpf';
+import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
+import { GuardianLocalDataSource } from '@/data/datasources/local/GuardianLocalDataSource';
+import responsaveis from '@/data/datasources/local/responsaveis.json';
 import { GuardianRepositoryImpl } from './GuardianRepositoryImpl';
 
 describe('GuardianRepositoryImpl', () => {

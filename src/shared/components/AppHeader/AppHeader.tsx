@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { Image, Pressable, StyleSheet } from 'react-native';
 
-import { useSession } from '../../../app/providers/SessionProvider';
-import logo from '../../../assets/images/logo.png';
-import { Box, motion, sizes, Text, theme } from '../../../core/theme';
-import type { RootStackNavigation } from '../../../navigation/types';
-import { Icon } from '../Icon';
+import { useSession } from '@/app/providers/SessionProvider';
+import logo from '@/assets/images/logo.png';
+import { Box, motion, sizes, Text, theme } from '@/core/theme';
+import type { RootStackNavigation } from '@/navigation/types';
+import { Icon } from '@/shared/components/Icon';
 
 /** Amplia a área de toque das ações de 15 pt de altura para ~44 pt. */
 const ACTION_HIT_SLOP = { top: 15, bottom: 15, left: 8, right: 8 };

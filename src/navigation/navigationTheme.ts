@@ -1,6 +1,6 @@
 import { DarkTheme, type Theme as NavigationTheme } from '@react-navigation/native';
 
-import { theme } from '../core/theme';
+import { theme } from '@/core/theme';
 
 /** Fundo preto em todas as telas e transições, sem flash branco. */
 export const navigationTheme: NavigationTheme = {

@@ -2,8 +2,8 @@ import type { PropsWithChildren } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Box, Text, theme } from '../../../core/theme';
-import { AppHeader } from '../AppHeader';
+import { Box, Text, theme } from '@/core/theme';
+import { AppHeader } from '@/shared/components/AppHeader';
 
 type TabScreenLayoutProps = PropsWithChildren<{
   /** Título da seção ("AGENDA", "BOLETIM"). */

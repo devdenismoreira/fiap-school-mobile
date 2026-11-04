@@ -1,7 +1,7 @@
-import { makeGuardian } from '../../test-utils/fixtures';
-import type { StoredSession } from '../entities/Session';
-import type { GuardianRepository } from '../repositories/GuardianRepository';
-import type { SessionRepository } from '../repositories/SessionRepository';
+import { makeGuardian } from '@/test-utils/fixtures';
+import type { StoredSession } from '@/domain/entities/Session';
+import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
+import type { SessionRepository } from '@/domain/repositories/SessionRepository';
 import { createRestoreSession } from './restoreSession';
 
 function setup({

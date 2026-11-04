@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 
-import { theme } from '../../../core/theme';
-import { renderWithTheme } from '../../../test-utils/renderWithTheme';
+import { theme } from '@/core/theme';
+import { renderWithTheme } from '@/test-utils/renderWithTheme';
 import { PrimaryButton } from './PrimaryButton';
 
 describe('PrimaryButton', () => {

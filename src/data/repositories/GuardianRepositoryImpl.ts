@@ -1,7 +1,7 @@
-import type { Guardian } from '../../domain/entities/Guardian';
-import type { GuardianRepository } from '../../domain/repositories/GuardianRepository';
-import type { GuardianDataSource } from '../datasources/GuardianDataSource';
-import { toGuardian } from '../mappers/guardianMapper';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
+import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
+import { toGuardian } from '@/data/mappers/guardianMapper';
 
 export class GuardianRepositoryImpl implements GuardianRepository {
   constructor(private readonly dataSource: GuardianDataSource) {}

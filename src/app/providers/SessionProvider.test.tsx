@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
-import { InvalidCredentialsError } from '../../core/errors/InvalidCredentialsError';
-import type { RestoredSession } from '../../domain/usecases/restoreSession';
-import { makeGuardian } from '../../test-utils/fixtures';
+import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import type { RestoredSession } from '@/domain/usecases/restoreSession';
+import { makeGuardian } from '@/test-utils/fixtures';
 import {
   SessionProvider,
   useSession,

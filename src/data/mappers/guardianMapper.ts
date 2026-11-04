@@ -1,13 +1,13 @@
-import type { Guardian } from '../../domain/entities/Guardian';
-import type { ReportCard } from '../../domain/entities/ReportCard';
-import type { ScheduleDay } from '../../domain/entities/Schedule';
-import type { Student } from '../../domain/entities/Student';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { ReportCard } from '@/domain/entities/ReportCard';
+import type { ScheduleDay } from '@/domain/entities/Schedule';
+import type { Student } from '@/domain/entities/Student';
 import type {
   AlunoDTO,
   BoletimDTO,
   DiaAgendaDTO,
   ResponsavelDTO,
-} from '../datasources/dtos';
+} from '@/data/datasources/dtos';
 
 function toScheduleDay(dto: DiaAgendaDTO): ScheduleDay {
   return {

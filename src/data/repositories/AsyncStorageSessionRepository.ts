@@ -1,9 +1,9 @@
 import {
   keyValueStorage,
   type KeyValueStorage,
-} from '../../core/storage/keyValueStorage';
-import type { StoredSession } from '../../domain/entities/Session';
-import type { SessionRepository } from '../../domain/repositories/SessionRepository';
+} from '@/core/storage/keyValueStorage';
+import type { StoredSession } from '@/domain/entities/Session';
+import type { SessionRepository } from '@/domain/repositories/SessionRepository';
 
 export const SESSION_STORAGE_KEY = '@fiap-school/session';
 const SESSION_VERSION = 1;

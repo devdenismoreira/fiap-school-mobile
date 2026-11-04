@@ -1,4 +1,4 @@
-import { formatCpf, onlyDigits } from '../../../core/utils/cpf';
+import { formatCpf, onlyDigits } from '@/core/utils/cpf';
 import { GuardianLocalDataSource } from './GuardianLocalDataSource';
 import responsaveis from './responsaveis.json';
 

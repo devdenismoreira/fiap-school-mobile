@@ -1,6 +1,6 @@
-import { InvalidCredentialsError } from '../../core/errors/InvalidCredentialsError';
-import { makeGuardian } from '../../test-utils/fixtures';
-import type { GuardianRepository } from '../repositories/GuardianRepository';
+import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { makeGuardian } from '@/test-utils/fixtures';
+import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
 import { createAuthenticateGuardian } from './authenticateGuardian';
 
 // CPF fictício com dígitos verificadores válidos (não pertence ao JSON).

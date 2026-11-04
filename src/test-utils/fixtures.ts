@@ -1,5 +1,5 @@
-import type { Guardian } from '../domain/entities/Guardian';
-import type { Student } from '../domain/entities/Student';
+import type { Guardian } from '@/domain/entities/Guardian';
+import type { Student } from '@/domain/entities/Student';
 
 export function makeStudent(overrides: Partial<Student> = {}): Student {
   return {
