@@ -51,14 +51,13 @@ Em um terminal, deixe o Metro rodando com `yarn start`. Se houver cache antigo, 
 
 | Comando | O que faz |
 |---|---|
-| `yarn ios` | Simulador iOS padrão |
+| `yarn ios` | Simulador iPhone 17 |
 | `yarn ios:device` | iPhone conectado (USB ou mesma rede) |
 | `yarn ios:release` | iPhone conectado, em Release: JS embutido, roda sem o Metro |
-| `yarn ios:select` | Lista simuladores e aparelhos para escolher |
-| `yarn android` | Emulador ou aparelho Android, compilando todas as arquiteturas |
-| `yarn android:device` | Emulador ou aparelho conectado, compilando só a arquitetura dele (bem mais rápido) |
-| `yarn android:release` | Aparelho conectado, em release: JS embutido, roda sem o Metro |
-| `yarn android:select` | Lista emuladores e aparelhos para escolher |
+| `yarn android` | Emulador ou aparelho Android conectado |
+| `yarn android:release` | Aparelho Android conectado, em release: JS embutido, roda sem o Metro |
+
+Os builds de desenvolvimento compilam só a arquitetura do emulador ou aparelho em uso, o que deixa o build mais rápido e o app menor. Para escolher outro emulador, simulador ou aparelho: `yarn android --list-devices` ou `yarn react-native run-ios --list-devices`.
 
 **iPhone físico:** na primeira vez, abra `ios/FiapSchoolMobile.xcworkspace` no Xcode. Em *Signing & Capabilities*, escolha o seu time de desenvolvimento e um *Bundle Identifier* único (o padrão do template, `org.reactjs.native.example…`, costuma conflitar). No iPhone, autorize o desenvolvedor em Ajustes › Geral › VPN e Gerenciamento de Dispositivos.
 
@@ -95,7 +94,7 @@ Principais decisões:
 - **Repository Pattern:** a fonte local se comporta como uma API de login. Ela valida as credenciais, devolve o responsável **sem** CPF, senha ou e-mail e simula 800 ms de latência para o estado "carregando" do Figma aparecer. Trocar por REST exige só outra implementação de `GuardianDataSource`.
 - **Casos de uso só onde há regra real:** `authenticateGuardian` (normaliza o CPF, valida o dígito verificador, erro genérico) e `restoreSession` (descarta sessão inválida e troca um aluno desvinculado pelo primeiro).
 - **Context API** apenas para a sessão e o aluno selecionado. O estado de cada tela (dia escolhido, ano, acordeões abertos) fica no ViewModel da tela (`use<Tela>ViewModel`).
-- **Navegação** no padrão de auth flow: telas condicionais por estado de sessão. A troca de aluno é uma rota modal acima das abas.
+- **Navegação** no padrão de auth flow: telas condicionais por estado de sessão. A troca de aluno é uma rota empilhada acima das abas, que sobe de baixo.
 - **Design system com Restyle:** cores, espaçamentos, raios, variantes de texto e de card vêm do Figma. Componentes usam props de token, então o TypeScript recusa tokens inexistentes.
 - **Organização:** cada componente ou tela fica numa pasta (`Nome.tsx`, `Nome.test.tsx`, `index.ts`). O ViewModel e os componentes exclusivos ficam junto da tela. Os imports usam o alias `@/` → `src/`.
 
