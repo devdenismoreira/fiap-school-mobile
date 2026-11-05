@@ -125,14 +125,14 @@ Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design sy
 
 | ID | Tema | Observação | Decisão |
 |---|---|---|---|
-| D-27 | Implementação | Há bibliotecas prontas, mas o projeto já tem Reanimated, Gesture Handler e Restyle | Componente próprio, sem biblioteca de toast |
+| D-27 ✅ | Implementação | Há bibliotecas prontas, mas o projeto já tem Reanimated, Gesture Handler e Restyle | Componente próprio, sem biblioteca de toast |
 | D-28 ✅ | Posição | Referência: Instagram | Embaixo, acima da barra de abas ou do botão principal, e acima do teclado quando aberto |
 | D-29 ✅ | Visual | O design system não tem cores de sucesso nem de erro | Fundo `surfaceRaised`, texto `bodyMedium` branco, raio 8, sem ícone |
 | D-30 ✅ | Situações | Comparação com a tabela de feedback trazida pelo desenvolvedor | Toast em sessão expirada, troca de aluno e queda e volta da conexão. Login realizado, senha incorreta, falha ao carregar e logout ficam como estão |
 | D-31 ✅ | Sessão expirada | A D-23 deixava a pessoa no Login sem explicação | Login com o toast, só quando havia sessão salva e a API a recusou |
 | D-32 ✅ | Conectividade | Detectar a queda e a volta da internet exige um módulo nativo | `@react-native-community/netinfo` com versão fixa 12.0.1 (TurboModule); mudanças de menos de 1 s são ignoradas |
-| D-33 | Reconexão na tela de conexão | A internet volta com o app parado na tela de conexão | Tenta restaurar a sessão sozinho, além do toast |
-| D-34 | Textos | Não há textos de toast no Figma | "Sua sessão expirou.\nEntre novamente."; "Mostrando os dados de {primeiroNome}."; "Sem conexão com a internet."; "Conexão restabelecida." |
+| D-33 ✅ | Reconexão na tela de conexão | A internet volta com o app parado na tela de conexão | Tenta restaurar a sessão sozinho, além do toast |
+| D-34 ✅ | Textos | Não há textos de toast no Figma | "Sua sessão expirou.\nEntre novamente."; "Mostrando os dados de {primeiroNome}."; "Sem conexão com a internet."; "Conexão restabelecida." |
 
 ### Remoção do JSON local (2026-11-05)
 

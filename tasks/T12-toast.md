@@ -57,4 +57,42 @@ Os de `features/toast.md` §7: automatizados e manuais.
 
 ## Status
 
-Não iniciada. Aguarda aprovação da spec e deste plano.
+**Implementada em 2026-11-05.** Faltam o build nativo e o roteiro manual, que ficam com o desenvolvedor. Spec, plano, NetInfo, D-33 e os textos foram aprovados quando o desenvolvedor pediu para começar a T12.
+
+Entregue:
+- **Dependência:**
+  - `@react-native-community/netinfo@12.0.1`;
+  - `yarn ios:pods` rodou e instalou o `react-native-netinfo` 12.0.1;
+  - a reformatação do `project.pbxproj` pelo CocoaPods, sem mudança de conteúdo, foi descartada.
+- **Tokens e animação:** `motion.toastDuration` e `motion.toastDurationLong`; presets `toastEntering` (`openTiming`) e `toastExiting` (220 ms, acelerando).
+- **`Toast`:**
+  - `surfaceRaised`, raio 8, `bodyMedium` branco em até 2 linhas, sombra;
+  - fecha ao tocar (`Pressable`) e ao arrastar para baixo (Gesture Handler);
+  - anuncia o texto.
+- **`ToastProvider`:**
+  - `showToast`, `hideToast`, substituição por `id` e temporizador;
+  - `useToastBottomInset` registrado por `MainTabs` (barra de abas), Login e tela de conexão (botão);
+  - host acima da navegação, somando a altura do teclado (`useKeyboardHeight`).
+- **Sessão expirada:**
+  - o `SessionProvider` lê a sessão salva antes de restaurar; se ela existia e a restauração devolveu `null`, o estado é `signedOut` com `sessionExpired: true`;
+  - o Login mostra o toast por 4 s.
+- **Troca de aluno:** `useStudentSelectionViewModel` mostra "Mostrando os dados de {primeiroNome}." só quando o aluno muda.
+- **Conexão:**
+  - `useConnectivity` (NetInfo, filtro de 1 s, estado inicial sem aviso);
+  - `ConnectivityFeedback` (toasts com `id` `connectivity` e `retryRestore` no estado `unreachable`), montado no `App`.
+- **Testes:** `renderWithSession` passou a incluir `GestureHandlerRootView` e `ToastProvider`; o `jest.setup` usa o mock oficial do NetInfo.
+
+Ajuste encontrado pelo teste: o fechamento por arrasto decidia pela distância acumulada no `onUpdate`. Um gesto rápido termina sem update, e o toast não fechava. Passou a usar o `translationY` do evento final.
+
+Validação:
+- `yarn typecheck` e `yarn lint` passando.
+- `yarn test`: 37 suítes e 251 testes passando. Entre eles:
+  - `Toast` (5);
+  - `ToastProvider` (8, inclusive teclado e posição);
+  - `ConnectivityFeedback` (4, inclusive reconexão automática);
+  - sessão expirada no Login e no fluxo completo com a API simulada;
+  - toast da troca de aluno.
+
+Pendente, com o desenvolvedor:
+1. Build nativo (`yarn ios` e `yarn android`) com o NetInfo.
+2. Roteiro manual da spec §7.

@@ -118,6 +118,7 @@ Depois da entrega, a API passou a existir em repositório próprio (`../FiapScho
 | react-native-svg | 15.16 |
 | Axios (versão fixa) | 1.20.0 |
 | react-native-keychain | 10.0 |
+| @react-native-community/netinfo (versão fixa) | 12.0.1 |
 | Jest | 29 |
 | React Native Testing Library | 14 |
 

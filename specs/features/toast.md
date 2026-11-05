@@ -1,6 +1,6 @@
 # Feature — Toast (avisos discretos)
 
-> Status: **rascunho para aprovação** · Branch: `feature/integrate-api` · Decisões: D-27 a D-34 · Referência: o toast do Instagram, com os tokens do design system do projeto
+> Status: **aprovada e implementada em 2026-11-05** (T12; falta a validação manual em aparelho) · Branch: `feature/integrate-api` · Decisões: D-27 a D-34 · Referência: o toast do Instagram, com os tokens do design system do projeto
 
 ## 1. Objetivo
 
@@ -104,30 +104,30 @@ Nos testes, entra o mock oficial (`@react-native-community/netinfo/jest/netinfo-
 ## 7. Critérios de aceite
 
 Automatizados:
-- [ ] **`Toast`:**
+- [x] **`Toast`:**
   - usa os tokens do §3;
   - fecha ao tocar;
   - fecha ao arrastar mais de 24 pt e volta abaixo disso;
   - anuncia o texto ao leitor de tela.
-- [ ] **`ToastProvider`:**
+- [x] **`ToastProvider`:**
   - `showToast` mostra;
   - some após a duração (relógio do Jest);
   - um toast novo substitui o atual;
   - o mesmo `id` substitui;
   - `hideToast` fecha;
   - a distância da base segue a tela registrada.
-- [ ] **Sessão expirada:**
+- [x] **Sessão expirada:**
   - restauração recusada com sessão salva → Login + toast;
   - sem sessão salva → Login sem toast;
   - depois de SAIR → Login sem toast.
-- [ ] **Troca de aluno:** outro aluno → toast com o primeiro nome; o mesmo aluno → nada.
-- [ ] **Conexão:**
+- [x] **Troca de aluno:** outro aluno → toast com o primeiro nome; o mesmo aluno → nada.
+- [x] **Conexão:**
   - online → offline após 1 s → "Sem conexão com a internet.";
   - offline → online → "Conexão restabelecida.";
   - mudança de menos de 1 s → nada;
   - estado inicial → nada.
-- [ ] **Reconexão** com o app na tela de conexão chama `retryRestore`.
-- [ ] typecheck, lint e testes passam.
+- [x] **Reconexão** com o app na tela de conexão chama `retryRestore`.
+- [x] typecheck, lint e testes passam.
 
 Manuais (aparelho ou simulador):
 - [ ] Toast acima da barra de abas, do botão do Login e do teclado.

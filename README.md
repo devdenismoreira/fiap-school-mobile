@@ -27,6 +27,7 @@ Aplicativo para responsáveis acompanharem a **agenda de aulas** e o **boletim**
 | AsyncStorage (sessão, sem tokens) | 3.1.1 |
 | Axios (cliente HTTP da API) | 1.20.0 |
 | React Native Keychain (refresh token) | 10.0.0 |
+| NetInfo (aviso de queda e volta da conexão) | 12.0.1 |
 | Jest + React Native Testing Library | 29.7 + 14.1 |
 | Gerenciador de pacotes | Yarn 1.22 (clássico) |
 
@@ -92,6 +93,21 @@ Comportamento:
   - após 5 tentativas erradas, a API bloqueia o login, e o app avisa.
 - **SAIR** revoga a sessão também na API.
 
+### Avisos (toast)
+
+Um toast no estilo do Instagram, com os tokens do design system, avisa sem interromper o uso:
+- **Visual e comportamento:**
+  - fundo `surfaceRaised`, texto branco e cantos arredondados;
+  - sobe de baixo, acima da barra de abas, do botão principal ou do teclado;
+  - some sozinho, ou fecha ao tocar ou ao arrastar para baixo;
+  - é lido pelo VoiceOver e pelo TalkBack.
+- **Quando aparece:**
+  - **sessão expirada:** a sessão salva foi recusada pela API ao abrir o app;
+  - **troca de aluno:** "Mostrando os dados de …";
+  - **conexão:** queda e volta da internet durante o uso, pelo NetInfo. Se a internet voltar com o app na tela de conexão, ele tenta entrar sozinho.
+
+Spec: [`features/toast.md`](specs/features/toast.md).
+
 ## Dados de teste
 
 As credenciais de teste são as do JSON fornecido pelo desafio.
@@ -146,7 +162,7 @@ yarn typecheck   # tsc --noEmit
 yarn lint        # ESLint + Prettier
 ```
 
-São 229 testes em 34 suítes, cobrindo:
+São 251 testes em 37 suítes, cobrindo:
 
 - **Regras:** CPF (máscara, normalização, dígito verificador), datas em pt-BR sem deslocamento de fuso, formatação de nota e faltas.
 - **Dados e API:**
@@ -154,7 +170,11 @@ São 229 testes em 34 suítes, cobrindo:
   - armazenamento de tokens;
   - datasource remoto, mapper, repositórios e validação da sessão salva.
 - **Casos de uso e sessão:** login, restauração, sem conexão, nova tentativa, troca de aluno e logout no servidor.
-- **Telas:** Login (três mensagens de erro), tela de conexão, Agenda e Boletim, troca de aluno, cabeçalho, barra de abas, dropdown e animações. Usam um fixture com a estrutura dos dados do desafio e identidades fictícias.
+- **Telas:** Login (três mensagens de erro e aviso de sessão expirada), tela de conexão, Agenda e Boletim, troca de aluno, cabeçalho, barra de abas, dropdown e animações. Usam um fixture com a estrutura dos dados do desafio e identidades fictícias.
+- **Toast e conexão:**
+  - visual, tocar e arrastar para fechar, duração, substituição, posição acima da barra e do teclado;
+  - queda e volta da internet, ignorando oscilações de menos de 1 s;
+  - nova tentativa automática.
 - **Fluxo integrado do app**, contra uma API simulada:
   - login válido e inválido, sem nenhum token no AsyncStorage;
   - reabertura com renovação da sessão;
