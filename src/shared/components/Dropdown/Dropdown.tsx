@@ -1,10 +1,22 @@
-import { useRef, useState } from 'react';
-import { Modal, Pressable, StyleSheet, type HostInstance } from 'react-native';
-
-import Animated from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  View,
+  type HostInstance,
+} from 'react-native';
+import Animated, {
+  interpolate,
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { Box, motion, sizes, Text } from '@/core/theme';
-import { dropdownPanelEntering } from '@/shared/animations';
+import { emphasizedAccelerate, openTiming } from '@/shared/animations';
 import { ExpandArrow } from '@/shared/components/ExpandArrow';
 
 export type DropdownOption = {
@@ -26,6 +38,9 @@ type DropdownProps = {
   testID?: string;
 };
 
+const PANEL_OFFSET = 8;
+const PANEL_START_SCALE = 0.96;
+
 export function Dropdown({
   options,
   selectedValue,
@@ -39,7 +54,38 @@ export function Dropdown({
 }: DropdownProps) {
   const triggerRef = useRef<HostInstance>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
+  const [isModalVisible, setModalVisible] = useState(isOpen);
+  const progress = useSharedValue(isOpen ? 1 : 0);
   const selected = options.find(option => option.value === selectedValue);
+
+  useEffect(() => {
+    if (isOpen) {
+      setModalVisible(true);
+      progress.value = withTiming(1, openTiming);
+      return;
+    }
+    progress.value = withTiming(
+      0,
+      {
+        duration: motion.normal,
+        easing: emphasizedAccelerate,
+        reduceMotion: ReduceMotion.System,
+      },
+      finished => {
+        if (finished) {
+          scheduleOnRN(setModalVisible, false);
+        }
+      },
+    );
+  }, [isOpen, progress]);
+
+  const panelStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [
+      { translateY: interpolate(progress.value, [0, 1], [-PANEL_OFFSET, 0]) },
+      { scaleY: interpolate(progress.value, [0, 1], [PANEL_START_SCALE, 1]) },
+    ],
+  }));
 
   const handleTriggerPress = () => {
     if (isOpen) {
@@ -79,7 +125,7 @@ export function Dropdown({
       </Pressable>
 
       <Modal
-        visible={isOpen}
+        visible={isModalVisible}
         transparent
         animationType="none"
         statusBarTranslucent
@@ -93,8 +139,8 @@ export function Dropdown({
           accessibilityRole="button"
           accessibilityLabel="Fechar lista"
         />
-        <Animated.View
-          entering={anchor ? dropdownPanelEntering : undefined}
+        <View
+          pointerEvents={isOpen ? 'auto' : 'none'}
           style={[
             styles.panel,
             anchor
@@ -106,29 +152,31 @@ export function Dropdown({
               : styles.unmeasured,
           ]}
         >
-          <Box
-            backgroundColor="surface"
-            borderRadius="m"
-            paddingVertical="xs"
-            accessibilityRole="menu"
-          >
-            {options.map(option => (
-              <Pressable
-                key={option.value}
-                onPress={() => onSelect(option.value)}
-                accessibilityRole="menuitem"
-                accessibilityState={{
-                  selected: option.value === selectedValue,
-                }}
-                style={({ pressed }) => pressed && styles.pressed}
-              >
-                <Box paddingVertical="xs" paddingHorizontal={contentPadding}>
-                  <Text variant="body">{option.label}</Text>
-                </Box>
-              </Pressable>
-            ))}
-          </Box>
-        </Animated.View>
+          <Animated.View style={[styles.panelOrigin, panelStyle]}>
+            <Box
+              backgroundColor="surface"
+              borderRadius="m"
+              paddingVertical="xs"
+              accessibilityRole="menu"
+            >
+              {options.map(option => (
+                <Pressable
+                  key={option.value}
+                  onPress={() => onSelect(option.value)}
+                  accessibilityRole="menuitem"
+                  accessibilityState={{
+                    selected: option.value === selectedValue,
+                  }}
+                  style={({ pressed }) => pressed && styles.pressed}
+                >
+                  <Box paddingVertical="xs" paddingHorizontal={contentPadding}>
+                    <Text variant="body">{option.label}</Text>
+                  </Box>
+                </Pressable>
+              ))}
+            </Box>
+          </Animated.View>
+        </View>
       </Modal>
     </>
   );
@@ -137,6 +185,9 @@ export function Dropdown({
 const styles = StyleSheet.create({
   panel: {
     position: 'absolute',
+  },
+  panelOrigin: {
+    transformOrigin: 'top',
   },
   unmeasured: {
     opacity: 0,

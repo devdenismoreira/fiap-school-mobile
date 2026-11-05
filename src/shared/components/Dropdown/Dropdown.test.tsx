@@ -1,6 +1,6 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { act, fireEvent, screen } from '@testing-library/react-native';
 
-import { theme } from '@/core/theme';
+import { motion, theme } from '@/core/theme';
 import { renderWithTheme } from '@/test-utils/renderWithTheme';
 import { Dropdown, type DropdownOption } from './Dropdown';
 
@@ -32,6 +32,31 @@ const trigger = () =>
   screen.getByRole('button', { name: 'Dia selecionado: 16 de março, domingo' });
 
 describe('Dropdown', () => {
+  it('ao fechar, mantém o painel durante a animação de saída e só depois o remove', async () => {
+    jest.useFakeTimers();
+    try {
+      const props = {
+        testID: 'dropdown',
+        accessibilityLabel: 'Dia selecionado',
+        options,
+        selectedValue: '2025-03-16',
+        onToggle: jest.fn(),
+        onClose: jest.fn(),
+        onSelect: jest.fn(),
+      };
+      const view = await renderWithTheme(<Dropdown {...props} isOpen />);
+      expect(screen.getAllByRole('menuitem')).toHaveLength(2);
+
+      await view.rerender(<Dropdown {...props} isOpen={false} />);
+      expect(screen.getAllByRole('menuitem')).toHaveLength(2);
+
+      await act(async () => jest.advanceTimersByTime(motion.normal + 50));
+      expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   it('fechado: mostra a opção selecionada e não lista as opções', async () => {
     const { handlers, view } = setup(false);
     await view;

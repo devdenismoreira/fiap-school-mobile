@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated';
 
 import { Box, Card, motion, Text } from '@/core/theme';
 import {
-  fadeInNormal,
+  fadeInSmooth,
   fadeOutFast,
   layoutTransition,
 } from '@/shared/animations';
@@ -47,7 +47,7 @@ export function TermAccordion({
       </Pressable>
 
       {term.isExpanded ? (
-        <Animated.View entering={fadeInNormal} exiting={fadeOutFast}>
+        <Animated.View entering={fadeInSmooth} exiting={fadeOutFast}>
           <Box marginTop="m" marginBottom="m" paddingHorizontal="sm" gap="ml">
             {term.subjects.map(subject => (
               <SubjectRow

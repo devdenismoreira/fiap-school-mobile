@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated';
 
 import { Box, motion, sizes, Text } from '@/core/theme';
 import {
-  fadeInNormal,
+  fadeInSmooth,
   fadeOutFast,
   layoutTransition,
 } from '@/shared/animations';
@@ -47,7 +47,7 @@ export function SubjectRow({ subject, onToggle }: SubjectRowProps) {
       </Pressable>
 
       {subject.isExpanded ? (
-        <Animated.View entering={fadeInNormal} exiting={fadeOutFast}>
+        <Animated.View entering={fadeInSmooth} exiting={fadeOutFast}>
           <Box marginTop="s" accessible accessibilityLabel={detailsLabel}>
             <Box flexDirection="row">
               <Text variant="captionMedium">Nota:</Text>

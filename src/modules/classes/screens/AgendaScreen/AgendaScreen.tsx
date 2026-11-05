@@ -1,7 +1,7 @@
 import Animated from 'react-native-reanimated';
 
 import { Box } from '@/core/theme';
-import { fadeInNormal, listItemEntering } from '@/shared/animations';
+import { fadeInSmooth, listItemEntering } from '@/shared/animations';
 import { Dropdown } from '@/shared/components/Dropdown';
 import { TabScreenLayout } from '@/shared/components/TabScreenLayout';
 import { ClassItem } from './components/ClassItem';
@@ -29,7 +29,7 @@ export function AgendaScreen() {
         ) : null}
 
         {viewModel.isEmptyDay ? (
-          <Animated.View key={dayKey} entering={fadeInNormal}>
+          <Animated.View key={dayKey} entering={fadeInSmooth}>
             <NoClassesState />
           </Animated.View>
         ) : (

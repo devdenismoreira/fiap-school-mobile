@@ -25,7 +25,7 @@ describe('ExpandArrow', () => {
     expect(rotation()).toEqual([{ rotate: '0deg' }]);
 
     await view.rerender(<ExpandArrow testID="arrow" expanded />);
-    await act(async () => jest.advanceTimersByTime(motion.fast));
+    await act(async () => jest.advanceTimersByTime(motion.open));
 
     expect(rotation()).toEqual([{ rotate: '180deg' }]);
   });

@@ -11,10 +11,24 @@ import { motion } from '@/core/theme';
 
 const easeOut = Easing.out(Easing.cubic);
 
+export const smoothEasing = Easing.bezierFn(0.4, 0, 0.2, 1);
+
+export const emphasizedAccelerate = Easing.bezierFn(0.3, 0, 0.8, 0.15);
+
+export const openTiming = {
+  duration: motion.open,
+  easing: smoothEasing,
+  reduceMotion: ReduceMotion.System,
+};
+
 function fadeInFrom(offsetY: number, duration: number) {
   return new Keyframe({
     0: { opacity: 0, transform: [{ translateY: offsetY }] },
-    100: { opacity: 1, transform: [{ translateY: 0 }], easing: easeOut },
+    100: {
+      opacity: 1,
+      transform: [{ translateY: 0 }],
+      easing: smoothEasing,
+    },
   })
     .duration(duration)
     .reduceMotion(ReduceMotion.System);
@@ -24,21 +38,19 @@ export const fadeInFast = FadeIn.duration(motion.fast)
   .easing(easeOut)
   .reduceMotion(ReduceMotion.System);
 
-export const fadeInNormal = FadeIn.duration(motion.normal)
-  .easing(easeOut)
+export const fadeInSmooth = FadeIn.duration(motion.open)
+  .easing(smoothEasing)
   .reduceMotion(ReduceMotion.System);
 
 export const fadeOutFast = FadeOut.duration(motion.fast)
   .easing(easeOut)
   .reduceMotion(ReduceMotion.System);
 
-export const layoutTransition = LinearTransition.duration(motion.normal)
-  .easing(easeOut)
+export const layoutTransition = LinearTransition.duration(motion.open)
+  .easing(smoothEasing)
   .reduceMotion(ReduceMotion.System);
-
-export const dropdownPanelEntering = fadeInFrom(-4, motion.fast);
 
 export function listItemEntering(index: number) {
   const step = Math.min(index, motion.staggerMaxItems - 1);
-  return fadeInFrom(8, motion.normal).delay(step * motion.stagger);
+  return fadeInFrom(8, motion.slow).delay(step * motion.stagger);
 }
