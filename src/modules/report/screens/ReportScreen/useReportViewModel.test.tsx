@@ -3,6 +3,8 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
 import { SessionProvider, useSession } from '@/app/providers/SessionProvider';
+import { ToastProvider } from '@/app/providers/ToastProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { theme } from '@/core/theme';
 import type { ReportCard } from '@/domain/entities/ReportCard';
 import { makeGuardian, makeStudent } from '@/test-utils/fixtures';
@@ -38,7 +40,13 @@ async function renderReport(...reportCardsPerStudent: ReportCard[][]) {
   });
   const wrapper = ({ children }: PropsWithChildren) => (
     <ThemeProvider theme={theme}>
-      <SessionProvider dependencies={dependencies}>{children}</SessionProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ToastProvider>
+          <SessionProvider dependencies={dependencies}>
+            {children}
+          </SessionProvider>
+        </ToastProvider>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
   const hook = await renderHook(

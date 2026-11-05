@@ -39,6 +39,7 @@ export type SessionContextValue = {
   selectStudent(rm: number): Promise<void>;
   signOut(): Promise<void>;
   retryRestore(): void;
+  refreshGuardian(): Promise<void>;
 };
 
 const isConnectionFailure = (error: unknown) =>
@@ -101,6 +102,16 @@ export function SessionProvider({
     setRestoreAttempt(attempt => attempt + 1);
   };
 
+  const refreshGuardian = async () => {
+    const restored = await restoreSession();
+    if (restored) {
+      setState({ status: 'signedIn', ...restored });
+      return;
+    }
+    setState({ status: 'signedOut', sessionExpired: true });
+    endSession().catch(() => undefined);
+  };
+
   const persist = (session: StoredSession) =>
     sessionRepository.save(session).catch(() => undefined);
 
@@ -144,6 +155,7 @@ export function SessionProvider({
         selectStudent,
         signOut,
         retryRestore,
+        refreshGuardian,
       }}
     >
       {children}

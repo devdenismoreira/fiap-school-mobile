@@ -6,9 +6,11 @@ import { Easing } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useSession } from '@/app/providers/SessionProvider';
 import { useToastBottomInset } from '@/app/providers/ToastProvider';
 import { Box, motion, sizes, theme } from '@/core/theme';
 import { AgendaScreen } from '@/modules/classes/screens/AgendaScreen';
+import { NoStudentsScreen } from '@/modules/students/screens/NoStudentsScreen';
 import { ReportScreen } from '@/modules/report/screens/ReportScreen';
 import { AppActionBar } from '@/shared/components/AppActionBar';
 import { TabBar } from './TabBar';
@@ -55,7 +57,10 @@ const softShift: Pick<
 export function MainTabs() {
   const reduceMotion = useReducedMotion();
   const insets = useSafeAreaInsets();
-  useToastBottomInset(sizes.tabBar.height);
+  const { state } = useSession();
+  const hasStudents =
+    state.status === 'signedIn' && state.guardian.students.length > 0;
+  useToastBottomInset(hasStudents ? sizes.tabBar.height : 0);
 
   return (
     <Box
@@ -64,17 +69,21 @@ export function MainTabs() {
       style={{ paddingTop: insets.top }}
     >
       <AppActionBar />
-      <Tab.Navigator
-        tabBar={renderTabBar}
-        screenOptions={{
-          headerShown: false,
-          sceneStyle: { backgroundColor: theme.colors.background },
-          ...(reduceMotion ? { animation: 'none' } : softShift),
-        }}
-      >
-        <Tab.Screen name="Agenda" component={AgendaScreen} />
-        <Tab.Screen name="Boletim" component={ReportScreen} />
-      </Tab.Navigator>
+      {hasStudents ? (
+        <Tab.Navigator
+          tabBar={renderTabBar}
+          screenOptions={{
+            headerShown: false,
+            sceneStyle: { backgroundColor: theme.colors.background },
+            ...(reduceMotion ? { animation: 'none' } : softShift),
+          }}
+        >
+          <Tab.Screen name="Agenda" component={AgendaScreen} />
+          <Tab.Screen name="Boletim" component={ReportScreen} />
+        </Tab.Navigator>
+      ) : (
+        <NoStudentsScreen />
+      )}
     </Box>
   );
 }

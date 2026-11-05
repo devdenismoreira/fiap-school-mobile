@@ -3,9 +3,9 @@ import Animated from 'react-native-reanimated';
 import { Box } from '@/core/theme';
 import { fadeInSmooth, listItemEntering } from '@/shared/animations';
 import { Dropdown } from '@/shared/components/Dropdown';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { TabScreenLayout } from '@/shared/components/TabScreenLayout';
 import { ClassItem } from './components/ClassItem';
-import { NoClassesState } from './components/NoClassesState';
 import { useAgendaViewModel } from './useAgendaViewModel';
 
 export function AgendaScreen() {
@@ -30,7 +30,7 @@ export function AgendaScreen() {
 
         {viewModel.isEmptyDay ? (
           <Animated.View key={dayKey} entering={fadeInSmooth}>
-            <NoClassesState />
+            <EmptyState title="Sem aulas neste dia" />
           </Animated.View>
         ) : (
           <Box marginTop="l" paddingLeft="m" gap="m">

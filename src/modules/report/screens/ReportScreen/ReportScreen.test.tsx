@@ -148,6 +148,48 @@ describe('ReportScreen', () => {
     expect(screen.getByText('ARTE')).toBeOnTheScreen();
   });
 
+  it('sem boletins: mostra o estado vazio e TENTAR NOVAMENTE busca os dados de novo', async () => {
+    const semBoletim = {
+      ...firstGuardian,
+      students: firstGuardian.students.map(student => ({
+        ...student,
+        reportCards: [],
+      })),
+    };
+    const comBoletim = firstGuardian;
+    const restoreSession = jest
+      .fn()
+      .mockResolvedValueOnce({
+        guardian: semBoletim,
+        selectedStudentRm: semBoletim.students[0].rm,
+      })
+      .mockResolvedValueOnce({
+        guardian: comBoletim,
+        selectedStudentRm: comBoletim.students[0].rm,
+      });
+    await renderWithSession(
+      <ReportScreen />,
+      makeSessionDependencies({ restoreSession }),
+    );
+
+    expect(
+      await screen.findByText('Nenhum boletim encontrado'),
+    ).toBeOnTheScreen();
+    expect(
+      screen.queryByRole('button', { name: /^Ano selecionado:/ }),
+    ).toBeNull();
+
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'TENTAR NOVAMENTE' }),
+    );
+
+    expect(
+      await screen.findByRole('button', { name: /^Ano selecionado:/ }),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText('Nenhum boletim encontrado')).toBeNull();
+    expect(restoreSession).toHaveBeenCalledTimes(2);
+  });
+
   it('não mostra média nem valores calculados', async () => {
     await renderReport();
     await fireEvent.press(term('1º trimestre'));

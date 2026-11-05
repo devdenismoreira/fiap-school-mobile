@@ -21,7 +21,10 @@ let api = createFakeApi();
 
 const renderApp = () => render(<App dependencies={api.dependencies} />);
 
-const storeSession = async (guardianId: number, selectedStudentRm: number) => {
+const storeSession = async (
+  guardianId: number,
+  selectedStudentRm: number | null,
+) => {
   api.keepSignedIn(guardianId);
   await AsyncStorage.setItem(
     SESSION_STORAGE_KEY,
@@ -187,6 +190,18 @@ describe('App (fluxo de sessão e navegação)', () => {
     expect(await sectionTitle('AGENDA')).toBeOnTheScreen();
     expect(screen.queryByRole('button', { name: 'TROCAR PERFIL' })).toBeNull();
     expect(screen.getByRole('button', { name: 'SAIR' })).toBeOnTheScreen();
+  });
+
+  it('responsável sem alunos vê só a mensagem e o SAIR, sem abas', async () => {
+    const noStudents = { ...guardian, id: 99, alunos: [] };
+    api = createFakeApi([...fixtureGuardians, noStudents]);
+    await storeSession(noStudents.id, null);
+    await renderApp();
+
+    expect(await screen.findByText('Nenhum aluno vinculado')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'SAIR' })).toBeOnTheScreen();
+    expect(screen.queryByRole('tab')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'TROCAR PERFIL' })).toBeNull();
   });
 
   it('SAIR limpa a sessão e volta ao Login', async () => {
