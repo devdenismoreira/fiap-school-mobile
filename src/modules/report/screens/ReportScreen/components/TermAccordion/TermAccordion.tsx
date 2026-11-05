@@ -1,13 +1,10 @@
-import { Pressable, StyleSheet } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { useRef } from 'react';
+import { Pressable, StyleSheet, View, type HostInstance } from 'react-native';
 
 import { Box, Card, motion, Text } from '@/core/theme';
-import {
-  fadeInSmooth,
-  fadeOutFast,
-  layoutTransition,
-} from '@/shared/animations';
+import { Collapsible } from '@/shared/components/Collapsible';
 import { ExpandArrow } from '@/shared/components/ExpandArrow';
+import { useScrollFocus } from '@/shared/components/TabScreenLayout';
 import type { ReportTerm } from '../../useReportViewModel';
 import { SubjectRow } from '../SubjectRow';
 
@@ -22,10 +19,32 @@ export function TermAccordion({
   onToggle,
   onToggleSubject,
 }: TermAccordionProps) {
+  const rootRef = useRef<HostInstance>(null);
+  const contentHeight = useRef(0);
+  const isRevealPending = useRef(false);
+  const scrollFocus = useScrollFocus();
+
+  const handleToggle = () => {
+    if (term.isExpanded) {
+      scrollFocus.followCollapsing(contentHeight.current);
+    } else {
+      isRevealPending.current = true;
+    }
+    onToggle();
+  };
+
+  const handleContentHeight = (height: number) => {
+    contentHeight.current = height;
+    if (isRevealPending.current) {
+      isRevealPending.current = false;
+      scrollFocus.revealExpanding(rootRef.current, height);
+    }
+  };
+
   return (
-    <Animated.View layout={layoutTransition}>
+    <View ref={rootRef} collapsable={false}>
       <Pressable
-        onPress={onToggle}
+        onPress={handleToggle}
         accessibilityRole="button"
         accessibilityLabel={term.label.toLocaleLowerCase('pt-BR')}
         accessibilityState={{ expanded: term.isExpanded }}
@@ -46,20 +65,21 @@ export function TermAccordion({
         </Card>
       </Pressable>
 
-      {term.isExpanded ? (
-        <Animated.View entering={fadeInSmooth} exiting={fadeOutFast}>
-          <Box marginTop="m" marginBottom="m" paddingHorizontal="sm" gap="ml">
-            {term.subjects.map(subject => (
-              <SubjectRow
-                key={subject.key}
-                subject={subject}
-                onToggle={() => onToggleSubject(subject.key)}
-              />
-            ))}
-          </Box>
-        </Animated.View>
-      ) : null}
-    </Animated.View>
+      <Collapsible
+        expanded={term.isExpanded}
+        onContentHeight={handleContentHeight}
+      >
+        <Box marginTop="m" marginBottom="m" paddingHorizontal="sm" gap="ml">
+          {term.subjects.map(subject => (
+            <SubjectRow
+              key={subject.key}
+              subject={subject}
+              onToggle={() => onToggleSubject(subject.key)}
+            />
+          ))}
+        </Box>
+      </Collapsible>
+    </View>
   );
 }
 

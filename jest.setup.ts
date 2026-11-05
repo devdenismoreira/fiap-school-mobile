@@ -5,6 +5,17 @@ jest.mock('react-native-worklets', () =>
   require('react-native-worklets/src/mock'),
 );
 
+// Sem views nativas no Jest, o ref animado não tem tag e o useScrollOffset
+// avisaria a cada render. A posição da rolagem não é observável nos testes.
+jest.mock('react-native-reanimated', () => {
+  const actual = jest.requireActual('react-native-reanimated');
+  return {
+    __esModule: true,
+    ...actual,
+    useScrollOffset: () => actual.useSharedValue(0),
+  };
+});
+
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest'),
 );
