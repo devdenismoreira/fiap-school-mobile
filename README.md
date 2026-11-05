@@ -94,7 +94,11 @@ Comportamento:
 
 ## Dados de teste
 
-Na versão da entrega, a autenticação é **simulada** a partir do JSON fornecido pelo desafio, em [`src/data/datasources/local/responsaveis.json`](src/data/datasources/local/responsaveis.json). Com a API, o mesmo arquivo alimenta o banco pelo seed de lá, e as credenciais são as mesmas. Para entrar, use os campos `cpf` e `senha` de qualquer responsável desse arquivo. O CPF pode ser digitado com ou sem máscara.
+As credenciais de teste são as do JSON fornecido pelo desafio.
+- **Até a entrega**, ele ficava no app e a autenticação era simulada.
+- **Desde a integração**, ele saiu do app e fica na API, em [`../FiapSchoolApi/prisma/data/responsaveis.json`](../FiapSchoolApi/prisma/data/responsaveis.json), alimentando o banco pelo seed.
+
+Para entrar, use os campos `cpf` e `senha` de qualquer responsável desse arquivo. O CPF pode ser digitado com ou sem máscara.
 
 - O **primeiro responsável** tem dois alunos e permite testar a troca de aluno.
 - O **segundo** tem um aluno só, então a ação "TROCAR PERFIL" não aparece.
@@ -120,7 +124,7 @@ src/
 
 Principais decisões:
 
-- **Repository Pattern:** na entrega, a fonte local se comportava como uma API de login. Ela validava as credenciais, devolvia o responsável **sem** CPF, senha ou e-mail e simulava 800 ms de latência para o estado "carregando" do Figma aparecer. A integração com a API confirmou o desenho: bastou outra implementação de `GuardianDataSource` (`GuardianRemoteDataSource`, com Axios). A fonte local continua nos testes.
+- **Repository Pattern:** na entrega, a fonte local se comportava como uma API de login. Ela validava as credenciais, devolvia o responsável **sem** CPF, senha ou e-mail e simulava 800 ms de latência para o estado "carregando" do Figma aparecer. A integração com a API confirmou o desenho: bastou outra implementação de `GuardianDataSource` (`GuardianRemoteDataSource`, com Axios). Depois disso, a fonte local e o JSON saíram do app; os testes usam uma API simulada sobre um fixture anonimizado.
 - **Casos de uso só onde há regra real:** `authenticateGuardian` (normaliza o CPF, valida o dígito verificador, erro genérico) e `restoreSession` (descarta sessão inválida e troca um aluno desvinculado pelo primeiro).
 - **Context API** apenas para a sessão e o aluno selecionado. O estado de cada tela (dia escolhido, ano, acordeões abertos) fica no ViewModel da tela (`use<Tela>ViewModel`).
 - **Navegação** no padrão de auth flow: telas condicionais por estado de sessão. A troca de aluno é uma rota empilhada acima das abas, que sobe de baixo.
@@ -131,8 +135,8 @@ Principais decisões:
 
 - A sessão salva no AsyncStorage contém **apenas** `{ version, guardianId, selectedStudentRm }`. Nunca CPF, senha, nome ou e-mail, e há teste para isso.
 - Credenciais erradas, CPF inválido ou inexistente geram a **mesma** mensagem, sem indicar qual campo errou.
-- Na versão da entrega, a autenticação é simulada e **não** representa segurança de produção, porque o JSON com as senhas vai junto no app.
-- Com a API, a autenticação é real: JWT, sessão no servidor e refresh token protegido pelo Keychain ou Keystore.
+- Na versão da entrega, a autenticação era simulada e **não** representava segurança de produção, porque o JSON com as senhas ia junto no app.
+- Com a API, a autenticação é real: JWT, sessão no servidor e refresh token protegido pelo Keychain ou Keystore. O JSON saiu do app, e o bundle não carrega dados pessoais.
 
 ## Testes e qualidade
 
@@ -142,13 +146,21 @@ yarn typecheck   # tsc --noEmit
 yarn lint        # ESLint + Prettier
 ```
 
-São 169 testes em 25 suítes, cobrindo:
+São 229 testes em 34 suítes, cobrindo:
 
 - **Regras:** CPF (máscara, normalização, dígito verificador), datas em pt-BR sem deslocamento de fuso, formatação de nota e faltas.
-- **Dados:** fonte local, mapper, repositórios e validação da sessão salva.
-- **Casos de uso e sessão:** login, restauração, troca de aluno e logout.
-- **Telas:** Login, Agenda e Boletim com os **dados reais do JSON**, troca de aluno, cabeçalho, barra de abas, dropdown e animações.
-- **Fluxo integrado do app:** login válido e inválido, reabertura com sessão, troca de aba, troca de aluno voltando à aba de origem e SAIR.
+- **Dados e API:**
+  - cliente HTTP (renovação compartilhada, uma repetição, erros normalizados);
+  - armazenamento de tokens;
+  - datasource remoto, mapper, repositórios e validação da sessão salva.
+- **Casos de uso e sessão:** login, restauração, sem conexão, nova tentativa, troca de aluno e logout no servidor.
+- **Telas:** Login (três mensagens de erro), tela de conexão, Agenda e Boletim, troca de aluno, cabeçalho, barra de abas, dropdown e animações. Usam um fixture com a estrutura dos dados do desafio e identidades fictícias.
+- **Fluxo integrado do app**, contra uma API simulada:
+  - login válido e inválido, sem nenhum token no AsyncStorage;
+  - reabertura com renovação da sessão;
+  - troca de aba;
+  - troca de aluno voltando à aba de origem;
+  - SAIR revogando a sessão.
 
 ## Fidelidade ao Figma
 

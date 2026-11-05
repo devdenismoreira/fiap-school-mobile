@@ -70,13 +70,19 @@ export const requestBody = (request: InternalAxiosRequestConfig): unknown =>
 
 export function createMemoryTokenStore(
   initial: Partial<SessionTokens> = {},
-): TokenStore & { saved: SessionTokens[] } {
+): TokenStore & {
+  saved: SessionTokens[];
+  setRefreshToken: (token: string) => void;
+} {
   let accessToken = initial.accessToken ?? null;
   let refreshToken = initial.refreshToken ?? null;
   const saved: SessionTokens[] = [];
 
   return {
     saved,
+    setRefreshToken: token => {
+      refreshToken = token;
+    },
     getAccessToken: () => accessToken,
     getRefreshToken: async () => refreshToken,
     save: async tokens => {

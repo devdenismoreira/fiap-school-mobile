@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 
 import { toGuardian } from '@/data/mappers/guardianMapper';
-import responsaveis from '@/data/datasources/local/responsaveis.json';
+import responsaveis from '@/test-utils/fixtures/responsaveis.json';
 import {
   makeSessionDependencies,
   renderWithSession,

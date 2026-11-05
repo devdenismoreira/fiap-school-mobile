@@ -2,7 +2,7 @@ import { NetworkError } from '@/core/errors/NetworkError';
 import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { createApiClient, REFRESH_PATH } from '@/core/http/apiClient';
 import type { ResponsavelDTO } from '@/data/datasources/dtos';
-import responsaveis from '@/data/datasources/local/responsaveis.json';
+import responsaveis from '@/test-utils/fixtures/responsaveis.json';
 import {
   apiError,
   authHeader,

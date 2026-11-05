@@ -1,18 +1,18 @@
 [
   {
     "id": 1,
-    "cpf": "96929456004",
-    "email": "gustavo-da-silva@example.com",
-    "senha": "123456",
-    "primeiroNome": "Gustavo",
-    "sobrenome": "da Silva",
+    "cpf": "11144477735",
+    "email": "ana.souza@exemplo.com",
+    "senha": "246810",
+    "primeiroNome": "Ana",
+    "sobrenome": "Souza",
     "alunos": [
       {
-        "rm": 12567,
+        "rm": 10001,
         "turma": "7EF",
         "periodo": "Matutino",
-        "primeiroNome": "Rafael",
-        "sobrenome": "da Silva",
+        "primeiroNome": "Caio",
+        "sobrenome": "Souza",
         "agenda": [
           {
             "dia": "2025-03-16",
@@ -574,11 +574,11 @@
         ]
       },
       {
-        "rm": 12568,
+        "rm": 10002,
         "turma": "2EM",
         "periodo": "Matutino",
-        "primeiroNome": "Joana",
-        "sobrenome": "da Silva",
+        "primeiroNome": "Duda",
+        "sobrenome": "Souza",
         "agenda": [
           {
             "dia": "2025-03-16",
@@ -942,18 +942,18 @@
   },
   {
     "id": 2,
-    "cpf": "50879567007",
-    "email": "adelaide-silveira@example.com",
-    "senha": "987654",
-    "primeiroNome": "Adelaide",
-    "sobrenome": "Silveira da Costa",
+    "cpf": "22255588846",
+    "email": "bruno.lima@exemplo.com",
+    "senha": "135791",
+    "primeiroNome": "Bruno",
+    "sobrenome": "Lima",
     "alunos": [
       {
-        "rm": 13752,
+        "rm": 20001,
         "turma": "1EF",
         "periodo": "Tarde",
-        "primeiroNome": "Bianca",
-        "sobrenome": "Silveira da Costa",
+        "primeiroNome": "Enzo",
+        "sobrenome": "Lima",
         "agenda": [
           {
             "dia": "2025-03-16",

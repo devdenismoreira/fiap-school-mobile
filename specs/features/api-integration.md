@@ -161,7 +161,7 @@ Só usa componentes e tokens existentes.
   - monta o `TokenStore` do Keychain e o `apiClient` com a URL de `getApiUrl()`;
   - delega a composição a `createRemoteDependencies(http, tokenStore)`. Os testes de ponta a ponta usam essa mesma função com um adaptador falso do Axios;
   - a latência simulada de 800 ms sai do caminho de produção.
-- O `GuardianLocalDataSource` continua disponível para os testes: `App.test` usa `createLocalDependencies()`.
+- O `GuardianLocalDataSource` ficou disponível para os testes até a D-35, que o removeu junto com o JSON. Desde então, `App.test` e `AppWithApi.test` usam a API simulada `createFakeApi`, sobre o fixture anonimizado.
 - **`SessionDependencies`** ganha `endSession(): Promise<void>`. O `makeSessionDependencies` dos testes recebe um padrão que não faz nada.
 - **`SessionState`** ganha `{ status: 'unreachable' }`, e o contexto ganha `retryRestore()`. No `RootNavigator`, o estado `unreachable` → `ConnectionErrorScreen`.
 

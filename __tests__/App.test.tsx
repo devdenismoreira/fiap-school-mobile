@@ -7,25 +7,27 @@ import {
 } from '@testing-library/react-native';
 
 import App from '../App';
-import { createLocalDependencies } from '@/app/bootstrap/dependencies';
 import { NetworkError } from '@/core/errors/NetworkError';
 import { onlyDigits } from '@/core/utils/cpf';
-import responsaveis from '@/data/datasources/local/responsaveis.json';
 import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
+import { createFakeApi, fixtureGuardians } from '@/test-utils/fakeApi';
 
-const [guardian, singleStudentGuardian] = responsaveis;
+const [guardian, singleStudentGuardian] = fixtureGuardians;
 const [firstStudent, secondStudent] = guardian.alunos;
 const studentInfo = (student: typeof firstStudent) =>
   `${student.turma} - RM ${student.rm} - ${student.periodo}`;
 
-const renderApp = () =>
-  render(<App dependencies={createLocalDependencies()} />);
+let api = createFakeApi();
 
-const storeSession = (guardianId: number, selectedStudentRm: number) =>
-  AsyncStorage.setItem(
+const renderApp = () => render(<App dependencies={api.dependencies} />);
+
+const storeSession = async (guardianId: number, selectedStudentRm: number) => {
+  api.keepSignedIn(guardianId);
+  await AsyncStorage.setItem(
     SESSION_STORAGE_KEY,
     JSON.stringify({ version: 1, guardianId, selectedStudentRm }),
   );
+};
 
 const loginButton = () => screen.findByRole('button', { name: 'FAZER LOGIN' });
 const tab = (name: 'AGENDA' | 'BOLETIM') => screen.getByRole('tab', { name });
@@ -34,6 +36,7 @@ const sectionTitle = (name: 'AGENDA' | 'BOLETIM') =>
 
 describe('App (fluxo de sessão e navegação)', () => {
   beforeEach(async () => {
+    api = createFakeApi();
     await AsyncStorage.removeItem(SESSION_STORAGE_KEY);
   });
 
@@ -198,11 +201,12 @@ describe('App (fluxo de sessão e navegação)', () => {
 
   it('sem conexão ao abrir mostra a tela de conexão e entra ao tentar de novo', async () => {
     await storeSession(guardian.id, firstStudent.rm);
-    const dependencies = createLocalDependencies();
     const restoreSession = jest
-      .fn(dependencies.restoreSession)
+      .fn(api.dependencies.restoreSession)
       .mockRejectedValueOnce(new NetworkError());
-    await render(<App dependencies={{ ...dependencies, restoreSession }} />);
+    await render(
+      <App dependencies={{ ...api.dependencies, restoreSession }} />,
+    );
 
     const retry = await screen.findByRole('button', {
       name: 'TENTAR NOVAMENTE',

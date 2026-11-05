@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 
 import { theme } from '@/core/theme';
 import { toGuardian } from '@/data/mappers/guardianMapper';
-import responsaveis from '@/data/datasources/local/responsaveis.json';
+import responsaveis from '@/test-utils/fixtures/responsaveis.json';
 import {
   makeSessionDependencies,
   renderWithSession,
@@ -14,10 +14,10 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
-const rafaelGuardian = toGuardian(responsaveis[0]);
-const biancaGuardian = toGuardian(responsaveis[1]);
+const firstGuardian = toGuardian(responsaveis[0]);
+const singleStudentGuardian = toGuardian(responsaveis[1]);
 
-async function renderReport(guardian = rafaelGuardian) {
+async function renderReport(guardian = firstGuardian) {
   await renderWithSession(
     <ReportScreen />,
     makeSessionDependencies({
@@ -67,7 +67,7 @@ describe('ReportScreen', () => {
 
     await fireEvent.press(term('1º trimestre'));
     const names =
-      rafaelGuardian.students[0].reportCards[0].terms[0].subjects.map(
+      firstGuardian.students[0].reportCards[0].terms[0].subjects.map(
         s => s.name,
       );
     expect(subjectRows().map(row => row.props.accessibilityLabel)).toEqual(
@@ -135,8 +135,8 @@ describe('ReportScreen', () => {
     expect(screen.getByLabelText('Nota 8,0, faltas 0')).toBeOnTheScreen();
   });
 
-  it('não exibe disciplina ausente do JSON (RM 13752: 1º trimestre sem Arte)', async () => {
-    await renderReport(biancaGuardian);
+  it('não exibe disciplina ausente do JSON (aluno sem Arte no 1º trimestre)', async () => {
+    await renderReport(singleStudentGuardian);
 
     await fireEvent.press(term('1º trimestre'));
     expect(subjectRows()).toHaveLength(11);

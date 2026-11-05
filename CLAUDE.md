@@ -29,11 +29,12 @@ Não tente localizar outro arquivo por conta própria nem assuma que a conexão 
 
 ### Dados JSON do desafio
 
-O desafio fornece um JSON com responsáveis (CPF, senha, nome), alunos, agenda e boletins. Ele fica na camada de dados e é servido por um datasource local que simula uma API com 800 ms de latência (D-04, D-06).
+O desafio fornece um JSON com responsáveis (CPF, senha, nome), alunos, agenda e boletins.
+- **Até a entrega**, ele ficava no app, servido por um datasource local que simulava uma API com 800 ms de latência (D-04, D-06).
+- **Desde 2026-11-05 (D-35)**, o app usa só a API, e o JSON foi movido para o repositório dela, onde alimenta o seed: `CHALLENGE_JSON_PATH=../FiapSchoolApi/prisma/data/responsaveis.json`.
+- **Nos testes do app**, entra um fixture anonimizado (`src/test-utils/fixtures/responsaveis.json`): mesma agenda e boletins, com nomes, RMs e e-mails fictícios e CPFs sintéticos. A API simulada `createFakeApi` (`src/test-utils/fakeApi.ts`) usa esse fixture.
 
-`CHALLENGE_JSON_PATH=src/data/datasources/local/responsaveis.json`
-
-Não invente credenciais, nomes, RM, turmas, aulas, notas ou estrutura JSON. Inspecione o arquivo real antes de modelar os dados. Não copie CPFs ou senhas do JSON para docs ou testes: os testes leem os dados do arquivo em tempo de execução.
+Não invente credenciais, nomes, RM, turmas, aulas, notas ou estrutura JSON. Não copie CPFs ou senhas para docs ou testes. O código de produção nunca importa JSON de dados nem `src/test-utils`.
 
 ## 3. Requisitos funcionais conhecidos
 

@@ -1,6 +1,6 @@
 # Especificações do FIAP School Mobile
 
-Especificações escritas a partir do repositório, do Figma e do JSON real do desafio (hoje em `src/data/datasources/local/responsaveis.json`, D-06). Cada documento registra requisitos, estados, critérios de aceite, casos de borda e decisões. Decisões do desenvolvedor estão marcadas com ✅ em `00-project-overview.md` §6. A diretriz geral é seguir o Figma fielmente ("Perfect Pixel").
+Especificações escritas a partir do repositório, do Figma e do JSON real do desafio (D-06; desde 2026-11-05 fora do app, em `../FiapSchoolApi/prisma/data/responsaveis.json`, D-35). Cada documento registra requisitos, estados, critérios de aceite, casos de borda e decisões. Decisões do desenvolvedor estão marcadas com ✅ em `00-project-overview.md` §6. A diretriz geral é seguir o Figma fielmente ("Perfect Pixel").
 
 | Documento | Conteúdo |
 |---|---|

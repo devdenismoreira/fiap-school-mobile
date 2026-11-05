@@ -108,7 +108,7 @@ Na entrega, backend e API ficaram fora do escopo (§5). Depois dela, o desenvolv
 
 | ID | Tema | Observação | Decisão |
 |---|---|---|---|
-| D-17 ✅ | Integração com a API | O app deve trocar o JSON pela API sem mudar o que o usuário vê | `GuardianRemoteDataSource` no lugar do local. Domínio, DTOs, `toGuardian` e as telas de Agenda, Boletim e Mudança de aluno ficam intactos. O datasource local continua nos testes |
+| D-17 ✅ | Integração com a API | O app deve trocar o JSON pela API sem mudar o que o usuário vê | `GuardianRemoteDataSource` no lugar do local. Domínio, DTOs, `toGuardian` e as telas de Agenda, Boletim e Mudança de aluno ficam intactos. O datasource local ficou nos testes até a D-35 |
 | D-18 ✅ | Cliente HTTP | Pedido do desenvolvedor: Axios, como nos projetos dele | `axios` com versão fixa 1.20.0. A 1.21.0 tinha 9 dias de publicação; uma versão com semanas de uso reduz o risco na cadeia de dependências |
 | D-19 ✅ | Tokens | Definido pelo desenvolvedor | O refresh vai para o `react-native-keychain` (`WHEN_UNLOCKED_THIS_DEVICE_ONLY`), e o access fica só em memória. Nenhum token no AsyncStorage; a senha nunca é persistida |
 | D-20 ✅ | Login sem conexão | O Figma só tem o erro de credenciais | Mensagem nova no mesmo lugar e estilo: "Não foi possível conectar.\nVerifique sua internet e tente novamente." |
@@ -133,3 +133,9 @@ Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design sy
 | D-32 ✅ | Conectividade | Detectar a queda e a volta da internet exige um módulo nativo | `@react-native-community/netinfo` com versão fixa 12.0.1 (TurboModule); mudanças de menos de 1 s são ignoradas |
 | D-33 | Reconexão na tela de conexão | A internet volta com o app parado na tela de conexão | Tenta restaurar a sessão sozinho, além do toast |
 | D-34 | Textos | Não há textos de toast no Figma | "Sua sessão expirou.\nEntre novamente."; "Mostrando os dados de {primeiroNome}."; "Sem conexão com a internet."; "Conexão restabelecida." |
+
+### Remoção do JSON local (2026-11-05)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-35 ✅ | JSON e datasource local | Com a API indo para produção, o app não usa mais o JSON. Mesmo assim, o `dependencies.ts` importava o `GuardianLocalDataSource`, e por isso o bundle de produção carregava o JSON com CPFs e senhas | **Decisão do desenvolvedor:** "aquele JSON já era".<br>- O arquivo foi movido para a API (`../FiapSchoolApi/prisma/data/responsaveis.json`), onde alimenta o seed e os testes de paridade.<br>- O app perdeu o `GuardianLocalDataSource` e o `createLocalDependencies`.<br>- Os testes usam um fixture anonimizado (`src/test-utils/fixtures/responsaveis.json`): mesma agenda e boletins, com nomes, RMs, e-mails e senhas fictícios e CPFs sintéticos válidos.<br>- Os testes também usam a API simulada `createFakeApi`.<br>- O código de produção não importa JSON nem `test-utils` |

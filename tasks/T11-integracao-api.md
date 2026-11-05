@@ -107,3 +107,9 @@ Validação:
 Pendente, com o desenvolvedor:
 1. Build nativo (`yarn ios` e `yarn android`) com o `react-native-keychain`.
 2. Roteiro manual da spec §9.
+
+Atualização (2026-11-05, D-35):
+- O `GuardianLocalDataSource`, o `createLocalDependencies` e o JSON saíram do app. O JSON foi movido para a API (`prisma/data/responsaveis.json`).
+- Os testes passaram a usar um fixture anonimizado e a API simulada `createFakeApi`.
+- O bundle de produção deixou de carregar CPFs e senhas.
+- Suíte: 34 suítes e 229 testes.

@@ -1,8 +1,19 @@
-import { onlyDigits } from '@/core/utils/cpf';
 import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
-import { GuardianLocalDataSource } from '@/data/datasources/local/GuardianLocalDataSource';
-import responsaveis from '@/data/datasources/local/responsaveis.json';
+import { fixtureGuardians, withoutCredentials } from '@/test-utils/fakeApi';
 import { GuardianRepositoryImpl } from './GuardianRepositoryImpl';
+
+const fixtureDataSource: GuardianDataSource = {
+  signIn: async (cpf, password) => {
+    const record = fixtureGuardians.find(
+      r => r.cpf === cpf && r.senha === password,
+    );
+    return record ? withoutCredentials(record) : null;
+  },
+  getById: async id => {
+    const record = fixtureGuardians.find(r => r.id === id);
+    return record ? withoutCredentials(record) : null;
+  },
+};
 
 describe('GuardianRepositoryImpl', () => {
   it('delega à fonte de dados e devolve a entidade mapeada', async () => {
@@ -32,23 +43,19 @@ describe('GuardianRepositoryImpl', () => {
   });
 
   it('retorna null quando as credenciais não conferem', async () => {
-    const repository = new GuardianRepositoryImpl(
-      new GuardianLocalDataSource(),
-    );
+    const repository = new GuardianRepositoryImpl(fixtureDataSource);
 
     await expect(
       repository.findByCredentials('52998224725', 'qualquer'),
     ).resolves.toBeNull();
   });
 
-  it('preserva a estrutura real do JSON: alunos, dias, aulas, boletins e disciplinas', async () => {
-    const repository = new GuardianRepositoryImpl(
-      new GuardianLocalDataSource(),
-    );
+  it('preserva a estrutura dos dados: alunos, dias, aulas, boletins e disciplinas', async () => {
+    const repository = new GuardianRepositoryImpl(fixtureDataSource);
 
-    for (const record of responsaveis) {
+    for (const record of fixtureGuardians) {
       const guardian = await repository.findByCredentials(
-        onlyDigits(record.cpf),
+        record.cpf,
         record.senha,
       );
 
