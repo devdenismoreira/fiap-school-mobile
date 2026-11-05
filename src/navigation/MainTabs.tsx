@@ -30,7 +30,7 @@ const softShift: Pick<
   transitionSpec: {
     animation: 'timing',
     config: {
-      duration: motion.transition,
+      duration: motion.tab,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
     },
   },
