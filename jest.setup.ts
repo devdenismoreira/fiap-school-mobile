@@ -20,6 +20,11 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest'),
 );
 
+// NetInfo é nativo: mock oficial da biblioteca (addEventListener é um jest.fn).
+jest.mock('@react-native-community/netinfo', () =>
+  require('@react-native-community/netinfo/jest/netinfo-mock.js'),
+);
+
 // O Keychain é nativo (TurboModule) e não existe no Jest: mock em memória com a mesma API.
 jest.mock('react-native-keychain', () => {
   let entry: { username: string; password: string } | null = null;
