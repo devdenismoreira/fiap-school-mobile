@@ -3,7 +3,6 @@ import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
 import type { ResponsavelDTO } from '@/data/datasources/dtos';
 import responsaveis from './responsaveis.json';
 
-/** Registro bruto do JSON, com credenciais. Não sai deste arquivo. */
 export type ResponsavelRecord = ResponsavelDTO & {
   cpf: string;
   email: string;
@@ -11,7 +10,6 @@ export type ResponsavelRecord = ResponsavelDTO & {
 };
 
 type Options = {
-  /** Latência simulada do login, em ms. 0 nos testes. */
   signInLatencyMs?: number;
   records?: ResponsavelRecord[];
 };
@@ -24,7 +22,6 @@ function wait(ms: number): Promise<void> {
     : Promise.resolve();
 }
 
-/** Lista explícita de campos públicos + cópia profunda, como uma resposta serializada de API. */
 function toResponse(record: ResponsavelRecord): ResponsavelDTO {
   const response: ResponsavelDTO = {
     id: record.id,
@@ -48,7 +45,6 @@ export class GuardianLocalDataSource implements GuardianDataSource {
     cpfDigits: string,
     password: string,
   ): Promise<ResponsavelDTO | null> {
-    // A latência vale para sucesso e falha, sem diferença de tempo entre os casos.
     await wait(this.signInLatencyMs);
 
     const record = this.records.find(

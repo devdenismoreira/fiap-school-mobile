@@ -8,10 +8,6 @@ export type AuthenticateGuardian = (
   password: string,
 ) => Promise<Guardian>;
 
-/**
- * Normaliza o CPF e valida antes de consultar os dados. Qualquer falha gera o
- * mesmo erro genérico, sem indicar se o CPF ou a senha está errado.
- */
 export function createAuthenticateGuardian(
   guardians: GuardianRepository,
 ): AuthenticateGuardian {

@@ -9,10 +9,6 @@ type StudentCardProps = {
   onPress: () => void;
 };
 
-/**
- * Card do Figma "Mudança de aluno": nome completo em caixa alta e a linha
- * turma/RM/período; o aluno atual tem borda de 1 pt em `primary`.
- */
 export function StudentCard({ student, selected, onPress }: StudentCardProps) {
   const fullName = `${student.firstName} ${student.lastName}`;
   const info = `${student.className} - RM ${student.rm} - ${student.shift}`;
@@ -41,7 +37,6 @@ export function StudentCard({ student, selected, onPress }: StudentCardProps) {
 }
 
 const styles = StyleSheet.create({
-  // A borda (sempre presente) conta no recuo: texto a 16 pt da borda externa, como no Figma.
   content: {
     padding: theme.spacing.m - sizes.borderHairline,
   },

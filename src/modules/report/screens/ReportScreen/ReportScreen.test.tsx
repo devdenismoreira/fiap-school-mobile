@@ -14,9 +14,8 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
-// Dados reais do JSON.
-const rafaelGuardian = toGuardian(responsaveis[0]); // RM 12567: 2025 e 2024
-const biancaGuardian = toGuardian(responsaveis[1]); // RM 13752: T1/2025 sem "Arte"
+const rafaelGuardian = toGuardian(responsaveis[0]);
+const biancaGuardian = toGuardian(responsaveis[1]);
 
 async function renderReport(guardian = rafaelGuardian) {
   await renderWithSession(

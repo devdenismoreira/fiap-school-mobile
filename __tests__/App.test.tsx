@@ -12,7 +12,6 @@ import { onlyDigits } from '@/core/utils/cpf';
 import responsaveis from '@/data/datasources/local/responsaveis.json';
 import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
 
-// Dados reais do fixture, lidos em tempo de execução (nada de credenciais no teste).
 const [guardian, singleStudentGuardian] = responsaveis;
 const [firstStudent, secondStudent] = guardian.alunos;
 const studentInfo = (student: typeof firstStudent) =>

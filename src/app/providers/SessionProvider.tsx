@@ -31,7 +31,6 @@ export type SessionDependencies = {
 export type SessionContextValue = {
   state: SessionState;
   selectedStudent: Student | null;
-  /** Lança `InvalidCredentialsError` quando o login falha. */
   signIn(cpf: string, password: string): Promise<void>;
   selectStudent(rm: number): Promise<void>;
   signOut(): Promise<void>;
@@ -73,7 +72,6 @@ export function SessionProvider({
     };
   }, [restoreSession]);
 
-  // Falha de gravação não derruba a sessão em memória.
   const persist = (session: StoredSession) =>
     sessionRepository.save(session).catch(() => undefined);
 

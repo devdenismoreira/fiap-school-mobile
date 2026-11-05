@@ -38,7 +38,6 @@ describe('AsyncStorageSessionRepository', () => {
 
     await repository.save({
       ...session,
-      // Campos extras não devem chegar ao storage, mesmo que venham por engano.
       ...({ cpf: '52998224725', senha: 'x' } as object),
     });
 

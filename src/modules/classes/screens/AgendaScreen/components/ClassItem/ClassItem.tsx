@@ -7,10 +7,6 @@ type ClassItemProps = {
   session: ClassSession;
 };
 
-/**
- * Item da lista de aulas do Figma: marcador vazado de 6 pt (borda `timelineDot`)
- * alinhado ao horário; disciplina 8 pt abaixo, a 10 pt do marcador.
- */
 export function ClassItem({ session }: ClassItemProps) {
   return (
     <Box

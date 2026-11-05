@@ -2,7 +2,6 @@ import { formatCpf, onlyDigits } from '@/core/utils/cpf';
 import { GuardianLocalDataSource } from './GuardianLocalDataSource';
 import responsaveis from './responsaveis.json';
 
-// Credenciais lidas do fixture em tempo de execução; nunca escritas no teste.
 const [first] = responsaveis;
 const cpf = onlyDigits(first.cpf);
 const password = first.senha;

@@ -10,17 +10,11 @@ import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-/**
- * Decide entre fluxo autenticado e não autenticado pelo estado da sessão
- * (padrão de auth flow do React Navigation: telas condicionais, sem navigate).
- */
 export function RootNavigator() {
   const { state } = useSession();
-  // "Reduzir movimento" do sistema: transições viram troca instantânea.
   const reduceMotion = useReducedMotion();
 
   if (state.status === 'restoring') {
-    // Sem splash no Figma (D-14): fundo preto enquanto restaura.
     return (
       <Box testID="session-restoring" flex={1} backgroundColor="background" />
     );

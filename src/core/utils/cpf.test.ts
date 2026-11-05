@@ -6,7 +6,6 @@ import {
   onlyDigits,
 } from './cpf';
 
-// CPF fictício de exemplo, com dígitos verificadores válidos (não pertence ao JSON).
 const VALID_CPF = '52998224725';
 
 describe('onlyDigits', () => {

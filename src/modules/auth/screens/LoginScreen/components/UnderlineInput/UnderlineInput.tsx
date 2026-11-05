@@ -21,10 +21,6 @@ type UnderlineInputProps = Omit<TextInputProps, 'style'> & {
   inputRef?: Ref<TextInputInstance>;
 };
 
-/**
- * Campo do Login no Figma: rótulo centralizado, valor centralizado em 32 pt e
- * sublinhado de 1 pt (cinza vazio, branco preenchido).
- */
 export function UnderlineInput({
   label,
   value,

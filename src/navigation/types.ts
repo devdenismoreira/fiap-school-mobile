@@ -9,7 +9,6 @@ export type MainTabParamList = {
 export type RootStackParamList = {
   Login: undefined;
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
-  /** Rota acima das abas, para voltar à aba de origem ao fechar. */
   StudentSelection: undefined;
 };
 

@@ -18,7 +18,6 @@ import { useKeyboardVisible } from '@/shared/hooks/useKeyboardVisible';
 import { UnderlineInput } from './components/UnderlineInput';
 import { LOGIN_ERROR_MESSAGE, useLoginViewModel } from './useLoginViewModel';
 
-/** Máscara completa `000.000.000-00` tem 14 caracteres. */
 const CPF_MASKED_LENGTH = 14;
 
 export function LoginScreen() {

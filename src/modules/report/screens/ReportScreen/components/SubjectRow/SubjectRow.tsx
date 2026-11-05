@@ -15,13 +15,8 @@ type SubjectRowProps = {
   onToggle: () => void;
 };
 
-/** Amplia a área de toque da linha de 17 pt (há 20 pt entre linhas). */
 const ROW_HIT_SLOP = { top: 10, bottom: 10 };
 
-/**
- * Disciplina do Boletim no Figma: nome em caixa alta e seta; aberta, mostra
- * "Nota:" 10 pt abaixo e "Faltas:" 4 pt abaixo, valores 12 pt à direita.
- */
 export function SubjectRow({ subject, onToggle }: SubjectRowProps) {
   const detailsLabel = subject.isEvaluated
     ? `Nota ${subject.grade}, faltas ${subject.absences}`

@@ -21,7 +21,6 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-// Fixture: responsável "Ana" com Rui (RM 100, selecionado) e Bia (RM 200).
 async function renderScreen() {
   const dependencies = makeSessionDependencies({
     restoreSession: jest

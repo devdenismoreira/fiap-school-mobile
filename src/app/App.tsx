@@ -13,7 +13,6 @@ import {
 const defaultDependencies = createDependencies();
 
 type AppProps = {
-  /** Permite injetar dependências nos testes. */
   dependencies?: SessionDependencies;
 };
 

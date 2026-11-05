@@ -10,9 +10,6 @@ import downArrow from '@/assets/icons/down-arrow.svg';
 import logout from '@/assets/icons/logout.svg';
 import { Box } from '@/core/theme';
 
-// `frame` é a caixa do ícone no Figma; `width`/`height` são as dimensões do
-// próprio SVG exportado, que fica centralizado na caixa sem ser esticado.
-// As cores vêm dos arquivos (uma exportação por estado).
 const icons = {
   arrowDown: { source: downArrow, frame: 14, width: 14, height: 14 },
   calendarActive: {
@@ -46,7 +43,6 @@ type IconProps = {
   testID?: string;
 };
 
-/** Ícone decorativo: o rótulo acessível fica no elemento interativo que o contém. */
 export function Icon({ name, style, testID }: IconProps) {
   const { source, frame, width, height } = icons[name];
 

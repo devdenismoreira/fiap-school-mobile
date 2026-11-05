@@ -4,7 +4,6 @@ import { TabScreenLayout } from '@/shared/components/TabScreenLayout';
 import { TermAccordion } from './components/TermAccordion';
 import { useReportViewModel } from './useReportViewModel';
 
-/** Aba Boletim (Figma 3:317, 3:1054, 3:389, 3:549): ano, trimestres e disciplinas. */
 export function ReportScreen() {
   const viewModel = useReportViewModel();
 

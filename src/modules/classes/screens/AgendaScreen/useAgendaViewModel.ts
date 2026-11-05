@@ -8,10 +8,6 @@ export function useAgendaViewModel() {
   const { selectedStudent } = useSession();
   const schedule = selectedStudent?.schedule ?? [];
 
-  // Data escolhida pelo usuário. O dia exibido é derivado dela: se o aluno
-  // atual não tiver essa data (ou nada foi escolhido), vale o primeiro dia
-  // da agenda, como no Figma (D-02). Assim a troca de aluno mantém a data
-  // quando ela existe, sem efeitos colaterais.
   const [preferredDate, setPreferredDate] = useState<string | null>(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 

@@ -22,10 +22,6 @@ const TABS: Record<
   },
 };
 
-/**
- * Barra de abas do Figma ("Rodapé"): fundo `surface`, duas metades iguais,
- * aba ativa em `primary`. A área segura inferior recebe a mesma cor.
- */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 

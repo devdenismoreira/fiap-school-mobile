@@ -15,10 +15,6 @@ type ExpandArrowProps = {
   testID?: string;
 };
 
-/**
- * Seta dos dropdowns e acordeões. No Figma a seta "aberta" é a mesma imagem
- * espelhada; aqui ela gira 180° (resultado visual idêntico, chevron simétrico).
- */
 export function ExpandArrow({ expanded, testID }: ExpandArrowProps) {
   const rotation = useSharedValue(expanded ? 180 : 0);
 

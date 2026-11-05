@@ -3,7 +3,6 @@ import { screen } from '@testing-library/react-native';
 import { renderWithTheme } from '@/test-utils/renderWithTheme';
 import { Icon, type IconName } from './Icon';
 
-// O ícone é ocultado dos leitores de tela de propósito; a busca precisa incluí-lo.
 const hidden = { includeHiddenElements: true };
 
 describe('Icon', () => {

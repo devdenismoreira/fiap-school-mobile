@@ -5,7 +5,6 @@ import { formatAbsences, formatGrade } from '@/core/utils/formatGrade';
 import type { DropdownOption } from '@/shared/components/Dropdown';
 
 type ReportUiState = {
-  /** Aluno a quem este estado pertence; estado de outro aluno não vale. */
   studentRm: number | null;
   year: string | null;
   expandedTerms: number[];
@@ -32,7 +31,6 @@ export function useReportViewModel() {
   const [uiState, setUiState] = useState(() => initialState(studentRm));
   const [isYearDropdownOpen, setYearDropdownOpen] = useState(false);
 
-  // Troca de aluno: volta ao primeiro boletim, tudo recolhido (student-selection §4).
   const current =
     uiState.studentRm === studentRm ? uiState : initialState(studentRm);
   const update = (change: (state: ReportUiState) => Partial<ReportUiState>) =>
@@ -42,7 +40,6 @@ export function useReportViewModel() {
       return { ...base, ...change(base) };
     });
 
-  // Ordem e padrão do JSON (D-01): primeiro boletim selecionado por padrão.
   const reportCard =
     reportCards.find(card => card.year === current.year) ??
     reportCards[0] ??
@@ -57,7 +54,6 @@ export function useReportViewModel() {
     number: term.number,
     label: `${term.number}º TRIMESTRE`,
     isExpanded: current.expandedTerms.includes(term.number),
-    // Só as disciplinas do JSON, na ordem do JSON; nada é calculado ou preenchido.
     subjects: term.subjects.map((subject, index) => {
       const key = `${term.number}:${index}`;
       return {

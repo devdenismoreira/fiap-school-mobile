@@ -17,11 +17,6 @@ type TermAccordionProps = {
   onToggleSubject: (key: string) => void;
 };
 
-/**
- * Trimestre do Boletim no Figma: card de 90 pt com título em `primary` e seta.
- * Aberto, lista as disciplinas 16 pt abaixo, 20 pt entre si, e deixa 32 pt
- * até o próximo card (16 aqui + 16 do espaçamento entre trimestres).
- */
 export function TermAccordion({
   term,
   onToggle,

@@ -19,7 +19,6 @@ import { useStudentSelectionViewModel } from './useStudentSelectionViewModel';
 const { closeTop, closeIcon, titleTop } = sizes.studentSelection;
 const TITLE = 'Escolha o perfil\nque você quer visualizar';
 
-/** Tela "Mudança de aluno" (Figma 2:5), aberta acima das abas. */
 export function StudentSelectionScreen() {
   const { students, selectedRm, select, close } =
     useStudentSelectionViewModel();
@@ -27,7 +26,6 @@ export function StudentSelectionScreen() {
   const navigation = useNavigation<RootStackNavigation>();
   const titleRef = useRef<HostInstance>(null);
 
-  // Leitor de tela começa pelo título, não pelo "FECHAR" (spec 03 §9).
   useEffect(
     () =>
       navigation.addListener('transitionEnd', () => {

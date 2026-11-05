@@ -9,8 +9,6 @@ describe('ExpandArrow', () => {
   beforeEach(() => jest.useFakeTimers());
   afterEach(() => jest.useRealTimers());
 
-  // O tipo público de getAnimatedStyle não declara parâmetros, mas a versão de
-  // testes (ativada por setUpTests) recebe o componente e devolve o estilo animado.
   const readAnimatedStyle = getAnimatedStyle as unknown as (
     component: unknown,
   ) => { transform?: unknown };

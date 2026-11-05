@@ -46,7 +46,6 @@ function toStudent(dto: AlunoDTO): Student {
   };
 }
 
-/** Traduz o DTO (PT) para a entidade de domínio (EN), preservando valores, nulos e ordem. */
 export function toGuardian(dto: ResponsavelDTO): Guardian {
   return {
     id: dto.id,

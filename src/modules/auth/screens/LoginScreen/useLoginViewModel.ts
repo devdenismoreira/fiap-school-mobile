@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import { useSession } from '@/app/providers/SessionProvider';
 import { CPF_LENGTH, formatCpf, normalizeCpf } from '@/core/utils/cpf';
 
-/** Texto do frame "Login - feedback de erro" do Figma (quebra de linha incluída). */
 export const LOGIN_ERROR_MESSAGE =
   'Usuário ou senha inválida.\nPode tentar novamente?';
 
@@ -37,17 +36,14 @@ export function useLoginViewModel() {
     submitting.current = true;
     setStatus('loading');
     try {
-      // Em caso de sucesso a sessão muda e o navegador troca de tela.
       await signIn(cpfDigits, password);
     } catch {
-      // Qualquer falha usa a mesma mensagem genérica, sem detalhes técnicos.
       setStatus('error');
     } finally {
       submitting.current = false;
     }
   };
 
-  /** Handler de toque: dispara o login sem devolver Promise (o erro já é tratado). */
   const submit = () => {
     if (!canSubmit || submitting.current) {
       return;

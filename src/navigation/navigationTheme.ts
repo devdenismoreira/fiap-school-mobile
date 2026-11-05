@@ -5,7 +5,6 @@ import {
 
 import { theme } from '@/core/theme';
 
-/** Fundo preto em todas as telas e transições, sem flash branco. */
 export const navigationTheme: NavigationTheme = {
   ...DarkTheme,
   colors: {

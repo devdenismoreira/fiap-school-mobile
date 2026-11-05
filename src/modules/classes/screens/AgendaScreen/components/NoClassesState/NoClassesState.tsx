@@ -5,10 +5,6 @@ import { Box, sizes, Text } from '@/core/theme';
 
 const { width, height, imageHeight } = sizes.noClassroom;
 
-/**
- * Estado "Sem aulas neste dia" do Figma: a ilustração tem 139,42 % da altura
- * da caixa e é recortada pelo topo (caixa 328 × 208, imagem 328 × 290).
- */
 export function NoClassesState() {
   return (
     <Box alignItems="center" marginTop="ml">

@@ -1,7 +1,6 @@
 import { fonts } from './fonts';
 import { theme } from './theme';
 
-// Os testes rodam no Node; o tsconfig do RN não tipa `require.resolve`.
 const resolveFile = (require as unknown as { resolve: (id: string) => string })
   .resolve;
 

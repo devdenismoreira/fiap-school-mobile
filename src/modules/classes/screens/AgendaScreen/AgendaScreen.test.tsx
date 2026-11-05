@@ -13,7 +13,6 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
-// Dados reais do JSON (responsável 1, aluno RM 12567 — o mesmo dos frames do Figma).
 const guardian = toGuardian(responsaveis[0]);
 const student = guardian.students[0];
 const monday = student.schedule.find(day => day.date === '2025-03-17')!;

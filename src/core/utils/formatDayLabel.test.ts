@@ -1,6 +1,5 @@
 import { formatDayLabel } from './formatDayLabel';
 
-// Os testes rodam no Node; o tsconfig do RN não inclui os tipos do Node.
 declare const process: { env: Record<string, string | undefined> };
 
 describe('formatDayLabel', () => {

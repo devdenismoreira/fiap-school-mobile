@@ -5,14 +5,12 @@ import { createAuthenticateGuardian } from '@/domain/usecases/authenticateGuardi
 import { createRestoreSession } from '@/domain/usecases/restoreSession';
 import type { SessionDependencies } from '@/app/providers/SessionProvider';
 
-/** Latência simulada do login (decisão D-04), para o estado "carregando" do Figma aparecer. */
 export const SIGN_IN_LATENCY_MS = 800;
 
 type Options = {
   signInLatencyMs?: number;
 };
 
-/** Composition root: única fábrica que conhece as implementações concretas. */
 export function createDependencies({
   signInLatencyMs = SIGN_IN_LATENCY_MS,
 }: Options = {}): SessionDependencies {

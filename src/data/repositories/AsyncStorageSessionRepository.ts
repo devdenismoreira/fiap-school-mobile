@@ -48,7 +48,6 @@ export class AsyncStorageSessionRepository implements SessionRepository {
   }
 
   async save(session: StoredSession): Promise<void> {
-    // Campos explícitos: nada além dos identificadores chega ao storage.
     const payload = {
       version: SESSION_VERSION,
       guardianId: session.guardianId,

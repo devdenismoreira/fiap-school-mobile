@@ -21,18 +21,11 @@ type DropdownProps = {
   onToggle: () => void;
   onClose: () => void;
   onSelect: (value: string) => void;
-  /** Recuo do texto no Figma: `m` (Agenda) ou `sm` (Boletim). */
   contentPadding?: 'm' | 'sm';
-  /** Prefixo lido por leitores de tela, ex.: "Dia selecionado". */
   accessibilityLabel: string;
   testID?: string;
 };
 
-/**
- * Dropdown do Figma: gatilho de 45 pt em `surface` e painel sobreposto 7 pt
- * abaixo. O painel abre num Modal transparente: fica acima de todo o
- * conteúdo, fecha ao tocar fora e com o voltar do Android.
- */
 export function Dropdown({
   options,
   selectedValue,
@@ -102,7 +95,6 @@ export function Dropdown({
         />
         <Animated.View
           entering={anchor ? dropdownPanelEntering : undefined}
-          // Até a medição do gatilho chegar, o painel fica invisível.
           style={[
             styles.panel,
             anchor
@@ -130,7 +122,6 @@ export function Dropdown({
                 }}
                 style={({ pressed }) => pressed && styles.pressed}
               >
-                {/* 8 + texto (20) + 8 = 36 pt entre opções, como no Figma. */}
                 <Box paddingVertical="xs" paddingHorizontal={contentPadding}>
                   <Text variant="body">{option.label}</Text>
                 </Box>

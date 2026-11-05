@@ -3,7 +3,6 @@ import { makeGuardian } from '@/test-utils/fixtures';
 import type { GuardianRepository } from '@/domain/repositories/GuardianRepository';
 import { createAuthenticateGuardian } from './authenticateGuardian';
 
-// CPF fictício com dígitos verificadores válidos (não pertence ao JSON).
 const VALID_CPF = '52998224725';
 
 function makeRepository(result = makeGuardian()): GuardianRepository {

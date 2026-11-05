@@ -6,14 +6,9 @@ import { Box, Text, theme } from '@/core/theme';
 import { AppHeader } from '@/shared/components/AppHeader';
 
 type TabScreenLayoutProps = PropsWithChildren<{
-  /** Título da seção ("AGENDA", "BOLETIM"). */
   title: string;
 }>;
 
-/**
- * Estrutura comum das abas: o cabeçalho rola junto com o conteúdo (D-10) e a
- * faixa da barra de status fica fixa e preta, sem conteúdo passando por baixo.
- */
 export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
   const insets = useSafeAreaInsets();
 

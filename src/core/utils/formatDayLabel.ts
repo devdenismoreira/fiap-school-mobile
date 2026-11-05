@@ -25,11 +25,6 @@ const WEEKDAYS = [
 
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
-/**
- * "2025-03-17" → "17 de março, segunda-feira".
- * Calcula o dia da semana em UTC a partir dos componentes da data, para não
- * sofrer deslocamento de fuso. Entrada inválida é devolvida sem alteração.
- */
 export function formatDayLabel(isoDate: string): string {
   const match = ISO_DATE.exec(isoDate);
   if (!match) {

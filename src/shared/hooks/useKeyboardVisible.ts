@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';
 
-/** Indica se o teclado está aberto (eventos "will" no iOS, "did" no Android). */
 export function useKeyboardVisible(): boolean {
   const [visible, setVisible] = useState(false);
 

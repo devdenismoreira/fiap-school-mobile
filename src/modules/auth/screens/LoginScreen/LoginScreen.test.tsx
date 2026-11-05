@@ -10,7 +10,6 @@ import {
 } from '@/test-utils/renderWithSession';
 import { LoginScreen } from './LoginScreen';
 
-// CPF fictício com dígitos verificadores válidos (não pertence ao JSON).
 const VALID_CPF = '52998224725';
 const MASKED_CPF = '529.982.247-25';
 

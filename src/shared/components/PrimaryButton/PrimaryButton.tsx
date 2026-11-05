@@ -9,9 +9,7 @@ type PrimaryButtonProps = {
   label: string;
   onPress: () => void;
   disabled?: boolean;
-  /** Como no Figma (frame "Login - carregando"): botão vazio, sem indicador. */
   loading?: boolean;
-  /** Área segura inferior quando o botão fica colado na base da tela. */
   bottomInset?: number;
   testID?: string;
 };

@@ -1,6 +1,3 @@
-// Formato de resposta da "API" de responsáveis. Espelha o JSON do desafio,
-// sem as credenciais (cpf, email, senha), que nunca saem da fonte de dados.
-
 export type DisciplinaDTO = {
   nome: string;
   nota: number | null;

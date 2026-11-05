@@ -8,10 +8,8 @@ import { ClassItem } from './components/ClassItem';
 import { NoClassesState } from './components/NoClassesState';
 import { useAgendaViewModel } from './useAgendaViewModel';
 
-/** Aba Agenda (Figma 2:24, 2:48, 2:88): seletor de dia e aulas do dia. */
 export function AgendaScreen() {
   const viewModel = useAgendaViewModel();
-  // As chaves incluem a data: ao trocar de dia, o conteúdo é recriado e anima a entrada.
   const dayKey = viewModel.selectedDate ?? 'sem-agenda';
 
   return (
@@ -37,7 +35,6 @@ export function AgendaScreen() {
         ) : (
           <Box marginTop="l" paddingLeft="m" gap="m">
             {viewModel.classes.map((session, index) => (
-              // Disciplinas podem se repetir no mesmo dia; o índice mantém a ordem do JSON.
               <Animated.View
                 key={`${dayKey}-${index}`}
                 entering={listItemEntering(index)}

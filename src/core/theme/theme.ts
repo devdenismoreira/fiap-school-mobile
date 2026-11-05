@@ -3,7 +3,6 @@ import { createTheme } from '@shopify/restyle';
 import { fonts } from './fonts';
 import { sizes } from './sizes';
 
-// Valores brutos do Figma (o arquivo não publica variáveis nem estilos).
 const palette = {
   black: '#000000',
   white: '#FFFFFF',
@@ -52,7 +51,6 @@ export const theme = createTheme({
   breakpoints: {
     phone: 0,
   },
-  // line-height "normal" do Figma para a Montserrat ≈ 1,22 × tamanho.
   textVariants: {
     defaults: {
       fontFamily: fonts.regular,
@@ -81,7 +79,6 @@ export const theme = createTheme({
     captionMedium: { fontFamily: fonts.medium, fontSize: 12, lineHeight: 15 },
     tabLabel: { fontFamily: fonts.bold, fontSize: 10, lineHeight: 12 },
   },
-  // Cards de aluno (Mudança de aluno) e de trimestre (Boletim): mesmo visual no Figma.
   cardVariants: {
     defaults: {},
     raised: {

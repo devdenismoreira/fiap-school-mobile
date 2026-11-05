@@ -4,12 +4,10 @@ export function onlyDigits(value: string): string {
   return value.replace(/\D/g, '');
 }
 
-/** Mantém só dígitos, limitado a 11. É o valor usado em comparações. */
 export function normalizeCpf(value: string): string {
   return onlyDigits(value).slice(0, CPF_LENGTH);
 }
 
-/** Máscara progressiva `000.000.000-00`, aplicada só na interface. */
 export function formatCpf(value: string): string {
   const digits = normalizeCpf(value);
 
@@ -36,7 +34,6 @@ function checkDigit(digits: string, length: number): number {
   return ((sum * 10) % 11) % 10;
 }
 
-/** Valida formato (11 dígitos), dígitos repetidos e os dois dígitos verificadores. */
 export function isValidCpf(value: string): boolean {
   const digits = onlyDigits(value);
 

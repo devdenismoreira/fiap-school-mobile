@@ -9,12 +9,6 @@ export type RestoredSession = {
 
 export type RestoreSession = () => Promise<RestoredSession | null>;
 
-/**
- * Restaura a sessão salva. Sessão ausente, inválida ou de um responsável que
- * não existe mais é descartada; aluno que não pertence mais ao responsável é
- * trocado pelo primeiro aluno. Falhas de gravação no storage não impedem a
- * restauração.
- */
 export function createRestoreSession(
   guardians: GuardianRepository,
   sessions: SessionRepository,

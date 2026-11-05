@@ -7,15 +7,10 @@ import { Box, motion, sizes, Text, theme } from '@/core/theme';
 import type { RootStackNavigation } from '@/navigation/types';
 import { Icon } from '@/shared/components/Icon';
 
-/** Amplia a área de toque das ações de 15 pt de altura para ~44 pt. */
 const ACTION_HIT_SLOP = { top: 15, bottom: 15, left: 8, right: 8 };
 
 const upper = (text: string) => text.toLocaleUpperCase('pt-BR');
 
-/**
- * Cabeçalho das abas (Figma "Cabeçalho"). Ações conforme D-03:
- * "TROCAR PERFIL" + "SAIR" com 2+ alunos (variante 3:908); só "SAIR" com 1 (17:14).
- */
 export function AppHeader() {
   const { state, selectedStudent, signOut } = useSession();
   const navigation = useNavigation<RootStackNavigation>();
