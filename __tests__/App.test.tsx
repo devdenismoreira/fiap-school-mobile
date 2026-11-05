@@ -7,7 +7,8 @@ import {
 } from '@testing-library/react-native';
 
 import App from '../App';
-import { createDependencies } from '@/app/bootstrap/dependencies';
+import { createLocalDependencies } from '@/app/bootstrap/dependencies';
+import { NetworkError } from '@/core/errors/NetworkError';
 import { onlyDigits } from '@/core/utils/cpf';
 import responsaveis from '@/data/datasources/local/responsaveis.json';
 import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
@@ -18,7 +19,7 @@ const studentInfo = (student: typeof firstStudent) =>
   `${student.turma} - RM ${student.rm} - ${student.periodo}`;
 
 const renderApp = () =>
-  render(<App dependencies={createDependencies({ signInLatencyMs: 0 })} />);
+  render(<App dependencies={createLocalDependencies()} />);
 
 const storeSession = (guardianId: number, selectedStudentRm: number) =>
   AsyncStorage.setItem(
@@ -193,5 +194,27 @@ describe('App (fluxo de sessão e navegação)', () => {
 
     expect(await loginButton()).toBeOnTheScreen();
     expect(await AsyncStorage.getItem(SESSION_STORAGE_KEY)).toBeNull();
+  });
+
+  it('sem conexão ao abrir mostra a tela de conexão e entra ao tentar de novo', async () => {
+    await storeSession(guardian.id, firstStudent.rm);
+    const dependencies = createLocalDependencies();
+    const restoreSession = jest
+      .fn(dependencies.restoreSession)
+      .mockRejectedValueOnce(new NetworkError());
+    await render(<App dependencies={{ ...dependencies, restoreSession }} />);
+
+    const retry = await screen.findByRole('button', {
+      name: 'TENTAR NOVAMENTE',
+    });
+    expect(
+      screen.getByText('Não foi possível conectar.\nVerifique sua internet.'),
+    ).toBeOnTheScreen();
+    expect(await AsyncStorage.getItem(SESSION_STORAGE_KEY)).not.toBeNull();
+
+    await fireEvent.press(retry);
+
+    expect(await sectionTitle('AGENDA')).toBeOnTheScreen();
+    expect(screen.getByText(studentInfo(firstStudent))).toBeOnTheScreen();
   });
 });

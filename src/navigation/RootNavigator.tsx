@@ -3,6 +3,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 
 import { useSession } from '@/app/providers/SessionProvider';
 import { Box, motion, theme } from '@/core/theme';
+import { ConnectionErrorScreen } from '@/modules/auth/screens/ConnectionErrorScreen';
 import { LoginScreen } from '@/modules/auth/screens/LoginScreen';
 import { StudentSelectionScreen } from '@/modules/students/screens/StudentSelectionScreen';
 import { MainTabs } from './MainTabs';
@@ -18,6 +19,10 @@ export function RootNavigator() {
     return (
       <Box testID="session-restoring" flex={1} backgroundColor="background" />
     );
+  }
+
+  if (state.status === 'unreachable') {
+    return <ConnectionErrorScreen />;
   }
 
   return (

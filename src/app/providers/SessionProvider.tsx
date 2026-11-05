@@ -6,6 +6,8 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import { NetworkError } from '@/core/errors/NetworkError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import type { Guardian } from '@/domain/entities/Guardian';
 import type { StoredSession } from '@/domain/entities/Session';
 import type { Student } from '@/domain/entities/Student';
@@ -15,6 +17,7 @@ import type { RestoreSession } from '@/domain/usecases/restoreSession';
 
 export type SessionState =
   | { status: 'restoring' }
+  | { status: 'unreachable' }
   | { status: 'signedOut' }
   | {
       status: 'signedIn';
@@ -26,6 +29,7 @@ export type SessionDependencies = {
   authenticateGuardian: AuthenticateGuardian;
   restoreSession: RestoreSession;
   sessionRepository: SessionRepository;
+  endSession: () => Promise<void>;
 };
 
 export type SessionContextValue = {
@@ -34,7 +38,11 @@ export type SessionContextValue = {
   signIn(cpf: string, password: string): Promise<void>;
   selectStudent(rm: number): Promise<void>;
   signOut(): Promise<void>;
+  retryRestore(): void;
 };
+
+const isConnectionFailure = (error: unknown) =>
+  error instanceof NetworkError || error instanceof TooManyAttemptsError;
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
@@ -46,31 +54,47 @@ export function SessionProvider({
   dependencies,
   children,
 }: SessionProviderProps) {
-  const { authenticateGuardian, restoreSession, sessionRepository } =
-    dependencies;
+  const {
+    authenticateGuardian,
+    restoreSession,
+    sessionRepository,
+    endSession,
+  } = dependencies;
   const [state, setState] = useState<SessionState>({ status: 'restoring' });
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
     restoreSession()
       .then(restored => {
+        if (!active) {
+          return;
+        }
+        if (restored) {
+          setState({ status: 'signedIn', ...restored });
+          return;
+        }
+        setState({ status: 'signedOut' });
+        endSession().catch(() => undefined);
+      })
+      .catch((error: unknown) => {
         if (active) {
           setState(
-            restored
-              ? { status: 'signedIn', ...restored }
+            isConnectionFailure(error)
+              ? { status: 'unreachable' }
               : { status: 'signedOut' },
           );
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setState({ status: 'signedOut' });
         }
       });
     return () => {
       active = false;
     };
-  }, [restoreSession]);
+  }, [restoreSession, endSession, restoreAttempt]);
+
+  const retryRestore = () => {
+    setState({ status: 'restoring' });
+    setRestoreAttempt(attempt => attempt + 1);
+  };
 
   const persist = (session: StoredSession) =>
     sessionRepository.save(session).catch(() => undefined);
@@ -94,6 +118,7 @@ export function SessionProvider({
   };
 
   const signOut = async () => {
+    await endSession().catch(() => undefined);
     await sessionRepository.clear().catch(() => undefined);
     setState({ status: 'signedOut' });
   };
@@ -107,7 +132,14 @@ export function SessionProvider({
 
   return (
     <SessionContext.Provider
-      value={{ state, selectedStudent, signIn, selectStudent, signOut }}
+      value={{
+        state,
+        selectedStudent,
+        signIn,
+        selectStudent,
+        signOut,
+        retryRestore,
+      }}
     >
       {children}
     </SessionContext.Provider>

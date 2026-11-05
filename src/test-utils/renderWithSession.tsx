@@ -20,6 +20,7 @@ export function makeSessionDependencies(
       save: jest.fn().mockResolvedValue(undefined),
       clear: jest.fn().mockResolvedValue(undefined),
     },
+    endSession: jest.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }

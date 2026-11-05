@@ -2,6 +2,8 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { NetworkError } from '@/core/errors/NetworkError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import type { RestoredSession } from '@/domain/usecases/restoreSession';
 import { makeGuardian } from '@/test-utils/fixtures';
 import {
@@ -19,6 +21,7 @@ function makeDependencies(restored: RestoredSession | null = null) {
       save: jest.fn().mockResolvedValue(undefined),
       clear: jest.fn().mockResolvedValue(undefined),
     },
+    endSession: jest.fn().mockResolvedValue(undefined),
   } satisfies SessionDependencies;
   return dependencies;
 }
@@ -54,6 +57,49 @@ describe('SessionProvider', () => {
     const { result } = await renderSession(dependencies);
 
     await waitFor(() => expect(result.current.state.status).toBe('signedOut'));
+  });
+
+  it('sem sessão para restaurar, encerra a sessão remota (refresh antigo no Keychain)', async () => {
+    const dependencies = makeDependencies(null);
+    const { result } = await renderSession(dependencies);
+
+    await waitFor(() => expect(result.current.state.status).toBe('signedOut'));
+    expect(dependencies.endSession).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ['sem conexão', new NetworkError()],
+    ['muitas tentativas', new TooManyAttemptsError()],
+  ])(
+    '%s na restauração vai para unreachable, sem apagar a sessão',
+    async (_label, error) => {
+      const dependencies = makeDependencies();
+      dependencies.restoreSession.mockRejectedValue(error);
+      const { result } = await renderSession(dependencies);
+
+      await waitFor(() =>
+        expect(result.current.state.status).toBe('unreachable'),
+      );
+      expect(dependencies.endSession).not.toHaveBeenCalled();
+      expect(dependencies.sessionRepository.clear).not.toHaveBeenCalled();
+    },
+  );
+
+  it('retryRestore tenta de novo e entra quando a conexão volta', async () => {
+    const guardian = makeGuardian();
+    const dependencies = makeDependencies();
+    dependencies.restoreSession
+      .mockRejectedValueOnce(new NetworkError())
+      .mockResolvedValueOnce({ guardian, selectedStudentRm: 100 });
+    const { result } = await renderSession(dependencies);
+    await waitFor(() =>
+      expect(result.current.state.status).toBe('unreachable'),
+    );
+
+    await act(async () => result.current.retryRestore());
+
+    await waitFor(() => expect(result.current.state.status).toBe('signedIn'));
+    expect(dependencies.restoreSession).toHaveBeenCalledTimes(2);
   });
 
   it('signIn entra com o primeiro aluno e persiste só os identificadores', async () => {
@@ -134,9 +180,25 @@ describe('SessionProvider', () => {
 
     await act(() => result.current.signOut());
 
+    expect(dependencies.endSession).toHaveBeenCalledTimes(1);
     expect(dependencies.sessionRepository.clear).toHaveBeenCalled();
     expect(result.current.state.status).toBe('signedOut');
     expect(result.current.selectedStudent).toBeNull();
+  });
+
+  it('signOut sai mesmo se o encerramento remoto falhar', async () => {
+    const dependencies = makeDependencies({
+      guardian: makeGuardian(),
+      selectedStudentRm: 100,
+    });
+    dependencies.endSession.mockRejectedValue(new NetworkError());
+    const { result } = await renderSession(dependencies);
+    await waitFor(() => expect(result.current.state.status).toBe('signedIn'));
+
+    await act(() => result.current.signOut());
+
+    expect(dependencies.sessionRepository.clear).toHaveBeenCalled();
+    expect(result.current.state.status).toBe('signedOut');
   });
 
   it('useSession fora do provider lança erro explícito', async () => {
