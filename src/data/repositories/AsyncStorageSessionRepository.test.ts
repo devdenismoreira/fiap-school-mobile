@@ -72,9 +72,15 @@ describe('AsyncStorageSessionRepository', () => {
     ['JSON inválido', '{nao-e-json'],
     ['valor não-objeto', '42'],
     ['null', 'null'],
-    ['versão desconhecida', '{"version":2,"guardianId":1,"selectedStudentRm":12567}'],
+    [
+      'versão desconhecida',
+      '{"version":2,"guardianId":1,"selectedStudentRm":12567}',
+    ],
     ['sem versão', '{"guardianId":1,"selectedStudentRm":12567}'],
-    ['id como string', '{"version":1,"guardianId":"1","selectedStudentRm":12567}'],
+    [
+      'id como string',
+      '{"version":1,"guardianId":"1","selectedStudentRm":12567}',
+    ],
     ['rm decimal', '{"version":1,"guardianId":1,"selectedStudentRm":1.5}'],
     ['id zero', '{"version":1,"guardianId":0,"selectedStudentRm":12567}'],
     ['rm ausente', '{"version":1,"guardianId":1}'],

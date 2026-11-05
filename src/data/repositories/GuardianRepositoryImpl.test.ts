@@ -19,7 +19,12 @@ describe('GuardianRepositoryImpl', () => {
 
     await expect(
       repository.findByCredentials('52998224725', 'segredo'),
-    ).resolves.toEqual({ id: 1, firstName: 'Ana', lastName: 'Teste', students: [] });
+    ).resolves.toEqual({
+      id: 1,
+      firstName: 'Ana',
+      lastName: 'Teste',
+      students: [],
+    });
     expect(dataSource.signIn).toHaveBeenCalledWith('52998224725', 'segredo');
 
     await expect(repository.findById(2)).resolves.toBeNull();
@@ -27,7 +32,9 @@ describe('GuardianRepositoryImpl', () => {
   });
 
   it('retorna null quando as credenciais não conferem', async () => {
-    const repository = new GuardianRepositoryImpl(new GuardianLocalDataSource());
+    const repository = new GuardianRepositoryImpl(
+      new GuardianLocalDataSource(),
+    );
 
     await expect(
       repository.findByCredentials('52998224725', 'qualquer'),
@@ -35,7 +42,9 @@ describe('GuardianRepositoryImpl', () => {
   });
 
   it('preserva a estrutura real do JSON: alunos, dias, aulas, boletins e disciplinas', async () => {
-    const repository = new GuardianRepositoryImpl(new GuardianLocalDataSource());
+    const repository = new GuardianRepositoryImpl(
+      new GuardianLocalDataSource(),
+    );
 
     for (const record of responsaveis) {
       const guardian = await repository.findByCredentials(
@@ -63,7 +72,10 @@ describe('GuardianRepositoryImpl', () => {
           aluno.boletim.map(b => [
             b.ano,
             b.turma,
-            b.trimestres.map(t => [t.trimestre, t.disciplinas.map(d => d.nome)]),
+            b.trimestres.map(t => [
+              t.trimestre,
+              t.disciplinas.map(d => d.nome),
+            ]),
           ]),
         );
       });

@@ -72,7 +72,8 @@ export function AppHeader() {
       </Box>
 
       <Text variant="greeting" textAlign="center" marginTop="m">
-        Olá, <Text variant="greetingBold">{upper(state.guardian.firstName)}</Text>
+        Olá,{' '}
+        <Text variant="greetingBold">{upper(state.guardian.firstName)}</Text>
       </Text>
 
       {selectedStudent ? (

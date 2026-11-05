@@ -52,22 +52,37 @@ describe('ReportScreen', () => {
   it('o seletor de ano lista "7EF - 2025" e "6EF - 2024"', async () => {
     await fireEvent.press(await renderReport());
 
-    expect(screen.getAllByRole('menuitem').map(item => item.props.accessibilityLabel ?? '')).toHaveLength(2);
+    expect(
+      screen
+        .getAllByRole('menuitem')
+        .map(item => item.props.accessibilityLabel ?? ''),
+    ).toHaveLength(2);
     expect(screen.getByRole('menuitem', { name: '7EF - 2025' })).toBeSelected();
-    expect(screen.getByRole('menuitem', { name: '6EF - 2024' })).toBeOnTheScreen();
+    expect(
+      screen.getByRole('menuitem', { name: '6EF - 2024' }),
+    ).toBeOnTheScreen();
   });
 
   it('1º trimestre de 2025 lista 12 disciplinas na ordem do JSON, com notas do Figma', async () => {
     await renderReport();
 
     await fireEvent.press(term('1º trimestre'));
-    const names = rafaelGuardian.students[0].reportCards[0].terms[0].subjects.map(s => s.name);
-    expect(subjectRows().map(row => row.props.accessibilityLabel)).toEqual(names);
+    const names =
+      rafaelGuardian.students[0].reportCards[0].terms[0].subjects.map(
+        s => s.name,
+      );
+    expect(subjectRows().map(row => row.props.accessibilityLabel)).toEqual(
+      names,
+    );
     expect(screen.getByText('LÍNGUA PORTUGUESA')).toBeOnTheScreen();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Língua Portuguesa' }));
     await fireEvent.press(
-      screen.getByRole('button', { name: 'Produção e Interpretação de Textos' }),
+      screen.getByRole('button', { name: 'Língua Portuguesa' }),
+    );
+    await fireEvent.press(
+      screen.getByRole('button', {
+        name: 'Produção e Interpretação de Textos',
+      }),
     );
 
     expect(screen.getByLabelText('Nota 9,5, faltas 0')).toBeOnTheScreen();
@@ -78,9 +93,13 @@ describe('ReportScreen', () => {
     await renderReport();
 
     await fireEvent.press(term('2º trimestre'));
-    await fireEvent.press(screen.getByRole('button', { name: 'Língua Portuguesa' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Língua Portuguesa' }),
+    );
 
-    const details = screen.getByLabelText('Nota não lançada, faltas não lançadas');
+    const details = screen.getByLabelText(
+      'Nota não lançada, faltas não lançadas',
+    );
     expect(details).toHaveTextContent('Nota:-Faltas:-');
   });
 
@@ -90,8 +109,12 @@ describe('ReportScreen', () => {
     await fireEvent.press(term('1º trimestre'));
     await fireEvent.press(term('2º trimestre'));
 
-    expect(term('1º trimestre')).toHaveProp('accessibilityState', { expanded: true });
-    expect(term('2º trimestre')).toHaveProp('accessibilityState', { expanded: true });
+    expect(term('1º trimestre')).toHaveProp('accessibilityState', {
+      expanded: true,
+    });
+    expect(term('2º trimestre')).toHaveProp('accessibilityState', {
+      expanded: true,
+    });
     expect(subjectRows()).toHaveLength(24);
   });
 
@@ -102,10 +125,14 @@ describe('ReportScreen', () => {
     expect(
       screen.getByRole('button', { name: /^Ano selecionado:/ }),
     ).toHaveAccessibleName('Ano selecionado: 6EF - 2024');
-    expect(term('3º trimestre')).toHaveProp('accessibilityState', { expanded: false });
+    expect(term('3º trimestre')).toHaveProp('accessibilityState', {
+      expanded: false,
+    });
 
     await fireEvent.press(term('3º trimestre'));
-    await fireEvent.press(screen.getByRole('button', { name: 'Língua Portuguesa' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Língua Portuguesa' }),
+    );
     expect(screen.getByLabelText('Nota 8,0, faltas 0')).toBeOnTheScreen();
   });
 

@@ -19,7 +19,9 @@ async function renderHeader(
   selectedStudentRm: number | null = 100,
 ) {
   const dependencies = makeSessionDependencies({
-    restoreSession: jest.fn().mockResolvedValue({ guardian, selectedStudentRm }),
+    restoreSession: jest
+      .fn()
+      .mockResolvedValue({ guardian, selectedStudentRm }),
   });
   await renderWithSession(<AppHeader />, dependencies);
   await screen.findByText(/^Olá, /);
@@ -40,7 +42,9 @@ describe('AppHeader', () => {
   it('com 2+ alunos mostra TROCAR PERFIL, que abre a seleção de aluno', async () => {
     await renderHeader();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'TROCAR PERFIL' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'TROCAR PERFIL' }),
+    );
 
     expect(mockNavigate).toHaveBeenCalledWith('StudentSelection');
     expect(screen.getByRole('button', { name: 'SAIR' })).toBeOnTheScreen();

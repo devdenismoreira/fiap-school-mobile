@@ -19,8 +19,10 @@ const initialState = (studentRm: number | null): ReportUiState => ({
   expandedSubjects: [],
 });
 
-const toggle = <T,>(items: T[], item: T) =>
-  items.includes(item) ? items.filter(value => value !== item) : [...items, item];
+const toggle = <T>(items: T[], item: T) =>
+  items.includes(item)
+    ? items.filter(value => value !== item)
+    : [...items, item];
 
 export function useReportViewModel() {
   const { selectedStudent } = useSession();

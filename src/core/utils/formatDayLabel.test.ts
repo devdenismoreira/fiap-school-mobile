@@ -25,18 +25,20 @@ describe('formatDayLabel', () => {
     expect(formatDayLabel('2025-12-31')).toBe('31 de dezembro, quarta-feira');
   });
 
-  it.each(['UTC', 'America/Sao_Paulo', 'Pacific/Kiritimati', 'Pacific/Pago_Pago'])(
-    'não sofre deslocamento de fuso (TZ=%s)',
-    timeZone => {
-      const original = process.env.TZ;
-      process.env.TZ = timeZone;
-      try {
-        expect(formatDayLabel('2025-03-16')).toBe('16 de março, domingo');
-      } finally {
-        process.env.TZ = original;
-      }
-    },
-  );
+  it.each([
+    'UTC',
+    'America/Sao_Paulo',
+    'Pacific/Kiritimati',
+    'Pacific/Pago_Pago',
+  ])('não sofre deslocamento de fuso (TZ=%s)', timeZone => {
+    const original = process.env.TZ;
+    process.env.TZ = timeZone;
+    try {
+      expect(formatDayLabel('2025-03-16')).toBe('16 de março, domingo');
+    } finally {
+      process.env.TZ = original;
+    }
+  });
 
   it('devolve a entrada sem alteração quando não é uma data ISO válida', () => {
     expect(formatDayLabel('')).toBe('');

@@ -44,7 +44,9 @@ describe('AgendaScreen', () => {
     await fireEvent.press(await renderAgenda());
 
     expect(
-      screen.getAllByRole('menuitem').map(item => item.props.accessibilityLabel ?? ''),
+      screen
+        .getAllByRole('menuitem')
+        .map(item => item.props.accessibilityLabel ?? ''),
     ).toHaveLength(7);
     for (const label of [
       '16 de março, domingo',

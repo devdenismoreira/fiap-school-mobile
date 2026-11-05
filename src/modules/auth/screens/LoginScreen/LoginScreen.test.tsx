@@ -95,7 +95,9 @@ describe('LoginScreen', () => {
     await fireEvent.press(submitButton());
 
     expect(
-      await screen.findByText('Usuário ou senha inválida.\nPode tentar novamente?'),
+      await screen.findByText(
+        'Usuário ou senha inválida.\nPode tentar novamente?',
+      ),
     ).toBeOnTheScreen();
     expect(announce).toHaveBeenCalledWith(
       'Usuário ou senha inválida. Pode tentar novamente?',

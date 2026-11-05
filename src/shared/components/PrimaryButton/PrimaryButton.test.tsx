@@ -7,7 +7,9 @@ import { PrimaryButton } from './PrimaryButton';
 describe('PrimaryButton', () => {
   it('habilitado: texto preto e dispara onPress', async () => {
     const onPress = jest.fn();
-    await renderWithTheme(<PrimaryButton label="FAZER LOGIN" onPress={onPress} />);
+    await renderWithTheme(
+      <PrimaryButton label="FAZER LOGIN" onPress={onPress} />,
+    );
 
     const button = screen.getByRole('button', { name: 'FAZER LOGIN' });
     expect(button).toBeEnabled();
@@ -52,7 +54,11 @@ describe('PrimaryButton', () => {
 
   it('pinta a área segura inferior com a cor do botão', async () => {
     await renderWithTheme(
-      <PrimaryButton label="FAZER LOGIN" onPress={jest.fn()} bottomInset={34} />,
+      <PrimaryButton
+        label="FAZER LOGIN"
+        onPress={jest.fn()}
+        bottomInset={34}
+      />,
     );
 
     expect(screen.getByRole('button', { name: 'FAZER LOGIN' })).toHaveStyle({

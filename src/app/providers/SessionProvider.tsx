@@ -43,7 +43,10 @@ type SessionProviderProps = PropsWithChildren<{
   dependencies: SessionDependencies;
 }>;
 
-export function SessionProvider({ dependencies, children }: SessionProviderProps) {
+export function SessionProvider({
+  dependencies,
+  children,
+}: SessionProviderProps) {
   const { authenticateGuardian, restoreSession, sessionRepository } =
     dependencies;
   const [state, setState] = useState<SessionState>({ status: 'restoring' });

@@ -46,7 +46,10 @@ describe('App (fluxo de sessão e navegação)', () => {
   it('login válido abre a aba Agenda com o cabeçalho e salva só os identificadores', async () => {
     await renderApp();
 
-    await fireEvent.changeText(await screen.findByLabelText('CPF'), guardian.cpf);
+    await fireEvent.changeText(
+      await screen.findByLabelText('CPF'),
+      guardian.cpf,
+    );
     await fireEvent.changeText(screen.getByLabelText('SENHA'), guardian.senha);
     await fireEvent.press(screen.getByRole('button', { name: 'FAZER LOGIN' }));
 
@@ -70,11 +73,19 @@ describe('App (fluxo de sessão e navegação)', () => {
   it('login inválido mostra o erro e permanece no Login', async () => {
     await renderApp();
 
-    await fireEvent.changeText(await screen.findByLabelText('CPF'), guardian.cpf);
-    await fireEvent.changeText(screen.getByLabelText('SENHA'), `${guardian.senha}x`);
+    await fireEvent.changeText(
+      await screen.findByLabelText('CPF'),
+      guardian.cpf,
+    );
+    await fireEvent.changeText(
+      screen.getByLabelText('SENHA'),
+      `${guardian.senha}x`,
+    );
     await fireEvent.press(screen.getByRole('button', { name: 'FAZER LOGIN' }));
 
-    expect(await screen.findByText(/Usuário ou senha inválida/)).toBeOnTheScreen();
+    expect(
+      await screen.findByText(/Usuário ou senha inválida/),
+    ).toBeOnTheScreen();
     expect(await AsyncStorage.getItem(SESSION_STORAGE_KEY)).toBeNull();
   });
 
@@ -108,7 +119,9 @@ describe('App (fluxo de sessão e navegação)', () => {
     await fireEvent.press(tab('BOLETIM'));
     await sectionTitle('BOLETIM');
 
-    await fireEvent.press(screen.getByRole('button', { name: 'TROCAR PERFIL' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'TROCAR PERFIL' }),
+    );
     expect(
       await screen.findByText('Escolha o perfil\nque você quer visualizar'),
     ).toBeOnTheScreen();
@@ -128,7 +141,9 @@ describe('App (fluxo de sessão e navegação)', () => {
     await fireEvent.press(tab('BOLETIM'));
     await sectionTitle('BOLETIM');
 
-    await fireEvent.press(screen.getByRole('button', { name: 'TROCAR PERFIL' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'TROCAR PERFIL' }),
+    );
     const fullName = `${secondStudent.primeiroNome} ${secondStudent.sobrenome}`;
     await fireEvent.press(
       await screen.findByRole('radio', { name: new RegExp(`^${fullName},`) }),
@@ -146,7 +161,10 @@ describe('App (fluxo de sessão e navegação)', () => {
   });
 
   it('responsável com 1 aluno não vê TROCAR PERFIL', async () => {
-    await storeSession(singleStudentGuardian.id, singleStudentGuardian.alunos[0].rm);
+    await storeSession(
+      singleStudentGuardian.id,
+      singleStudentGuardian.alunos[0].rm,
+    );
     await renderApp();
 
     expect(await sectionTitle('AGENDA')).toBeOnTheScreen();

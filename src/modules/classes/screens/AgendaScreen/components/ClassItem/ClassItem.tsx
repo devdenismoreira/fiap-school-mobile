@@ -16,7 +16,9 @@ export function ClassItem({ session }: ClassItemProps) {
     <Box
       flexDirection="row"
       accessible
-      accessibilityLabel={`${session.time.replace(' - ', ' às ')}, ${session.subject}`}
+      accessibilityLabel={`${session.time.replace(' - ', ' às ')}, ${
+        session.subject
+      }`}
     >
       <Box
         width={sizes.timelineDot}

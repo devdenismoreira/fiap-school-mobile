@@ -31,7 +31,9 @@ export function renderWithSession(
   function Providers({ children }: PropsWithChildren) {
     return (
       <ThemeProvider theme={theme}>
-        <SessionProvider dependencies={dependencies}>{children}</SessionProvider>
+        <SessionProvider dependencies={dependencies}>
+          {children}
+        </SessionProvider>
       </ThemeProvider>
     );
   }

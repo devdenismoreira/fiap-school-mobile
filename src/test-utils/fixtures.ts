@@ -19,7 +19,10 @@ export function makeGuardian(overrides: Partial<Guardian> = {}): Guardian {
     id: 1,
     firstName: 'Ana',
     lastName: 'Teste',
-    students: [makeStudent({ rm: 100 }), makeStudent({ rm: 200, firstName: 'Bia' })],
+    students: [
+      makeStudent({ rm: 100 }),
+      makeStudent({ rm: 200, firstName: 'Bia' }),
+    ],
     ...overrides,
   };
 }

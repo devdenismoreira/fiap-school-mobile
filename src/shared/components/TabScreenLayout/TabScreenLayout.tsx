@@ -18,7 +18,11 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <Box flex={1} backgroundColor="background" style={{ paddingTop: insets.top }}>
+    <Box
+      flex={1}
+      backgroundColor="background"
+      style={{ paddingTop: insets.top }}
+    >
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}

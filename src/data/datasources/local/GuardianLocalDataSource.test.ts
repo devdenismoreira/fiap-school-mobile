@@ -43,7 +43,9 @@ describe('GuardianLocalDataSource', () => {
   it('só aceita o CPF já normalizado (11 dígitos exatos)', async () => {
     const dataSource = new GuardianLocalDataSource();
 
-    await expect(dataSource.signIn(formatCpf(cpf), password)).resolves.toBeNull();
+    await expect(
+      dataSource.signIn(formatCpf(cpf), password),
+    ).resolves.toBeNull();
     await expect(dataSource.signIn(`${cpf}0`, password)).resolves.toBeNull();
   });
 

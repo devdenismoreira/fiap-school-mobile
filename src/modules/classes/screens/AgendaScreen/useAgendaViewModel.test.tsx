@@ -20,7 +20,9 @@ const day = (date: string, subjects: string[] = []): ScheduleDay => ({
 
 async function renderAgenda(guardian: Guardian, selectedStudentRm = 100) {
   const dependencies = makeSessionDependencies({
-    restoreSession: jest.fn().mockResolvedValue({ guardian, selectedStudentRm }),
+    restoreSession: jest
+      .fn()
+      .mockResolvedValue({ guardian, selectedStudentRm }),
   });
   const wrapper = ({ children }: PropsWithChildren) => (
     <ThemeProvider theme={theme}>
