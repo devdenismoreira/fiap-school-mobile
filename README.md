@@ -131,6 +131,14 @@ Medidas, cores, tipografia e estados seguem o Figma. Diferenças conhecidas:
 
 ## Documentação do processo (SDD)
 
-O desenvolvimento seguiu Spec-Driven Development: especificações em `specs/` (visão geral, arquitetura, modelo de dados, design system e uma spec por funcionalidade), tarefas incrementais com critérios de aceite em `tasks/`, e o contexto de IA em `CLAUDE.md`.
+O desenvolvimento seguiu Spec-Driven Development (Specify → Plan → Implement → Validate → Review), com o Claude Code como apoio.
+
+| Caminho | Conteúdo |
+|---|---|
+| [`specs/`](specs/README.md) | Visão geral e decisões (D-01 a D-16), arquitetura, modelo de dados, design system e uma spec por funcionalidade |
+| [`tasks/`](tasks/README.md) | Tarefas T01–T10 com dependências, critérios de aceite, validação e status |
+| [`CLAUDE.md`](CLAUDE.md) | Contexto e regras do projeto para a IA |
+| [`.claude/`](.claude/) | Agentes (`architect`, `mobile-developer`, `test-engineer`, `code-reviewer`), comandos (`/specify`, `/plan`, `/implement`, `/validate`, `/review`) e permissões compartilhadas |
+| [`AI_USAGE.md`](AI_USAGE.md) | Como a IA foi usada e como as respostas foram validadas |
 
 O histórico usa Conventional Commits, com um commit por funcionalidade.
