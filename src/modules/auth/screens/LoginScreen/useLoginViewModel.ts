@@ -1,12 +1,35 @@
 import { useRef, useState } from 'react';
 
 import { useSession } from '@/app/providers/SessionProvider';
+import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { CPF_LENGTH, formatCpf, normalizeCpf } from '@/core/utils/cpf';
 
-export const LOGIN_ERROR_MESSAGE =
-  'Usuário ou senha inválida.\nPode tentar novamente?';
+export type LoginErrorKind = 'credentials' | 'connection' | 'tooManyAttempts';
 
-type Status = 'idle' | 'loading' | 'error';
+export const LOGIN_ERROR_MESSAGES: Record<LoginErrorKind, string> = {
+  credentials: 'Usuário ou senha inválida.\nPode tentar novamente?',
+  connection:
+    'Não foi possível conectar.\nVerifique sua internet e tente novamente.',
+  tooManyAttempts: 'Muitas tentativas.\nTente novamente mais tarde.',
+};
+
+export const LOGIN_ERROR_MESSAGE = LOGIN_ERROR_MESSAGES.credentials;
+
+type Status = 'idle' | 'loading' | LoginErrorKind;
+
+const isErrorStatus = (status: Status): status is LoginErrorKind =>
+  status !== 'idle' && status !== 'loading';
+
+function toErrorKind(error: unknown): LoginErrorKind {
+  if (error instanceof InvalidCredentialsError) {
+    return 'credentials';
+  }
+  if (error instanceof TooManyAttemptsError) {
+    return 'tooManyAttempts';
+  }
+  return 'connection';
+}
 
 export function useLoginViewModel() {
   const { signIn } = useSession();
@@ -20,7 +43,7 @@ export function useLoginViewModel() {
     cpfDigits.length === CPF_LENGTH && password.length > 0 && !isLoading;
 
   const clearError = () =>
-    setStatus(current => (current === 'error' ? 'idle' : current));
+    setStatus(current => (isErrorStatus(current) ? 'idle' : current));
 
   const changeCpf = (text: string) => {
     setCpfDigits(normalizeCpf(text));
@@ -37,8 +60,8 @@ export function useLoginViewModel() {
     setStatus('loading');
     try {
       await signIn(cpfDigits, password);
-    } catch {
-      setStatus('error');
+    } catch (error) {
+      setStatus(toErrorKind(error));
     } finally {
       submitting.current = false;
     }
@@ -55,7 +78,8 @@ export function useLoginViewModel() {
     cpf: formatCpf(cpfDigits),
     password,
     isLoading,
-    hasError: status === 'error',
+    hasError: isErrorStatus(status),
+    errorMessage: isErrorStatus(status) ? LOGIN_ERROR_MESSAGES[status] : null,
     canSubmit,
     changeCpf,
     changePassword,

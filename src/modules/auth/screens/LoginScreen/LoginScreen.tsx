@@ -16,7 +16,7 @@ import { fadeInFast, fadeOutFast } from '@/shared/animations';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useKeyboardVisible } from '@/shared/hooks/useKeyboardVisible';
 import { UnderlineInput } from './components/UnderlineInput';
-import { LOGIN_ERROR_MESSAGE, useLoginViewModel } from './useLoginViewModel';
+import { useLoginViewModel } from './useLoginViewModel';
 
 const CPF_MASKED_LENGTH = 14;
 
@@ -27,12 +27,12 @@ export function LoginScreen() {
   const passwordRef = useRef<TextInputInstance>(null);
 
   useEffect(() => {
-    if (viewModel.hasError) {
+    if (viewModel.errorMessage) {
       AccessibilityInfo.announceForAccessibility(
-        LOGIN_ERROR_MESSAGE.replace('\n', ' '),
+        viewModel.errorMessage.replace('\n', ' '),
       );
     }
-  }, [viewModel.hasError]);
+  }, [viewModel.errorMessage]);
 
   return (
     <Box flex={1} backgroundColor="background">
@@ -91,11 +91,11 @@ export function LoginScreen() {
               />
             </Box>
 
-            {viewModel.hasError ? (
+            {viewModel.errorMessage ? (
               <Animated.View entering={fadeInFast} exiting={fadeOutFast}>
                 <Box marginTop="xl">
                   <Text variant="bodyMedium" color="primary" textAlign="center">
-                    {LOGIN_ERROR_MESSAGE}
+                    {viewModel.errorMessage}
                   </Text>
                 </Box>
               </Animated.View>

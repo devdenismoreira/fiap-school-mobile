@@ -2,6 +2,8 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { NetworkError } from '@/core/errors/NetworkError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { theme } from '@/core/theme';
 import { makeGuardian } from '@/test-utils/fixtures';
 import {
@@ -106,6 +108,41 @@ describe('LoginScreen', () => {
     await fireEvent.changeText(passwordInput(), 'outra');
     expect(screen.queryByText(/Usuário ou senha inválida/)).toBeNull();
   });
+
+  it.each([
+    [
+      'sem conexão',
+      new NetworkError(),
+      'Não foi possível conectar.\nVerifique sua internet e tente novamente.',
+    ],
+    [
+      'muitas tentativas',
+      new TooManyAttemptsError(),
+      'Muitas tentativas.\nTente novamente mais tarde.',
+    ],
+  ])(
+    '%s: mostra e anuncia a mensagem própria',
+    async (_label, error, message) => {
+      const announce = jest.spyOn(
+        AccessibilityInfo,
+        'announceForAccessibility',
+      );
+      await renderWithSession(
+        <LoginScreen />,
+        makeSessionDependencies({
+          authenticateGuardian: jest.fn().mockRejectedValue(error),
+        }),
+      );
+
+      await fillCredentials();
+      await fireEvent.press(submitButton());
+
+      expect(await screen.findByText(message)).toBeOnTheScreen();
+      expect(announce).toHaveBeenCalledWith(message.replace('\n', ' '));
+      expect(screen.queryByText(/Usuário ou senha inválida/)).toBeNull();
+      expect(submitButton()).toBeEnabled();
+    },
+  );
 
   it('carregando: botão ocupado e vazio, campos bloqueados e sem envio duplo', async () => {
     let finish: () => void = () => undefined;
