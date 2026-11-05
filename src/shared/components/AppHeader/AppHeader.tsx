@@ -34,6 +34,7 @@ export function AppHeader() {
           source={logo}
           resizeMode="cover"
           style={styles.logo}
+          accessible
           accessibilityRole="image"
           accessibilityLabel="FIAP School"
         />
