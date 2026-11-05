@@ -78,15 +78,17 @@ describe('StudentSelectionScreen', () => {
       selectedStudentRm: 200,
     });
     expect(mockGoBack).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Mostrando os dados de Bia.')).toBeOnTheScreen();
   });
 
-  it('selecionar o aluno atual só fecha, sem gravar nada', async () => {
+  it('selecionar o aluno atual só fecha, sem gravar nada nem avisar', async () => {
     const dependencies = await renderScreen();
 
     await fireEvent.press(card(100));
 
     expect(dependencies.sessionRepository.save).not.toHaveBeenCalled();
     expect(mockGoBack).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(/Mostrando os dados de/)).toBeNull();
   });
 
   it('FECHAR volta sem alterar o aluno', async () => {
