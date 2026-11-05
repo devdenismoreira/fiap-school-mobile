@@ -13,5 +13,6 @@ Especificações escritas a partir do repositório, do Figma e do JSON real do d
 | [features/classes.md](features/classes.md) | Agenda por dia |
 | [features/report.md](features/report.md) | Boletim por ano e trimestre |
 | [features/api-integration.md](features/api-integration.md) | Evolução depois da entrega: troca do JSON pela FIAP School API (tokens, interceptador, mensagens de conexão) |
+| [features/toast.md](features/toast.md) | Toast no estilo do Instagram com os tokens do projeto: sessão expirada, troca de aluno, conexão |
 
 Regras de manutenção: atualizar a spec quando uma decisão mudar, e não tratar documentação como substituta de testes.
