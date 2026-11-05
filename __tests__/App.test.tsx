@@ -111,6 +111,20 @@ describe('App (fluxo de sessão e navegação)', () => {
     expect(screen.getByText(studentInfo(firstStudent))).toBeOnTheScreen();
   });
 
+  it('só a barra de ações é fixa (uma instância); a saudação rola dentro de cada aba', async () => {
+    await storeSession(guardian.id, firstStudent.rm);
+    await renderApp();
+    await sectionTitle('AGENDA');
+    await fireEvent.press(tab('BOLETIM'));
+    await sectionTitle('BOLETIM');
+
+    const hidden = { includeHiddenElements: true };
+    expect(
+      screen.getAllByRole('button', { name: 'SAIR', ...hidden }),
+    ).toHaveLength(1);
+    expect(screen.getAllByText(/^Olá, /, hidden)).toHaveLength(2);
+  });
+
   it('TROCAR PERFIL abre a seleção acima das abas e FECHAR volta à mesma aba', async () => {
     await storeSession(guardian.id, firstStudent.rm);
     await renderApp();

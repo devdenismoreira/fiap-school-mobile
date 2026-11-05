@@ -3,7 +3,9 @@ export const motion = {
   normal: 220,
   slow: 320,
   open: 400,
+  transition: 480,
   stagger: 30,
   staggerMaxItems: 6,
+  sectionStagger: 80,
   pressedOpacity: 0.7,
 } as const;

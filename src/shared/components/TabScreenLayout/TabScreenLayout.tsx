@@ -1,28 +1,26 @@
 import type { PropsWithChildren } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 
-import { Box, Text, theme } from '@/core/theme';
-import { AppHeader } from '@/shared/components/AppHeader';
+import { Text, theme } from '@/core/theme';
+import { screenSectionEntering } from '@/shared/animations';
+import { StudentGreeting } from '@/shared/components/StudentGreeting';
 
 type TabScreenLayoutProps = PropsWithChildren<{
   title: string;
 }>;
 
 export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
-  const insets = useSafeAreaInsets();
-
   return (
-    <Box
-      flex={1}
-      backgroundColor="background"
-      style={{ paddingTop: insets.top }}
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
     >
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        <AppHeader />
+      <Animated.View entering={screenSectionEntering(0)}>
+        <StudentGreeting />
+      </Animated.View>
+      <Animated.View entering={screenSectionEntering(1)}>
         <Text
           variant="sectionTitle"
           textAlign="center"
@@ -31,13 +29,18 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
         >
           {title}
         </Text>
+      </Animated.View>
+      <Animated.View entering={screenSectionEntering(2)}>
         {children}
-      </ScrollView>
-    </Box>
+      </Animated.View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    backgroundColor: theme.colors.background,
+  },
   content: {
     flexGrow: 1,
     paddingBottom: theme.spacing.xl,

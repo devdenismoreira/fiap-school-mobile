@@ -54,3 +54,7 @@ export function listItemEntering(index: number) {
   const step = Math.min(index, motion.staggerMaxItems - 1);
   return fadeInFrom(8, motion.slow).delay(step * motion.stagger);
 }
+
+export function screenSectionEntering(index: number) {
+  return fadeInFrom(12, motion.open).delay(index * motion.sectionStagger);
+}
