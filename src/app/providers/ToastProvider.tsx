@@ -12,17 +12,23 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { motion, theme } from '@/core/theme';
-import { Toast } from '@/shared/components/Toast';
+import { Toast, type ToastVariant } from '@/shared/components/Toast';
 import { useKeyboardHeight } from '@/shared/hooks/useKeyboardHeight';
 
 export type ToastOptions = {
   id?: string;
+  title?: string;
+  variant?: ToastVariant;
   duration?: number;
 };
 
 type ActiveToast = {
   key: string;
   message: string;
+  title?: string;
+  variant: ToastVariant;
+  duration: number;
+  run: number;
 };
 
 type BottomInset = {
@@ -76,11 +82,23 @@ export function ToastProvider({ children }: PropsWithChildren) {
   const showToast = useCallback(
     (
       message: string,
-      { id, duration = motion.toastDuration }: ToastOptions = {},
+      {
+        id,
+        title,
+        variant = 'info',
+        duration = motion.toastDuration,
+      }: ToastOptions = {},
     ) => {
       clearTimeout(timer.current);
       sequence.current += 1;
-      setToast({ key: id ?? `toast-${sequence.current}`, message });
+      setToast({
+        key: id ?? `toast-${sequence.current}`,
+        message,
+        title,
+        variant,
+        duration,
+        run: sequence.current,
+      });
       timer.current = setTimeout(() => setToast(null), duration);
     },
     [],
@@ -143,6 +161,10 @@ function ToastHost({ toast, barHeight, onDismiss }: ToastHostProps) {
           <Toast
             key={toast.key}
             message={toast.message}
+            title={toast.title}
+            variant={toast.variant}
+            duration={toast.duration}
+            run={toast.run}
             onDismiss={onDismiss}
           />
         </View>

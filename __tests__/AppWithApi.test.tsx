@@ -100,7 +100,7 @@ describe('App com a FIAP School API (simulada)', () => {
       await screen.findByRole('button', { name: 'FAZER LOGIN' }),
     ).toBeOnTheScreen();
     expect(
-      screen.getByText('Sua sessão expirou.\nEntre novamente.'),
+      screen.getByText('Entre novamente para continuar.'),
     ).toBeOnTheScreen();
     await expect(api.tokenStore.getRefreshToken()).resolves.toBeNull();
     expect(await AsyncStorage.getItem(SESSION_STORAGE_KEY)).toBeNull();
@@ -117,6 +117,6 @@ describe('App com a FIAP School API (simulada)', () => {
     expect(
       await screen.findByRole('button', { name: 'FAZER LOGIN' }),
     ).toBeOnTheScreen();
-    expect(screen.queryByText(/Sua sessão expirou/)).toBeNull();
+    expect(screen.queryByText(/Sessão expirada/)).toBeNull();
   });
 });

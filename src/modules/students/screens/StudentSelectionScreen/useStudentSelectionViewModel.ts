@@ -20,7 +20,10 @@ export function useStudentSelectionViewModel() {
     const student = students.find(item => item.rm === rm);
     if (student && rm !== selectedRm) {
       selectStudent(rm);
-      showToast(studentSwitchedMessage(student.firstName));
+      showToast(studentSwitchedMessage(student.firstName), {
+        title: 'Perfil alterado',
+        variant: 'info',
+      });
     }
     close();
   };

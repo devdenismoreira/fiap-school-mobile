@@ -33,17 +33,26 @@ Regras:
    - mudanças que duram menos de 1 s são ignoradas, para não piscar em redes instáveis.
 4. **Reconexão na tela de conexão (D-33):** quando a internet volta e o app está nessa tela, ele tenta restaurar a sessão sozinho, além de mostrar "Conexão restabelecida.".
 
-## 3. Visual (D-29)
+## 3. Visual (revisado em 2026-11-05, a partir da referência do desenvolvedor)
 
-| Propriedade | Token |
+Quatro variantes, cada uma com ícone pequeno (20 pt, traço) e uma linha de destaque de 2 pt na base, na cor da variante:
+
+| Variante | Cor | Tema | Uso |
+|---|---|---|---|
+| `success` | turquesa #20E6D0 | `feedbackSuccess` | Conexão restabelecida |
+| `info` | turquesa #20E6D0 | `feedbackInfo` | Perfil alterado |
+| `error` | rosa #F0005B | `feedbackError` | Sem conexão |
+| `warning` | âmbar #F5C84B | `feedbackWarning` | Sessão expirada |
+
+| Propriedade | Valor |
 |---|---|
-| Fundo | `surfaceRaised` (#4D4D4D) |
-| Texto | `bodyMedium`, cor `textPrimary` (branco), alinhado à esquerda, no máximo 2 linhas |
-| Raio | `m` (8) |
-| Padding | vertical `sm` (12), horizontal `m` (16) |
-| Margens laterais | `m` (16) |
-| Sombra | `shadowColor` preto, opacidade 0,3, raio 8, deslocamento y 2; `elevation` 6 no Android |
-| Ícone | Nenhum: o design system não tem ícones de estado, e o `CLAUDE.md` §8 veda ícones decorativos sem base no design |
+| Fundo | `surface` (#262626) |
+| Título | `bodySemiBold`, branco; mensagem `caption` |
+| Raio, margens | `m` (8); 16 pt nas laterais |
+| Fechar | X cinza à direita; tocar no toast ou arrastar para baixo também fecha |
+| Sombra | leve, `elevation` 8 no Android |
+
+Textos: "Sessão expirada · Entre novamente para continuar.", "Perfil alterado · Mostrando os dados de {nome}.", "Sem conexão · Verifique sua internet.", "Conexão restabelecida · Você está online novamente.". O `showToast` aceita `title` e `variant`.
 
 ## 4. Comportamento
 
@@ -58,7 +67,7 @@ Regras:
 Com o teclado aberto, a altura dele é somada, para o toast não ficar escondido.
 
 **Animação:**
-- entrada: sobe de baixo com fade, `openTiming` (400 ms, curva suave);
+- entrada: sobe de baixo com fade, `quickTiming` (260 ms, curva suave);
 - saída: desce com fade, 220 ms (`emphasizedAccelerate`), a mesma do fechamento do dropdown;
 - "Reduzir movimento" troca as duas por aparecer e sumir sem animação (`ReduceMotion.System`).
 

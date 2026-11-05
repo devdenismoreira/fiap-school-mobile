@@ -6,17 +6,26 @@ import {
   getByGestureTestId,
 } from 'react-native-gesture-handler/jest-utils';
 
-import { theme } from '@/core/theme';
+import { getAnimatedStyle } from 'react-native-reanimated';
+
+import { motion, theme } from '@/core/theme';
 import { renderWithTheme } from '@/test-utils/renderWithTheme';
 import { Toast, TOAST_DISMISS_DISTANCE } from './Toast';
+import type { ToastVariant } from './ToastIcon';
 
-const MESSAGE = 'Sua sessão expirou.\nEntre novamente.';
+const TITLE = 'Sessão expirada';
+const MESSAGE = 'Entre novamente para continuar.';
 
-async function renderToast() {
+async function renderToast(variant: ToastVariant = 'warning') {
   const onDismiss = jest.fn();
   await renderWithTheme(
     <GestureHandlerRootView style={styles.root}>
-      <Toast message={MESSAGE} onDismiss={onDismiss} />
+      <Toast
+        title={TITLE}
+        message={MESSAGE}
+        variant={variant}
+        onDismiss={onDismiss}
+      />
     </GestureHandlerRootView>,
   );
   return onDismiss;
@@ -32,29 +41,61 @@ const swipe = (distance: number) =>
   );
 
 describe('Toast', () => {
-  it('usa os tokens do design system: surfaceRaised, raio 8 e texto branco em 2 linhas no máximo', async () => {
+  it('usa os tokens do design system: fundo surface, raio 8, título e mensagem', async () => {
     await renderToast();
 
-    const text = screen.getByText(MESSAGE);
-    expect(text).toHaveProp('numberOfLines', 2);
-    expect(text).toHaveStyle({ color: theme.colors.textPrimary });
+    expect(screen.getByText(TITLE)).toHaveStyle({
+      color: theme.colors.textPrimary,
+    });
+    expect(screen.getByText(MESSAGE)).toHaveProp('numberOfLines', 2);
     expect(screen.getByTestId('toast').children[0]).toHaveStyle({
-      backgroundColor: theme.colors.surfaceRaised,
+      backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadii.m,
     });
   });
 
-  it('anuncia a mensagem ao leitor de tela e se apresenta como botão de fechar', async () => {
+  it.each([
+    ['success', theme.colors.feedbackSuccess],
+    ['info', theme.colors.feedbackInfo],
+    ['error', theme.colors.feedbackError],
+    ['warning', theme.colors.feedbackWarning],
+  ] as const)(
+    'variante %s usa a cor de destaque na linha inferior',
+    async (variant, color) => {
+      await renderToast(variant);
+
+      expect(screen.getByTestId('toast-accent')).toHaveStyle({
+        backgroundColor: color,
+      });
+    },
+  );
+
+  it('a linha de destaque encolhe como um progresso até o fim da duração', async () => {
+    jest.useFakeTimers();
+    await renderToast();
+    const scale = () =>
+      (
+        getAnimatedStyle as unknown as (c: unknown) => {
+          transform?: { scaleX: number }[];
+        }
+      )(screen.getByTestId('toast-accent')).transform?.[0].scaleX;
+
+    expect(scale()).toBe(1);
+    await act(async () => jest.advanceTimersByTime(motion.toastDuration / 2));
+    expect(scale()).toBeCloseTo(0.5, 1);
+    await act(async () => jest.advanceTimersByTime(motion.toastDuration));
+    expect(scale()).toBe(0);
+    jest.useRealTimers();
+  });
+
+  it('anuncia título e mensagem ao leitor de tela e se apresenta como botão de fechar', async () => {
     const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
 
     await renderToast();
 
-    expect(announce).toHaveBeenCalledWith(
-      'Sua sessão expirou. Entre novamente.',
-    );
-    const toast = screen.getByRole('button', {
-      name: 'Sua sessão expirou. Entre novamente.',
-    });
+    const spoken = `${TITLE}. ${MESSAGE}`;
+    expect(announce).toHaveBeenCalledWith(spoken);
+    const toast = screen.getByRole('button', { name: spoken });
     expect(toast).toHaveProp('accessibilityHint', 'Toque para fechar');
   });
 

@@ -194,7 +194,7 @@ describe('LoginScreen', () => {
     );
 
     expect(
-      await screen.findByText('Sua sessão expirou.\nEntre novamente.'),
+      await screen.findByText('Entre novamente para continuar.'),
     ).toBeOnTheScreen();
   });
 
@@ -202,6 +202,6 @@ describe('LoginScreen', () => {
     await renderWithSession(<LoginScreen />);
     await screen.findByText('CPF');
 
-    expect(screen.queryByText(/Sua sessão expirou/)).toBeNull();
+    expect(screen.queryByText(/Sessão expirada/)).toBeNull();
   });
 });

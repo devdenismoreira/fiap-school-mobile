@@ -7,7 +7,8 @@ import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { motion } from '@/core/theme';
 import { CPF_LENGTH, formatCpf, normalizeCpf } from '@/core/utils/cpf';
 
-export const SESSION_EXPIRED_MESSAGE = 'Sua sessão expirou.\nEntre novamente.';
+export const SESSION_EXPIRED_TITLE = 'Sessão expirada';
+export const SESSION_EXPIRED_MESSAGE = 'Entre novamente para continuar.';
 
 export type LoginErrorKind = 'credentials' | 'connection' | 'tooManyAttempts';
 
@@ -48,6 +49,8 @@ export function useLoginViewModel() {
   useEffect(() => {
     if (sessionExpired) {
       showToast(SESSION_EXPIRED_MESSAGE, {
+        title: SESSION_EXPIRED_TITLE,
+        variant: 'warning',
         duration: motion.toastDurationLong,
       });
     }
