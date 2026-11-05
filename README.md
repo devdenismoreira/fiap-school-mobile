@@ -24,7 +24,9 @@ Aplicativo para responsáveis acompanharem a **agenda de aulas** e o **boletim**
 | React Native Reanimated + Worklets | 4.7.1 + 0.13.1 |
 | React Native Gesture Handler, Screens, Safe Area Context | 3.4 / 4.30 / 5.11 |
 | React Native SVG (ícones do Figma) | 15.16.0 |
-| AsyncStorage (sessão) | 3.1.1 |
+| AsyncStorage (sessão, sem tokens) | 3.1.1 |
+| Axios (cliente HTTP da API) | 1.20.0 |
+| React Native Keychain (refresh token) | 10.0.0 |
 | Jest + React Native Testing Library | 29.7 + 14.1 |
 | Gerenciador de pacotes | Yarn 1.22 (clássico) |
 
@@ -63,9 +65,36 @@ Os builds de desenvolvimento compilam só a arquitetura do emulador ou aparelho 
 
 **Android físico:** ative as Opções do desenvolvedor e a Depuração USB, e confira se o aparelho aparece em `adb devices`. O `release` usa a chave de debug do template, o que basta para testes locais.
 
+## Integração com a FIAP School API
+
+Na branch `feature/integrate-api`, o app usa a [FIAP School API](../FiapSchoolApi) no lugar do JSON local. A API devolve o mesmo formato de dados, então domínio, telas e navegação não mudaram (spec [`features/api-integration.md`](specs/features/api-integration.md)).
+
+1. Suba a API (`yarn dev` em `../FiapSchoolApi`) e confira em `http://localhost:3000/docs`.
+2. Rode o app normalmente. Em debug, sem configuração, ele usa:
+   - simulador iOS: `http://localhost:3000`;
+   - emulador Android: `http://10.0.2.2:3000`.
+3. **Aparelho físico:** abra um túnel HTTPS para a API e passe a URL ao Metro. A `API_URL` é gravada no bundle, por isso o `--reset-cache`.
+
+   ```sh
+   cloudflared tunnel --url http://localhost:3000   # ou: ngrok http 3000
+   API_URL=https://<endereço-do-túnel> yarn start --reset-cache
+   ```
+
+4. **Release:** exige `API_URL` com `https://` no momento do bundle; sem ela, o app falha ao abrir com uma mensagem clara.
+
+Comportamento:
+- **Tokens:** o refresh token fica no Keychain (iOS) ou no Keystore (Android); o access token, só em memória. Nenhum token vai para o AsyncStorage, e a senha nunca é guardada.
+- **Ao abrir o app:** ele renova a sessão com o refresh guardado e entra sem pedir login.
+- **Token vencido:** um 401 gera uma única renovação, compartilhada entre as requisições, e cada requisição é repetida uma vez.
+- **Sem conexão:**
+  - no login, aparece uma mensagem de conexão;
+  - na abertura do app, aparece uma tela com **TENTAR NOVAMENTE**;
+  - após 5 tentativas erradas, a API bloqueia o login, e o app avisa.
+- **SAIR** revoga a sessão também na API.
+
 ## Dados de teste
 
-A autenticação é **simulada** a partir do JSON fornecido pelo desafio, em [`src/data/datasources/local/responsaveis.json`](src/data/datasources/local/responsaveis.json). Para entrar, use os campos `cpf` e `senha` de qualquer responsável desse arquivo. O CPF pode ser digitado com ou sem máscara.
+Na versão da entrega, a autenticação é **simulada** a partir do JSON fornecido pelo desafio, em [`src/data/datasources/local/responsaveis.json`](src/data/datasources/local/responsaveis.json). Com a API, o mesmo arquivo alimenta o banco pelo seed de lá, e as credenciais são as mesmas. Para entrar, use os campos `cpf` e `senha` de qualquer responsável desse arquivo. O CPF pode ser digitado com ou sem máscara.
 
 - O **primeiro responsável** tem dois alunos e permite testar a troca de aluno.
 - O **segundo** tem um aluno só, então a ação "TROCAR PERFIL" não aparece.
@@ -91,7 +120,7 @@ src/
 
 Principais decisões:
 
-- **Repository Pattern:** a fonte local se comporta como uma API de login. Ela valida as credenciais, devolve o responsável **sem** CPF, senha ou e-mail e simula 800 ms de latência para o estado "carregando" do Figma aparecer. Trocar por REST exige só outra implementação de `GuardianDataSource`.
+- **Repository Pattern:** na entrega, a fonte local se comportava como uma API de login. Ela validava as credenciais, devolvia o responsável **sem** CPF, senha ou e-mail e simulava 800 ms de latência para o estado "carregando" do Figma aparecer. A integração com a API confirmou o desenho: bastou outra implementação de `GuardianDataSource` (`GuardianRemoteDataSource`, com Axios). A fonte local continua nos testes.
 - **Casos de uso só onde há regra real:** `authenticateGuardian` (normaliza o CPF, valida o dígito verificador, erro genérico) e `restoreSession` (descarta sessão inválida e troca um aluno desvinculado pelo primeiro).
 - **Context API** apenas para a sessão e o aluno selecionado. O estado de cada tela (dia escolhido, ano, acordeões abertos) fica no ViewModel da tela (`use<Tela>ViewModel`).
 - **Navegação** no padrão de auth flow: telas condicionais por estado de sessão. A troca de aluno é uma rota empilhada acima das abas, que sobe de baixo.
@@ -102,7 +131,8 @@ Principais decisões:
 
 - A sessão salva no AsyncStorage contém **apenas** `{ version, guardianId, selectedStudentRm }`. Nunca CPF, senha, nome ou e-mail, e há teste para isso.
 - Credenciais erradas, CPF inválido ou inexistente geram a **mesma** mensagem, sem indicar qual campo errou.
-- A autenticação é simulada para o desafio e **não** representa segurança de produção: o JSON com as senhas vai junto no app.
+- Na versão da entrega, a autenticação é simulada e **não** representa segurança de produção, porque o JSON com as senhas vai junto no app.
+- Com a API, a autenticação é real: JWT, sessão no servidor e refresh token protegido pelo Keychain ou Keystore.
 
 ## Testes e qualidade
 

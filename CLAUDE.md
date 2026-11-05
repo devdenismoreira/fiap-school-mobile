@@ -14,7 +14,11 @@ Não presuma requisitos nem invente dados, telas, regras de negócio ou comporta
 - **Objetivo:** aplicativo para responsáveis acompanharem as aulas diárias e o boletim anual de seus alunos.
 - **Plataformas:** Android e iOS.
 - **Repositório:** `github.com/devdenismoreira/fiap-school-mobile`, **privado** até a entrega; trabalho na branch `develop`.
-- **Estado atual:** tarefas T01–T10 implementadas (`tasks/README.md`). Os ajustes feitos após o teste em aparelho estão registrados na T09. Valide o estado real do repositório antes de alterar arquivos.
+- **Estado atual:**
+  - tarefas T01–T10 implementadas (`tasks/README.md`); os ajustes feitos após o teste em aparelho estão registrados na T09;
+  - depois da entrega, a T11 integra o app à FIAP School API (`../FiapSchoolApi`), na branch `feature/integrate-api` (`specs/features/api-integration.md`).
+
+  Valide o estado real do repositório antes de alterar arquivos.
 - **Figma:** consultado pelo MCP oficial do Figma. Os assets já foram exportados para `src/assets/` (D-16).
 
 ### Link do Figma
@@ -91,7 +95,9 @@ Verifique primeiro o `package.json` e a versão efetiva do React Native. Não in
 - AsyncStorage: persistência não sensível da sessão.
 - Jest e React Native Testing Library: testes.
 
-Não adicione bibliotecas por conveniência sem justificar a necessidade. Não adicione Firebase nem crie uma API/backend próprio: o desafio fornece dados locais e o escopo é o aplicativo mobile.
+Não adicione bibliotecas por conveniência sem justificar a necessidade. Não adicione Firebase nem crie uma API/backend dentro deste repositório: o desafio fornece dados locais e o escopo é o aplicativo mobile.
+
+Depois da entrega, a API passou a existir em repositório próprio (`../FiapSchoolApi`, Express + Prisma). O contrato dela está em `../FiapSchoolApi/specs/03-api-contract.md`. Mudanças em `GuardianDataSource`, nos DTOs ou no `toGuardian` exigem atualizar esse contrato.
 
 ### Versões em uso
 
@@ -109,6 +115,8 @@ Não adicione bibliotecas por conveniência sem justificar a necessidade. Não a
 | Safe Area Context | 5.11 |
 | AsyncStorage | 3.1 |
 | react-native-svg | 15.16 |
+| Axios (versão fixa) | 1.20.0 |
+| react-native-keychain | 10.0 |
 | Jest | 29 |
 | React Native Testing Library | 14 |
 

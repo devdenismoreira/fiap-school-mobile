@@ -12,5 +12,6 @@ Especificações escritas a partir do repositório, do Figma e do JSON real do d
 | [features/student-selection.md](features/student-selection.md) | Cabeçalho e troca de aluno |
 | [features/classes.md](features/classes.md) | Agenda por dia |
 | [features/report.md](features/report.md) | Boletim por ano e trimestre |
+| [features/api-integration.md](features/api-integration.md) | Evolução depois da entrega: troca do JSON pela FIAP School API (tokens, interceptador, mensagens de conexão) |
 
 Regras de manutenção: atualizar a spec quando uma decisão mudar, e não tratar documentação como substituta de testes.
