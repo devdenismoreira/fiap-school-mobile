@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Abertura (Android < 12): fundo preto com o logo centralizado (200 dp, igual ao Android 12+). -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
-    <item android:drawable="@color/app_background" />
-    <item>
-        <bitmap android:gravity="center" android:src="@drawable/launch_logo" />
-    </item>
-</layer-list>

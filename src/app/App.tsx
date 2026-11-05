@@ -5,6 +5,7 @@ import { navigationTheme } from '@/navigation/navigationTheme';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { createDependencies } from './bootstrap/dependencies';
 import { AppProviders } from './providers/AppProviders';
+import { BootSplashGate } from './providers/BootSplashGate';
 import { ConnectivityFeedback } from './providers/ConnectivityFeedback';
 import {
   SessionProvider,
@@ -28,6 +29,7 @@ export default function App({ dependencies = defaultDependencies }: AppProps) {
             <RootNavigator />
           </NavigationContainer>
           <ConnectivityFeedback />
+          <BootSplashGate />
         </SessionProvider>
       </ToastProvider>
     </AppProviders>

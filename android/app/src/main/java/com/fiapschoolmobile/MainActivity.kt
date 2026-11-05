@@ -5,12 +5,13 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import com.zoontek.rnbootsplash.RNBootSplash
 
 class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    // Sai do tema de abertura (LaunchTheme) para o tema do app, com fundo preto.
-    setTheme(R.style.AppTheme)
+    // Mantém a abertura até o JS chamar BootSplash.hide(); depois volta ao AppTheme.
+    RNBootSplash.init(this, R.style.BootTheme)
     // react-native-screens: não restaurar o estado das telas nativas após o
     // Android matar o processo (evita crash ao reabrir o app).
     super.onCreate(null)

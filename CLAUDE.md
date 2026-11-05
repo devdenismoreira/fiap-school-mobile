@@ -119,6 +119,7 @@ Depois da entrega, a API passou a existir em repositório próprio (`../FiapScho
 | Axios (versão fixa) | 1.20.0 |
 | react-native-keychain | 10.0 |
 | @react-native-community/netinfo (versão fixa) | 12.0.1 |
+| react-native-bootsplash (versão fixa) | 7.3.3 |
 | Jest | 29 |
 | React Native Testing Library | 14 |
 

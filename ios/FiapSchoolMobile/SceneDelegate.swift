@@ -1,6 +1,7 @@
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
+import RNBootSplash
 import UIKit
 
 class SceneDelegate: RCTDefaultReactNativeFactoryDelegate, UIWindowSceneDelegate {
@@ -45,6 +46,7 @@ class SceneDelegate: RCTDefaultReactNativeFactoryDelegate, UIWindowSceneDelegate
   override func customize(_ rootView: RCTRootView) {
     super.customize(rootView)
     rootView.backgroundColor = .black
+    RNBootSplash.initWithStoryboard("LaunchScreen", rootView: rootView)
   }
 
   func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

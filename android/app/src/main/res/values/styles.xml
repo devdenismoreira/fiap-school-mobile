@@ -8,9 +8,17 @@
         <item name="android:windowBackground">@color/app_background</item>
     </style>
 
-    <!-- Tema de abertura: a MainActivity troca para AppTheme ao ser criada. -->
-    <style name="LaunchTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
+    <!--
+      Abertura (react-native-bootsplash): fundo preto e o ícone `splash_icon`
+      (288 dp com o logo em 200 dp, o maior tamanho que cabe no círculo de
+      192 dp da SplashScreen do Android 12+). O splash fica até o JS chamar
+      BootSplash.hide(); depois a MainActivity usa o AppTheme.
+    -->
+    <style name="BootTheme" parent="Theme.BootSplash">
+        <item name="bootSplashBackground">@color/app_background</item>
+        <item name="bootSplashLogo">@drawable/splash_icon</item>
+        <item name="darkContentBarsStyle">false</item>
+        <item name="postBootSplashTheme">@style/AppTheme</item>
     </style>
 
 </resources>

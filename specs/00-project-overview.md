@@ -139,3 +139,9 @@ Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design sy
 | ID | Tema | Observação | Decisão |
 |---|---|---|---|
 | D-35 ✅ | JSON e datasource local | Com a API indo para produção, o app não usa mais o JSON. Mesmo assim, o `dependencies.ts` importava o `GuardianLocalDataSource`, e por isso o bundle de produção carregava o JSON com CPFs e senhas | **Decisão do desenvolvedor:** "aquele JSON já era".<br>- O arquivo foi movido para a API (`../FiapSchoolApi/prisma/data/responsaveis.json`), onde alimenta o seed e os testes de paridade.<br>- O app perdeu o `GuardianLocalDataSource` e o `createLocalDependencies`.<br>- Os testes usam um fixture anonimizado (`src/test-utils/fixtures/responsaveis.json`): mesma agenda e boletins, com nomes, RMs, e-mails e senhas fictícios e CPFs sintéticos válidos.<br>- Os testes também usam a API simulada `createFakeApi`.<br>- O código de produção não importa JSON nem `test-utils` |
+
+### Abertura mantida até a sessão restaurar (2026-11-05)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-36 ✅ | Launch screen até restaurar a sessão | Entre a launch screen e o primeiro conteúdo, o app ficava com a tela preta enquanto restaurava a sessão (renovação do token e `/me`) | `react-native-bootsplash` 7.3.3 (versão fixa; a 7.3.5 tinha 6 dias): a abertura continua na tela até o `BootSplashGate` chamar `BootSplash.hide({ fade: true })`, quando a sessão deixa de estar em `restoring`. No iOS, reaproveita o `LaunchScreen.storyboard`; no Android, o `BootTheme` usa o fundo preto e o `splash_icon`, e o `LaunchTheme` e o `launch_screen` foram removidos |

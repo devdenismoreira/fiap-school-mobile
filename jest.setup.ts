@@ -20,6 +20,15 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest'),
 );
 
+// BootSplash é nativo: a abertura só é escondida pelo app (BootSplashGate).
+jest.mock('react-native-bootsplash', () => ({
+  __esModule: true,
+  default: {
+    hide: jest.fn().mockResolvedValue(undefined),
+    isVisible: jest.fn(),
+  },
+}));
+
 // NetInfo é nativo: mock oficial da biblioteca (addEventListener é um jest.fn).
 jest.mock('@react-native-community/netinfo', () =>
   require('@react-native-community/netinfo/jest/netinfo-mock.js'),

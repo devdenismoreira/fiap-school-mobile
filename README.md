@@ -28,6 +28,7 @@ Aplicativo para responsáveis acompanharem a **agenda de aulas** e o **boletim**
 | Axios (cliente HTTP da API) | 1.20.0 |
 | React Native Keychain (refresh token) | 10.0.0 |
 | NetInfo (aviso de queda e volta da conexão) | 12.0.1 |
+| React Native BootSplash (abertura até restaurar a sessão) | 7.3.3 |
 | Jest + React Native Testing Library | 29.7 + 14.1 |
 | Gerenciador de pacotes | Yarn 1.22 (clássico) |
 
