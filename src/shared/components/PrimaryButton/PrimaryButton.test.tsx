@@ -37,7 +37,7 @@ describe('PrimaryButton', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it('carregando: botão vazio, ocupado e sem disparar onPress', async () => {
+  it('carregando: mostra o indicador no lugar do texto, ocupado e sem disparar onPress', async () => {
     const onPress = jest.fn();
     await renderWithTheme(
       <PrimaryButton label="FAZER LOGIN" onPress={onPress} loading />,
@@ -47,6 +47,7 @@ describe('PrimaryButton', () => {
     expect(button).toBeBusy();
     expect(button).toBeDisabled();
     expect(screen.queryByText('FAZER LOGIN')).toBeNull();
+    expect(screen.getByTestId('primary-button-spinner')).toBeOnTheScreen();
 
     await fireEvent.press(button);
     expect(onPress).not.toHaveBeenCalled();

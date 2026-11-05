@@ -1,5 +1,5 @@
 import { useTheme } from '@shopify/restyle';
-import { Pressable, StyleSheet } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { Box, motion, sizes, Text, type Theme } from '@/core/theme';
@@ -43,7 +43,14 @@ export function PrimaryButton({
         alignItems="center"
         justifyContent="center"
       >
-        {loading ? null : (
+        {loading ? (
+          <Animated.View entering={fadeInFast} exiting={fadeOutFast}>
+            <ActivityIndicator
+              testID="primary-button-spinner"
+              color={colors.onPrimary}
+            />
+          </Animated.View>
+        ) : (
           <Animated.View entering={fadeInFast} exiting={fadeOutFast}>
             <Text
               variant="button"
