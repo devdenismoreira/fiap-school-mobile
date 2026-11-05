@@ -1,9 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 
 import { useSession } from '@/app/providers/SessionProvider';
+import { useToast } from '@/app/providers/ToastProvider';
+
+export const studentSwitchedMessage = (firstName: string) =>
+  `Mostrando os dados de ${firstName}.`;
 
 export function useStudentSelectionViewModel() {
   const { state, selectedStudent, selectStudent } = useSession();
+  const { showToast } = useToast();
   const navigation = useNavigation();
 
   const students = state.status === 'signedIn' ? state.guardian.students : [];
@@ -12,8 +17,13 @@ export function useStudentSelectionViewModel() {
   const close = () => navigation.goBack();
 
   const select = (rm: number) => {
-    if (rm !== selectedRm) {
+    const student = students.find(item => item.rm === rm);
+    if (student && rm !== selectedRm) {
       selectStudent(rm);
+      showToast(studentSwitchedMessage(student.firstName), {
+        title: 'Perfil alterado',
+        variant: 'info',
+      });
     }
     close();
   };

@@ -6,6 +6,8 @@ import {
   type PropsWithChildren,
 } from 'react';
 
+import { NetworkError } from '@/core/errors/NetworkError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import type { Guardian } from '@/domain/entities/Guardian';
 import type { StoredSession } from '@/domain/entities/Session';
 import type { Student } from '@/domain/entities/Student';
@@ -15,7 +17,8 @@ import type { RestoreSession } from '@/domain/usecases/restoreSession';
 
 export type SessionState =
   | { status: 'restoring' }
-  | { status: 'signedOut' }
+  | { status: 'unreachable' }
+  | { status: 'signedOut'; sessionExpired?: boolean }
   | {
       status: 'signedIn';
       guardian: Guardian;
@@ -26,6 +29,7 @@ export type SessionDependencies = {
   authenticateGuardian: AuthenticateGuardian;
   restoreSession: RestoreSession;
   sessionRepository: SessionRepository;
+  endSession: () => Promise<void>;
 };
 
 export type SessionContextValue = {
@@ -34,7 +38,12 @@ export type SessionContextValue = {
   signIn(cpf: string, password: string): Promise<void>;
   selectStudent(rm: number): Promise<void>;
   signOut(): Promise<void>;
+  retryRestore(): void;
+  refreshGuardian(): Promise<void>;
 };
+
+const isConnectionFailure = (error: unknown) =>
+  error instanceof NetworkError || error instanceof TooManyAttemptsError;
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
@@ -46,31 +55,62 @@ export function SessionProvider({
   dependencies,
   children,
 }: SessionProviderProps) {
-  const { authenticateGuardian, restoreSession, sessionRepository } =
-    dependencies;
+  const {
+    authenticateGuardian,
+    restoreSession,
+    sessionRepository,
+    endSession,
+  } = dependencies;
   const [state, setState] = useState<SessionState>({ status: 'restoring' });
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
-    restoreSession()
-      .then(restored => {
+    const restore = async () => {
+      const stored = await sessionRepository.load().catch(() => null);
+      const restored = await restoreSession();
+      return { restored, hadSession: Boolean(stored) };
+    };
+    restore()
+      .then(({ restored, hadSession }) => {
+        if (!active) {
+          return;
+        }
+        if (restored) {
+          setState({ status: 'signedIn', ...restored });
+          return;
+        }
+        setState({ status: 'signedOut', sessionExpired: hadSession });
+        endSession().catch(() => undefined);
+      })
+      .catch((error: unknown) => {
         if (active) {
           setState(
-            restored
-              ? { status: 'signedIn', ...restored }
+            isConnectionFailure(error)
+              ? { status: 'unreachable' }
               : { status: 'signedOut' },
           );
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setState({ status: 'signedOut' });
         }
       });
     return () => {
       active = false;
     };
-  }, [restoreSession]);
+  }, [restoreSession, sessionRepository, endSession, restoreAttempt]);
+
+  const retryRestore = () => {
+    setState({ status: 'restoring' });
+    setRestoreAttempt(attempt => attempt + 1);
+  };
+
+  const refreshGuardian = async () => {
+    const restored = await restoreSession();
+    if (restored) {
+      setState({ status: 'signedIn', ...restored });
+      return;
+    }
+    setState({ status: 'signedOut', sessionExpired: true });
+    endSession().catch(() => undefined);
+  };
 
   const persist = (session: StoredSession) =>
     sessionRepository.save(session).catch(() => undefined);
@@ -94,6 +134,7 @@ export function SessionProvider({
   };
 
   const signOut = async () => {
+    await endSession().catch(() => undefined);
     await sessionRepository.clear().catch(() => undefined);
     setState({ status: 'signedOut' });
   };
@@ -107,7 +148,15 @@ export function SessionProvider({
 
   return (
     <SessionContext.Provider
-      value={{ state, selectedStudent, signIn, selectStudent, signOut }}
+      value={{
+        state,
+        selectedStudent,
+        signIn,
+        selectStudent,
+        signOut,
+        retryRestore,
+        refreshGuardian,
+      }}
     >
       {children}
     </SessionContext.Provider>

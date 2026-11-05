@@ -20,6 +20,41 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest'),
 );
 
+// BootSplash é nativo: a abertura só é escondida pelo app (BootSplashGate).
+jest.mock('react-native-bootsplash', () => ({
+  __esModule: true,
+  default: {
+    hide: jest.fn().mockResolvedValue(undefined),
+    isVisible: jest.fn(),
+  },
+}));
+
+// NetInfo é nativo: mock oficial da biblioteca (addEventListener é um jest.fn).
+jest.mock('@react-native-community/netinfo', () =>
+  require('@react-native-community/netinfo/jest/netinfo-mock.js'),
+);
+
+// O Keychain é nativo (TurboModule) e não existe no Jest: mock em memória com a mesma API.
+jest.mock('react-native-keychain', () => {
+  let entry: { username: string; password: string } | null = null;
+  return {
+    ACCESSIBLE: {
+      WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'AccessibleWhenUnlockedThisDeviceOnly',
+    },
+    setGenericPassword: jest.fn(async (username: string, password: string) => {
+      entry = { username, password };
+      return { service: 'mock', storage: 'mock' };
+    }),
+    getGenericPassword: jest.fn(async () =>
+      entry ? { ...entry, service: 'mock', storage: 'mock' } : false,
+    ),
+    resetGenericPassword: jest.fn(async () => {
+      entry = null;
+      return true;
+    }),
+  };
+});
+
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default,

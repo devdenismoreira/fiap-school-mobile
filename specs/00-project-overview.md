@@ -101,3 +101,47 @@ Diretriz geral do desenvolvedor (2026-11-04): **seguir o Figma fielmente ("Perfe
 | D-14 | Tela de restauração | Não há splash no Figma | Fundo preto sem conteúdo enquanto restaura (sem novo elemento visual) |
 | D-15 | Ambiente | Shell do editor em Node 20 (nvm padrão = 22); Pods não instalados; `react-native-worklets` não declarado; Babel sem plugin de worklets | Corrigir na tarefa T01 |
 | D-16 ✅ | Limite do Figma MCP | O plano Starter atingiu o limite de chamadas durante a inspeção; URLs temporárias de assets expiram em ~2026-11-11 | Assets salvos em `src/assets/` (autorizado em 2026-11-04) |
+
+### Evolução depois da entrega: integração com a API (2026-11-05)
+
+Na entrega, backend e API ficaram fora do escopo (§5). Depois dela, o desenvolvedor criou a FIAP School API (`../FiapSchoolApi`), e o app passa a usá-la na branch `feature/integrate-api` (`features/api-integration.md`).
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-17 ✅ | Integração com a API | O app deve trocar o JSON pela API sem mudar o que o usuário vê | `GuardianRemoteDataSource` no lugar do local. Domínio, DTOs, `toGuardian` e as telas de Agenda, Boletim e Mudança de aluno ficam intactos. O datasource local ficou nos testes até a D-35 |
+| D-18 ✅ | Cliente HTTP | Pedido do desenvolvedor: Axios, como nos projetos dele | `axios` com versão fixa 1.20.0. A 1.21.0 tinha 9 dias de publicação; uma versão com semanas de uso reduz o risco na cadeia de dependências |
+| D-19 ✅ | Tokens | Definido pelo desenvolvedor | O refresh vai para o `react-native-keychain` (`WHEN_UNLOCKED_THIS_DEVICE_ONLY`), e o access fica só em memória. Nenhum token no AsyncStorage; a senha nunca é persistida |
+| D-20 ✅ | Login sem conexão | O Figma só tem o erro de credenciais | Mensagem nova no mesmo lugar e estilo: "Não foi possível conectar.\nVerifique sua internet e tente novamente." |
+| D-21 ✅ | App aberto sem conexão | A renovação falha por rede com a sessão salva | Tela de conexão (logo, mensagem e **TENTAR NOVAMENTE**). A sessão continua guardada e entra direto quando a conexão voltar |
+| D-22 ✅ | Login bloqueado (429) | A API limita as tentativas por CPF e por IP | Mensagem específica: "Muitas tentativas.\nTente novamente mais tarde." |
+| D-23 | Sessão expirada ou revogada | Refresh recusado pela API ao abrir o app | ~~Volta ao Login sem aviso~~. **Substituída pela D-31** (Login com toast) |
+| D-24 ✅ | URL da API em desenvolvimento | O aparelho físico não alcança o `localhost` do computador | Padrão por plataforma (`localhost` no simulador iOS, `10.0.2.2` no emulador Android). No aparelho físico, túnel HTTPS com `API_URL` injetada no bundle por `babel-plugin-transform-inline-environment-variables` (dependência de desenvolvimento) |
+| D-25 | Timeout | A hospedagem gratuita pode hibernar | 20 s por requisição, revisto quando a API for publicada (T11 da API) |
+| D-26 | URL em release | A hospedagem ainda não foi escolhida | O release exige `API_URL` com `https://`; sem ela, falha na inicialização com erro claro. Sem exceções de ATS nem de tráfego sem TLS |
+
+### Toast (2026-11-05)
+
+Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design system (`features/toast.md`).
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-27 ✅ | Implementação | Há bibliotecas prontas, mas o projeto já tem Reanimated, Gesture Handler e Restyle | Componente próprio, sem biblioteca de toast |
+| D-28 ✅ | Posição | Referência: Instagram | Embaixo, acima da barra de abas ou do botão principal, e acima do teclado quando aberto |
+| D-29 ✅ | Visual | O design system não tem cores de sucesso nem de erro | Fundo `surfaceRaised`, texto `bodyMedium` branco, raio 8, sem ícone |
+| D-30 ✅ | Situações | Comparação com a tabela de feedback trazida pelo desenvolvedor | Toast em sessão expirada, troca de aluno e queda e volta da conexão. Login realizado, senha incorreta, falha ao carregar e logout ficam como estão |
+| D-31 ✅ | Sessão expirada | A D-23 deixava a pessoa no Login sem explicação | Login com o toast, só quando havia sessão salva e a API a recusou |
+| D-32 ✅ | Conectividade | Detectar a queda e a volta da internet exige um módulo nativo | `@react-native-community/netinfo` com versão fixa 12.0.1 (TurboModule); mudanças de menos de 1 s são ignoradas |
+| D-33 ✅ | Reconexão na tela de conexão | A internet volta com o app parado na tela de conexão | Tenta restaurar a sessão sozinho, além do toast |
+| D-34 ✅ | Textos | Não há textos de toast no Figma | "Sua sessão expirou.\nEntre novamente."; "Mostrando os dados de {primeiroNome}."; "Sem conexão com a internet."; "Conexão restabelecida." |
+
+### Remoção do JSON local (2026-11-05)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-35 ✅ | JSON e datasource local | Com a API indo para produção, o app não usa mais o JSON. Mesmo assim, o `dependencies.ts` importava o `GuardianLocalDataSource`, e por isso o bundle de produção carregava o JSON com CPFs e senhas | **Decisão do desenvolvedor:** "aquele JSON já era".<br>- O arquivo foi movido para a API (`../FiapSchoolApi/prisma/data/responsaveis.json`), onde alimenta o seed e os testes de paridade.<br>- O app perdeu o `GuardianLocalDataSource` e o `createLocalDependencies`.<br>- Os testes usam um fixture anonimizado (`src/test-utils/fixtures/responsaveis.json`): mesma agenda e boletins, com nomes, RMs, e-mails e senhas fictícios e CPFs sintéticos válidos.<br>- Os testes também usam a API simulada `createFakeApi`.<br>- O código de produção não importa JSON nem `test-utils` |
+
+### Abertura mantida até a sessão restaurar (2026-11-05)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-36 ✅ | Launch screen até restaurar a sessão | Entre a launch screen e o primeiro conteúdo, o app ficava com a tela preta enquanto restaurava a sessão (renovação do token e `/me`) | `react-native-bootsplash` 7.3.3 (versão fixa; a 7.3.5 tinha 6 dias): a abertura continua na tela até o `BootSplashGate` chamar `BootSplash.hide({ fade: true })`, quando a sessão deixa de estar em `restoring`. No iOS, reaproveita o `LaunchScreen.storyboard`; no Android, o `BootTheme` usa o fundo preto e o `splash_icon`, e o `LaunchTheme` e o `launch_screen` foram removidos |

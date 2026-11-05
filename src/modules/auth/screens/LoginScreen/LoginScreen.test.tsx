@@ -2,6 +2,8 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
+import { NetworkError } from '@/core/errors/NetworkError';
+import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { theme } from '@/core/theme';
 import { makeGuardian } from '@/test-utils/fixtures';
 import {
@@ -107,6 +109,41 @@ describe('LoginScreen', () => {
     expect(screen.queryByText(/Usuário ou senha inválida/)).toBeNull();
   });
 
+  it.each([
+    [
+      'sem conexão',
+      new NetworkError(),
+      'Não foi possível conectar.\nVerifique sua internet e tente novamente.',
+    ],
+    [
+      'muitas tentativas',
+      new TooManyAttemptsError(),
+      'Muitas tentativas.\nTente novamente mais tarde.',
+    ],
+  ])(
+    '%s: mostra e anuncia a mensagem própria',
+    async (_label, error, message) => {
+      const announce = jest.spyOn(
+        AccessibilityInfo,
+        'announceForAccessibility',
+      );
+      await renderWithSession(
+        <LoginScreen />,
+        makeSessionDependencies({
+          authenticateGuardian: jest.fn().mockRejectedValue(error),
+        }),
+      );
+
+      await fillCredentials();
+      await fireEvent.press(submitButton());
+
+      expect(await screen.findByText(message)).toBeOnTheScreen();
+      expect(announce).toHaveBeenCalledWith(message.replace('\n', ' '));
+      expect(screen.queryByText(/Usuário ou senha inválida/)).toBeNull();
+      expect(submitButton()).toBeEnabled();
+    },
+  );
+
   it('carregando: botão ocupado e vazio, campos bloqueados e sem envio duplo', async () => {
     let finish: () => void = () => undefined;
     const authenticateGuardian = jest.fn(
@@ -140,5 +177,31 @@ describe('LoginScreen', () => {
     expect(passwordInput()).toHaveProp('secureTextEntry', true);
     expect(passwordInput()).toHaveProp('textContentType', 'password');
     expect(cpfInput()).toHaveProp('keyboardType', 'number-pad');
+  });
+
+  it('sessão salva recusada pela API: avisa com toast que a sessão expirou', async () => {
+    await renderWithSession(
+      <LoginScreen />,
+      makeSessionDependencies({
+        sessionRepository: {
+          load: jest
+            .fn()
+            .mockResolvedValue({ guardianId: 1, selectedStudentRm: 100 }),
+          save: jest.fn().mockResolvedValue(undefined),
+          clear: jest.fn().mockResolvedValue(undefined),
+        },
+      }),
+    );
+
+    expect(
+      await screen.findByText('Entre novamente para continuar.'),
+    ).toBeOnTheScreen();
+  });
+
+  it('sem sessão salva, o Login abre sem aviso', async () => {
+    await renderWithSession(<LoginScreen />);
+    await screen.findByText('CPF');
+
+    expect(screen.queryByText(/Sessão expirada/)).toBeNull();
   });
 });

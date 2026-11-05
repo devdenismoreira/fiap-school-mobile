@@ -14,6 +14,8 @@ Cada tarefa tem escopo, dependências, critérios de aceite e estratégia de val
 | T08 | [Boletim](T08-boletim.md) | T05, T07 | Anos, trimestres, notas/faltas |
 | T09 | [Animações e refinamento](T09-animacoes-e-refinamento.md) | T06–T08 | Movimento, acessibilidade, fidelidade |
 | T10 | [Validação e entrega](T10-validacao-e-entrega.md) | T09 | Builds, README, docs finais |
+| T11 | [Integração com a API](T11-integracao-api.md) | T10 e a FIAP School API | Datasource remoto, Keychain, Axios com renovação compartilhada, mensagens de conexão (evolução depois da entrega, branch `feature/integrate-api`) |
+| T12 | [Toast](T12-toast.md) | T11 | Toast no estilo do Instagram: sessão expirada, troca de aluno e conexão (NetInfo) |
 
 T02 e T03 podem andar em paralelo após a T01. T06, T07 e T08 podem andar em paralelo após a T05 (T08 reutiliza o `Dropdown` da T07).
 

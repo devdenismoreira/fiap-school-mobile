@@ -1,6 +1,6 @@
 # 02 — Modelo de dados
 
-> Status: **aprovada e implementada** (T03) · Fonte: JSON do desafio (37,9 KB), inspecionado em 2026-11-04 em `src/responsaveis.json` e movido para `src/data/datasources/local/responsaveis.json` (D-06)
+> Status: **aprovada e implementada** (T03) · Fonte: JSON do desafio (37,9 KB), inspecionado em 2026-11-04 em `src/responsaveis.json` e movido para `src/data/datasources/local/responsaveis.json` (D-06). Desde 2026-11-05 fica fora do app, em `../FiapSchoolApi/prisma/data/responsaveis.json` (D-35); este documento descreve o modelo da época da entrega
 
 Este documento **não** reproduz CPF, senha nem e-mail dos registros. Nomes e RMs aparecem porque já constam no Figma.
 

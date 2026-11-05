@@ -1,6 +1,6 @@
 # Especificações do FIAP School Mobile
 
-Especificações escritas a partir do repositório, do Figma e do JSON real do desafio (hoje em `src/data/datasources/local/responsaveis.json`, D-06). Cada documento registra requisitos, estados, critérios de aceite, casos de borda e decisões. Decisões do desenvolvedor estão marcadas com ✅ em `00-project-overview.md` §6. A diretriz geral é seguir o Figma fielmente ("Perfect Pixel").
+Especificações escritas a partir do repositório, do Figma e do JSON real do desafio (D-06; desde 2026-11-05 fora do app, em `../FiapSchoolApi/prisma/data/responsaveis.json`, D-35). Cada documento registra requisitos, estados, critérios de aceite, casos de borda e decisões. Decisões do desenvolvedor estão marcadas com ✅ em `00-project-overview.md` §6. A diretriz geral é seguir o Figma fielmente ("Perfect Pixel").
 
 | Documento | Conteúdo |
 |---|---|
@@ -12,5 +12,7 @@ Especificações escritas a partir do repositório, do Figma e do JSON real do d
 | [features/student-selection.md](features/student-selection.md) | Cabeçalho e troca de aluno |
 | [features/classes.md](features/classes.md) | Agenda por dia |
 | [features/report.md](features/report.md) | Boletim por ano e trimestre |
+| [features/api-integration.md](features/api-integration.md) | Evolução depois da entrega: troca do JSON pela FIAP School API (tokens, interceptador, mensagens de conexão) |
+| [features/toast.md](features/toast.md) | Toast no estilo do Instagram com os tokens do projeto: sessão expirada, troca de aluno, conexão |
 
 Regras de manutenção: atualizar a spec quando uma decisão mudar, e não tratar documentação como substituta de testes.

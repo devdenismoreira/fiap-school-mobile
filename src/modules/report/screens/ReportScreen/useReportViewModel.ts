@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { useSession } from '@/app/providers/SessionProvider';
+import { useToast } from '@/app/providers/ToastProvider';
 import { formatAbsences, formatGrade } from '@/core/utils/formatGrade';
 import type { DropdownOption } from '@/shared/components/Dropdown';
 
@@ -24,7 +25,9 @@ const toggle = <T>(items: T[], item: T) =>
     : [...items, item];
 
 export function useReportViewModel() {
-  const { selectedStudent } = useSession();
+  const { selectedStudent, refreshGuardian } = useSession();
+  const { showToast } = useToast();
+  const [isRefreshing, setRefreshing] = useState(false);
   const reportCards = selectedStudent?.reportCards ?? [];
   const studentRm = selectedStudent?.rm ?? null;
 
@@ -67,7 +70,23 @@ export function useReportViewModel() {
     }),
   }));
 
+  const reload = async () => {
+    setRefreshing(true);
+    try {
+      await refreshGuardian();
+    } catch {
+      showToast('Verifique sua internet e tente novamente.', {
+        title: 'Não foi possível atualizar',
+        variant: 'error',
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return {
+    isRefreshing,
+    reload,
     hasReportCards: reportCards.length > 0,
     years,
     selectedYear: reportCard?.year ?? null,

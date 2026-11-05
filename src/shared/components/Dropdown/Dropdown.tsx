@@ -16,7 +16,7 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { Box, motion, sizes, Text } from '@/core/theme';
-import { emphasizedAccelerate, openTiming } from '@/shared/animations';
+import { emphasizedAccelerate, quickTiming } from '@/shared/animations';
 import { ExpandArrow } from '@/shared/components/ExpandArrow';
 
 export type DropdownOption = {
@@ -61,7 +61,7 @@ export function Dropdown({
   useEffect(() => {
     if (isOpen) {
       setModalVisible(true);
-      progress.value = withTiming(1, openTiming);
+      progress.value = withTiming(1, quickTiming);
       return;
     }
     progress.value = withTiming(
