@@ -4,6 +4,7 @@ import type { PropsWithChildren } from 'react';
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
 import { NetworkError } from '@/core/errors/NetworkError';
 import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
+import type { StoredSession } from '@/domain/entities/Session';
 import type { RestoredSession } from '@/domain/usecases/restoreSession';
 import { makeGuardian } from '@/test-utils/fixtures';
 import {
@@ -17,7 +18,9 @@ function makeDependencies(restored: RestoredSession | null = null) {
     authenticateGuardian: jest.fn().mockResolvedValue(makeGuardian()),
     restoreSession: jest.fn().mockResolvedValue(restored),
     sessionRepository: {
-      load: jest.fn(),
+      load: jest
+        .fn<Promise<StoredSession | null>, []>()
+        .mockResolvedValue(null),
       save: jest.fn().mockResolvedValue(undefined),
       clear: jest.fn().mockResolvedValue(undefined),
     },
@@ -57,6 +60,33 @@ describe('SessionProvider', () => {
     const { result } = await renderSession(dependencies);
 
     await waitFor(() => expect(result.current.state.status).toBe('signedOut'));
+  });
+
+  it('sessão salva recusada pela API: signedOut com sessionExpired', async () => {
+    const dependencies = makeDependencies(null);
+    dependencies.sessionRepository.load.mockResolvedValue({
+      guardianId: 1,
+      selectedStudentRm: 100,
+    });
+    const { result } = await renderSession(dependencies);
+
+    await waitFor(() =>
+      expect(result.current.state).toEqual({
+        status: 'signedOut',
+        sessionExpired: true,
+      }),
+    );
+  });
+
+  it('sem sessão salva: signedOut sem sessionExpired', async () => {
+    const { result } = await renderSession(makeDependencies(null));
+
+    await waitFor(() =>
+      expect(result.current.state).toEqual({
+        status: 'signedOut',
+        sessionExpired: false,
+      }),
+    );
   });
 
   it('sem sessão para restaurar, encerra a sessão remota (refresh antigo no Keychain)', async () => {

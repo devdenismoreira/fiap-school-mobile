@@ -1,9 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSession } from '@/app/providers/SessionProvider';
+import { useToast } from '@/app/providers/ToastProvider';
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
 import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
+import { motion } from '@/core/theme';
 import { CPF_LENGTH, formatCpf, normalizeCpf } from '@/core/utils/cpf';
+
+export const SESSION_EXPIRED_MESSAGE = 'Sua sessão expirou.\nEntre novamente.';
 
 export type LoginErrorKind = 'credentials' | 'connection' | 'tooManyAttempts';
 
@@ -32,11 +36,22 @@ function toErrorKind(error: unknown): LoginErrorKind {
 }
 
 export function useLoginViewModel() {
-  const { signIn } = useSession();
+  const { signIn, state } = useSession();
+  const { showToast } = useToast();
+  const sessionExpired =
+    state.status === 'signedOut' && state.sessionExpired === true;
   const [cpfDigits, setCpfDigits] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const submitting = useRef(false);
+
+  useEffect(() => {
+    if (sessionExpired) {
+      showToast(SESSION_EXPIRED_MESSAGE, {
+        duration: motion.toastDurationLong,
+      });
+    }
+  }, [sessionExpired, showToast]);
 
   const isLoading = status === 'loading';
   const canSubmit =

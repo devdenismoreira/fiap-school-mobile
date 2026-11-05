@@ -99,7 +99,24 @@ describe('App com a FIAP School API (simulada)', () => {
     expect(
       await screen.findByRole('button', { name: 'FAZER LOGIN' }),
     ).toBeOnTheScreen();
+    expect(
+      screen.getByText('Sua sessão expirou.\nEntre novamente.'),
+    ).toBeOnTheScreen();
     await expect(api.tokenStore.getRefreshToken()).resolves.toBeNull();
     expect(await AsyncStorage.getItem(SESSION_STORAGE_KEY)).toBeNull();
+  });
+
+  it('SAIR leva ao Login sem o aviso de sessão expirada', async () => {
+    const api = createFakeApi();
+    await storeSession(api);
+    await render(<App dependencies={api.dependencies} />);
+    await screen.findByRole('header', { name: 'AGENDA' });
+
+    await fireEvent.press(screen.getByRole('button', { name: 'SAIR' }));
+
+    expect(
+      await screen.findByRole('button', { name: 'FAZER LOGIN' }),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText(/Sua sessão expirou/)).toBeNull();
   });
 });

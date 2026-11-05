@@ -178,4 +178,30 @@ describe('LoginScreen', () => {
     expect(passwordInput()).toHaveProp('textContentType', 'password');
     expect(cpfInput()).toHaveProp('keyboardType', 'number-pad');
   });
+
+  it('sessão salva recusada pela API: avisa com toast que a sessão expirou', async () => {
+    await renderWithSession(
+      <LoginScreen />,
+      makeSessionDependencies({
+        sessionRepository: {
+          load: jest
+            .fn()
+            .mockResolvedValue({ guardianId: 1, selectedStudentRm: 100 }),
+          save: jest.fn().mockResolvedValue(undefined),
+          clear: jest.fn().mockResolvedValue(undefined),
+        },
+      }),
+    );
+
+    expect(
+      await screen.findByText('Sua sessão expirou.\nEntre novamente.'),
+    ).toBeOnTheScreen();
+  });
+
+  it('sem sessão salva, o Login abre sem aviso', async () => {
+    await renderWithSession(<LoginScreen />);
+    await screen.findByText('CPF');
+
+    expect(screen.queryByText(/Sua sessão expirou/)).toBeNull();
+  });
 });

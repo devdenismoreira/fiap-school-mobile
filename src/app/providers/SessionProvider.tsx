@@ -18,7 +18,7 @@ import type { RestoreSession } from '@/domain/usecases/restoreSession';
 export type SessionState =
   | { status: 'restoring' }
   | { status: 'unreachable' }
-  | { status: 'signedOut' }
+  | { status: 'signedOut'; sessionExpired?: boolean }
   | {
       status: 'signedIn';
       guardian: Guardian;
@@ -65,8 +65,13 @@ export function SessionProvider({
 
   useEffect(() => {
     let active = true;
-    restoreSession()
-      .then(restored => {
+    const restore = async () => {
+      const stored = await sessionRepository.load().catch(() => null);
+      const restored = await restoreSession();
+      return { restored, hadSession: Boolean(stored) };
+    };
+    restore()
+      .then(({ restored, hadSession }) => {
         if (!active) {
           return;
         }
@@ -74,7 +79,7 @@ export function SessionProvider({
           setState({ status: 'signedIn', ...restored });
           return;
         }
-        setState({ status: 'signedOut' });
+        setState({ status: 'signedOut', sessionExpired: hadSession });
         endSession().catch(() => undefined);
       })
       .catch((error: unknown) => {
@@ -89,7 +94,7 @@ export function SessionProvider({
     return () => {
       active = false;
     };
-  }, [restoreSession, endSession, restoreAttempt]);
+  }, [restoreSession, sessionRepository, endSession, restoreAttempt]);
 
   const retryRestore = () => {
     setState({ status: 'restoring' });
