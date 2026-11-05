@@ -8,4 +8,6 @@ export const motion = {
   staggerMaxItems: 6,
   sectionStagger: 80,
   pressedOpacity: 0.7,
+  toastDuration: 3000,
+  toastDurationLong: 4000,
 } as const;

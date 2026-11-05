@@ -9,6 +9,7 @@ import {
   SessionProvider,
   type SessionDependencies,
 } from './providers/SessionProvider';
+import { ToastProvider } from './providers/ToastProvider';
 
 const defaultDependencies = createDependencies();
 
@@ -20,11 +21,13 @@ export default function App({ dependencies = defaultDependencies }: AppProps) {
   return (
     <AppProviders>
       <StatusBar barStyle="light-content" />
-      <SessionProvider dependencies={dependencies}>
-        <NavigationContainer theme={navigationTheme}>
-          <RootNavigator />
-        </NavigationContainer>
-      </SessionProvider>
+      <ToastProvider>
+        <SessionProvider dependencies={dependencies}>
+          <NavigationContainer theme={navigationTheme}>
+            <RootNavigator />
+          </NavigationContainer>
+        </SessionProvider>
+      </ToastProvider>
     </AppProviders>
   );
 }

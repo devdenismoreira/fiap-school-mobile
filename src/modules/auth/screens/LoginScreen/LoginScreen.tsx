@@ -11,6 +11,7 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import logo from '@/assets/images/logo.png';
+import { useToastBottomInset } from '@/app/providers/ToastProvider';
 import { Box, sizes, Text } from '@/core/theme';
 import { fadeInFast, fadeOutFast } from '@/shared/animations';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -23,6 +24,7 @@ const CPF_MASKED_LENGTH = 14;
 export function LoginScreen() {
   const viewModel = useLoginViewModel();
   const insets = useSafeAreaInsets();
+  useToastBottomInset(sizes.primaryButtonHeight);
   const keyboardVisible = useKeyboardVisible();
   const passwordRef = useRef<TextInputInstance>(null);
 

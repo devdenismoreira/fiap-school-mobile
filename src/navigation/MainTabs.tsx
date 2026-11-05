@@ -6,7 +6,8 @@ import { Easing } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Box, motion, theme } from '@/core/theme';
+import { useToastBottomInset } from '@/app/providers/ToastProvider';
+import { Box, motion, sizes, theme } from '@/core/theme';
 import { AgendaScreen } from '@/modules/classes/screens/AgendaScreen';
 import { ReportScreen } from '@/modules/report/screens/ReportScreen';
 import { AppActionBar } from '@/shared/components/AppActionBar';
@@ -54,6 +55,7 @@ const softShift: Pick<
 export function MainTabs() {
   const reduceMotion = useReducedMotion();
   const insets = useSafeAreaInsets();
+  useToastBottomInset(sizes.tabBar.height);
 
   return (
     <Box

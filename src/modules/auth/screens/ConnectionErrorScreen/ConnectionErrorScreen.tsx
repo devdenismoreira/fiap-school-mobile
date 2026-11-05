@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSession } from '@/app/providers/SessionProvider';
+import { useToastBottomInset } from '@/app/providers/ToastProvider';
 import logo from '@/assets/images/logo.png';
 import { Box, sizes, Text } from '@/core/theme';
 import { fadeInSmooth } from '@/shared/animations';
@@ -15,6 +16,7 @@ export const CONNECTION_ERROR_MESSAGE =
 export function ConnectionErrorScreen() {
   const { retryRestore } = useSession();
   const insets = useSafeAreaInsets();
+  useToastBottomInset(sizes.primaryButtonHeight);
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility(

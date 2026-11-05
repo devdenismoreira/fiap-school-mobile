@@ -58,3 +58,18 @@ export function listItemEntering(index: number) {
 export function screenSectionEntering(index: number) {
   return fadeInFrom(12, motion.open).delay(index * motion.sectionStagger);
 }
+
+export const TOAST_OFFSET = 24;
+
+export const toastEntering = fadeInFrom(TOAST_OFFSET, motion.open);
+
+export const toastExiting = new Keyframe({
+  0: { opacity: 1, transform: [{ translateY: 0 }] },
+  100: {
+    opacity: 0,
+    transform: [{ translateY: TOAST_OFFSET }],
+    easing: emphasizedAccelerate,
+  },
+})
+  .duration(motion.normal)
+  .reduceMotion(ReduceMotion.System);
