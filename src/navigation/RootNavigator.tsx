@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { useSession } from '@/app/providers/SessionProvider';
-import { Box, theme } from '@/core/theme';
+import { Box, motion, theme } from '@/core/theme';
 import { LoginScreen } from '@/modules/auth/screens/LoginScreen';
 import { StudentSelectionScreen } from '@/modules/students/screens/StudentSelectionScreen';
 import { MainTabs } from './MainTabs';
@@ -35,8 +35,10 @@ export function RootNavigator() {
             name="StudentSelection"
             component={StudentSelectionScreen}
             options={{
-              presentation: 'fullScreenModal',
+              presentation: 'card',
               animation: reduceMotion ? 'none' : 'slide_from_bottom',
+              animationDuration: motion.transition,
+              gestureEnabled: false,
             }}
           />
         </>
