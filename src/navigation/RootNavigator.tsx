@@ -26,6 +26,7 @@ export function RootNavigator() {
         headerShown: false,
         animation: reduceMotion ? 'none' : 'fade',
         contentStyle: { backgroundColor: theme.colors.background },
+        statusBarStyle: 'light',
       }}
     >
       {state.status === 'signedIn' ? (
