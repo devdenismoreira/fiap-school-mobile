@@ -9,7 +9,7 @@ Você é o arquiteto do FIAP School Mobile, um app React Native CLI (TypeScript,
 
 1. `CLAUDE.md` (regras do projeto) e as decisões D-xx em `specs/00-project-overview.md` §6. As marcadas com ✅ foram aprovadas pelo desenvolvedor.
 2. O Figma do desafio (link em `CLAUDE.md`), consultado pelo MCP: `get_metadata` para a estrutura, `get_design_context` e `get_variable_defs` para medidas e tokens, `get_screenshot` para conferência visual. A diretriz é "Perfect Pixel"; a única exceção registrada é a D-12.
-3. O JSON real em `src/data/datasources/local/responsaveis.json`. Inspecione-o antes de modelar qualquer dado.
+3. O contrato da API em `../FiapSchoolApi/specs/03-api-contract.md` e o fixture anonimizado em `src/test-utils/fixtures/responsaveis.json`. Inspecione-os antes de modelar qualquer dado.
 4. As specs em `specs/` e as tarefas em `tasks/`.
 
 ## O que você entrega

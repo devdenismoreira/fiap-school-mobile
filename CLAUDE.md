@@ -13,10 +13,10 @@ Não presuma requisitos nem invente dados, telas, regras de negócio ou comporta
 - **Projeto:** FIAP School Mobile
 - **Objetivo:** aplicativo para responsáveis acompanharem as aulas diárias e o boletim anual de seus alunos.
 - **Plataformas:** Android e iOS.
-- **Repositório:** `github.com/devdenismoreira/fiap-school-mobile`, **privado** até a entrega; trabalho na branch `develop`.
+- **Repositório:** `github.com/devdenismoreira/fiap-school-mobile`, **privado** até o desenvolvedor concluir a revisão e torná-lo público; trabalho na branch `develop`.
 - **Estado atual:**
-  - tarefas T01–T10 implementadas (`tasks/README.md`); os ajustes feitos após o teste em aparelho estão registrados na T09;
-  - depois da entrega, a T11 integra o app à FIAP School API (`../FiapSchoolApi`), na branch `feature/integrate-api` (`specs/features/api-integration.md`).
+  - tarefas T01–T15 implementadas e validadas em aparelho (`tasks/README.md`): T01–T10 são a entrega; T11 integra a API, T12 o toast, T13 as rotas de alunos, T14 os estados vazios e T15 a abertura e os ajustes de experiência;
+  - a API (`../FiapSchoolApi`) está em produção na Railway, e o app usa só ela (D-35, D-37, D-38).
 
   Valide o estado real do repositório antes de alterar arquivos.
 - **Figma:** consultado pelo MCP oficial do Figma. Os assets já foram exportados para `src/assets/` (D-16).
@@ -41,7 +41,7 @@ Não invente credenciais, nomes, RM, turmas, aulas, notas ou estrutura JSON. Nã
 O aplicativo deve contemplar:
 
 1. **Login**
-   - Autenticação simulada usando os dados do JSON fornecido.
+   - Autenticação pela FIAP School API, que usa os dados do JSON fornecido (seed). Na entrega era simulada localmente.
    - Entrada de CPF e senha.
    - Máscara e normalização de CPF.
    - Persistência da sessão para que o responsável não precise autenticar novamente ao reabrir o app.
@@ -96,7 +96,7 @@ Verifique primeiro o `package.json` e a versão efetiva do React Native. Não in
 - AsyncStorage: persistência não sensível da sessão.
 - Jest e React Native Testing Library: testes.
 
-Não adicione bibliotecas por conveniência sem justificar a necessidade. Não adicione Firebase nem crie uma API/backend dentro deste repositório: o desafio fornece dados locais e o escopo é o aplicativo mobile.
+Não adicione bibliotecas por conveniência sem justificar a necessidade. Não adicione Firebase nem crie uma API/backend dentro deste repositório: a API fica em repositório próprio.
 
 Depois da entrega, a API passou a existir em repositório próprio (`../FiapSchoolApi`, Express + Prisma). O contrato dela está em `../FiapSchoolApi/specs/03-api-contract.md`. Mudanças em `GuardianDataSource`, nos DTOs ou no `toGuardian` exigem atualizar esse contrato.
 
@@ -131,7 +131,7 @@ Adote uma arquitetura pragmática, com separação clara de responsabilidades, s
 
 - **Presentation:** telas, componentes de feature e ViewModels/hooks de apresentação.
 - **Domain:** entidades, contratos de repositório e casos de uso que representem regras reais.
-- **Data:** acesso ao JSON local, fontes de dados e implementações dos repositórios.
+- **Data:** acesso à API (Axios), fontes de dados e implementações dos repositórios.
 - **Core:** tema, armazenamento, erros e utilitários transversais.
 - **Shared:** componentes e hooks realmente reutilizados.
 - **App:** composição de dependências, providers e inicialização.
@@ -155,7 +155,7 @@ src/
 │   └── usecases/
 ├── data/
 │   ├── datasources/
-│   │   └── local/
+│   │   └── remote/
 │   ├── repositories/
 │   └── mappers/
 ├── modules/
@@ -189,7 +189,8 @@ Convenções adotadas:
 
 ## 6. Segurança e persistência
 
-- O JSON local serve apenas para simular a autenticação exigida pelo desafio; não representa autenticação segura de produção.
+- A autenticação é da API (bcrypt, JWT, refresh rotativo). O refresh token fica só no Keychain e o access token só em memória.
+- Os logins de demonstração do README são dados fictícios do desafio, com senhas fracas de propósito; não use em produção.
 - Nunca armazene senha em AsyncStorage ou em qualquer armazenamento persistente.
 - Persista apenas os identificadores mínimos necessários para restaurar a sessão, conforme a estrutura real dos dados.
 - Não registre CPF, senha ou dados pessoais em logs.
@@ -297,7 +298,7 @@ No Claude Code, o ciclo está nos comandos `/specify`, `/plan`, `/implement`, `/
 8. Animações, estados e refinamento visual.
 9. Testes, validação Android/iOS e README.
 
-A ordem pode mudar após a inspeção dos arquivos e do projeto. O plano executado está em `tasks/README.md` (T01–T10).
+A ordem pode mudar após a inspeção dos arquivos e do projeto. O plano executado está em `tasks/README.md` (T01–T15).
 
 ## 13. Padrões de código e colaboração
 
@@ -321,6 +322,7 @@ A ordem pode mudar após a inspeção dos arquivos e do projeto. O plano executa
   - um commit por funcionalidade, com os próprios testes;
   - quando um arquivo mistura assuntos, monte o índice em etapas.
 - Nunca faça push automaticamente, mesmo depois de um commit autorizado.
+- A URL da API é única (D-37, `src/core/config/apiConfig.ts`): não crie variável de ambiente nem alternativa por plataforma. Mudanças locais nesse arquivo ficam fora dos commits.
 
 ## 14. Critérios de entrega
 

@@ -10,7 +10,7 @@ Delegue ao agente `architect` e acompanhe o resultado.
 1. Leia `CLAUDE.md`, `specs/README.md`, `specs/00-project-overview.md` (decisões D-xx) e a spec existente da área, se houver, em `specs/features/`.
 2. Levante os insumos reais:
    - frames e componentes do Figma pelo MCP, com os ids dos nós;
-   - os campos do JSON em `src/data/datasources/local/responsaveis.json`;
+   - o contrato da API (`../FiapSchoolApi/specs/03-api-contract.md`) e o fixture `src/test-utils/fixtures/responsaveis.json`;
    - o requisito correspondente em `CLAUDE.md` §3.
 3. Escreva ou atualize `specs/features/<funcionalidade>.md` no formato das specs existentes:
    - layout com medidas e tokens;

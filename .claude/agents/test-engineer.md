@@ -14,7 +14,7 @@ Você cuida dos testes do FIAP School Mobile: Jest 29 e React Native Testing Lib
   - `renderWithTheme` para componentes;
   - `renderWithSession` com `makeSessionDependencies` para telas com sessão;
   - `fixtures` (`makeGuardian`, `makeStudent`) para dados sintéticos.
-- Dados reais: importe `src/data/datasources/local/responsaveis.json` e use `toGuardian`. **Credenciais são lidas do JSON em tempo de execução, nunca escritas como literais** nos testes.
+- Dados: use o fixture anonimizado `src/test-utils/fixtures/responsaveis.json` e a API simulada `createFakeApi` (`src/test-utils/fakeApi.ts`), com `toGuardian` e `toGuardianWithRecords`. **Credenciais são lidas do fixture em tempo de execução, nunca escritas como literais** nos testes. Nunca importe o JSON real da API.
 
 ## Regras
 
