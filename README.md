@@ -20,6 +20,18 @@ Aplicativo para responsáveis acompanharem a **agenda de aulas** e o **boletim**
 - **Abertura (splash)** que fica na tela até a sessão ser restaurada.
 - **Animações** discretas em todas as telas, que respeitam o "Reduzir movimento" do sistema.
 
+## Demonstração
+
+Gravações em iPhone, com a API de produção.
+
+| Login e sessão | Agenda |
+|:---:|:---:|
+| <img src="docs/demo/login.gif" width="240" alt="Login com CPF mascarado e senha"> | <img src="docs/demo/agenda.gif" width="240" alt="Agenda com seletor de dia e aulas"> |
+
+| Boletim | Troca de aluno |
+|:---:|:---:|
+| <img src="docs/demo/boletim.gif" width="240" alt="Boletim com anos e trimestres expansíveis"> | <img src="docs/demo/trocaperfil.gif" width="240" alt="Tela de mudança de aluno acima das abas"> |
+
 ## Stack
 
 | Item | Versão |
