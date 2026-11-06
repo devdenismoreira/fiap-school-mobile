@@ -121,8 +121,9 @@ Logins válidos na API de produção (dados do desafio e de demonstração; o CP
 | Adelaide Silveira da Costa | 508.795.670-07 | 987654 | Bianca (um aluno: sem TROCAR PERFIL) |
 | Carla Mendes | 333.666.999-57 | 112233 | nenhum (tela "Nenhum aluno vinculado") |
 | Diego Rocha | 444.777.000-83 | 445566 | Felipe, sem boletim (estado "Nenhum boletim encontrado") |
+| Elisa Prado | 555.888.111-94 | 778899 | Lucas, Marina, Pedro, Sofia e Davi (cinco alunos, lista longa na troca de aluno) |
 
-Os dois primeiros vêm do JSON do desafio; Carla e Diego são fictícios, criados para exercitar os estados vazios. São dados de demonstração.
+Os dois primeiros vêm do JSON do desafio; Carla, Diego e Elisa são fictícios, criados para exercitar os estados vazios. São dados de demonstração.
 
 ## Arquitetura
 
