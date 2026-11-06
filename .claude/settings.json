@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(yarn typecheck)",
+      "Bash(yarn lint)",
+      "Bash(yarn lint *)",
+      "Bash(yarn test)",
+      "Bash(yarn test *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "mcp__plugin_figma_figma__get_metadata",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__get_variable_defs"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(yarn add *)",
+      "Bash(yarn remove *)",
+      "Bash(yarn upgrade *)",
+      "Bash(yarn android*)",
+      "Bash(yarn ios*)",
+      "Bash(pod install*)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  }
+}

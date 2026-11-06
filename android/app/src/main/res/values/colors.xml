@@ -1,0 +1,4 @@
+<resources>
+    <!-- Fundo do app (token `background` do tema): ícone adaptativo e abertura. -->
+    <color name="app_background">#000000</color>
+</resources>

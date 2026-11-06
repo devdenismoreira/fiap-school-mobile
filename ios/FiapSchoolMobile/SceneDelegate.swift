@@ -1,6 +1,7 @@
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
+import RNBootSplash
 import UIKit
 
 class SceneDelegate: RCTDefaultReactNativeFactoryDelegate, UIWindowSceneDelegate {
@@ -19,7 +20,9 @@ class SceneDelegate: RCTDefaultReactNativeFactoryDelegate, UIWindowSceneDelegate
     dependencyProvider = RCTAppDependencyProvider()
     reactNativeFactory = RCTReactNativeFactory(delegate: self)
     window = UIWindow(windowScene: windowScene)
-    
+    // Fundo preto atrás do React: sem "piscada" branca entre a launch screen e o primeiro quadro.
+    window?.backgroundColor = .black
+
     #if DEBUG
     let devMenuConfiguration = RCTDevMenuConfiguration(
       devMenuEnabled: true,
@@ -36,6 +39,14 @@ class SceneDelegate: RCTDefaultReactNativeFactoryDelegate, UIWindowSceneDelegate
     )
 
    
+  }
+
+  /// View raiz do React em preto (o padrão é `systemBackground`, branco no modo claro),
+  /// visível entre a launch screen e o primeiro quadro desenhado pelo JavaScript.
+  override func customize(_ rootView: RCTRootView) {
+    super.customize(rootView)
+    rootView.backgroundColor = .black
+    RNBootSplash.initWithStoryboard("LaunchScreen", rootView: rootView)
   }
 
   func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

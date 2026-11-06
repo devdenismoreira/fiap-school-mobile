@@ -1,0 +1,56 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useReducedMotion } from 'react-native-reanimated';
+
+import { useSession } from '@/app/providers/SessionProvider';
+import { Box, motion, theme } from '@/core/theme';
+import { ConnectionErrorScreen } from '@/modules/auth/screens/ConnectionErrorScreen';
+import { LoginScreen } from '@/modules/auth/screens/LoginScreen';
+import { StudentSelectionScreen } from '@/modules/students/screens/StudentSelectionScreen';
+import { MainTabs } from './MainTabs';
+import type { RootStackParamList } from './types';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export function RootNavigator() {
+  const { state } = useSession();
+  const reduceMotion = useReducedMotion();
+
+  if (state.status === 'restoring') {
+    return (
+      <Box testID="session-restoring" flex={1} backgroundColor="background" />
+    );
+  }
+
+  if (state.status === 'unreachable') {
+    return <ConnectionErrorScreen />;
+  }
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? 'none' : 'fade',
+        contentStyle: { backgroundColor: theme.colors.background },
+        statusBarStyle: 'light',
+      }}
+    >
+      {state.status === 'signedIn' ? (
+        <>
+          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen
+            name="StudentSelection"
+            component={StudentSelectionScreen}
+            options={{
+              presentation: 'card',
+              animation: reduceMotion ? 'none' : 'slide_from_bottom',
+              animationDuration: motion.transition,
+              gestureEnabled: false,
+            }}
+          />
+        </>
+      ) : (
+        <Stack.Screen name="Login" component={LoginScreen} />
+      )}
+    </Stack.Navigator>
+  );
+}
