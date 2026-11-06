@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios';
 
 import type { SessionDependencies } from '@/app/providers/SessionProvider';
-import { getApiUrl } from '@/core/config/apiConfig';
+import { API_URL } from '@/core/config/apiConfig';
 import { createApiClient } from '@/core/http/apiClient';
 import { createTokenStore, type TokenStore } from '@/core/storage/tokenStore';
 import { GuardianRemoteDataSource } from '@/data/datasources/remote/GuardianRemoteDataSource';
@@ -30,7 +30,7 @@ export function createRemoteDependencies(
 
 export function createDependencies(): SessionDependencies {
   const tokenStore = createTokenStore();
-  const http = createApiClient({ baseURL: getApiUrl(), tokenStore });
+  const http = createApiClient({ baseURL: API_URL, tokenStore });
 
   return createRemoteDependencies(http, tokenStore);
 }

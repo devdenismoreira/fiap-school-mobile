@@ -71,18 +71,9 @@ Os builds de desenvolvimento compilam só a arquitetura do emulador ou aparelho 
 
 Na branch `feature/integrate-api`, o app usa a [FIAP School API](../FiapSchoolApi) no lugar do JSON local. A API devolve o mesmo formato de dados, então domínio, telas e navegação não mudaram (spec [`features/api-integration.md`](specs/features/api-integration.md)).
 
-1. Suba a API (`yarn dev` em `../FiapSchoolApi`) e confira em `http://localhost:3000/docs`.
-2. Rode o app normalmente. Em debug, sem configuração, ele usa:
-   - simulador iOS: `http://localhost:3000`;
-   - emulador Android: `http://10.0.2.2:3000`.
-3. **Aparelho físico:** abra um túnel HTTPS para a API e passe a URL ao Metro. A `API_URL` é gravada no bundle, por isso o `--reset-cache`.
+O app usa **uma única URL**, a da API em produção: `https://fiap-school-api-production.up.railway.app` (em `src/core/config/apiConfig.ts`). Vale para debug e release, em simulador, emulador e aparelho. Não há variável de ambiente nem túnel. Para apontar para outra API, altere a constante e gere o app de novo.
 
-   ```sh
-   cloudflared tunnel --url http://localhost:3000   # ou: ngrok http 3000
-   API_URL=https://<endereço-do-túnel> yarn start --reset-cache
-   ```
-
-4. **Release:** exige `API_URL` com `https://` no momento do bundle; sem ela, o app falha ao abrir com uma mensagem clara.
+A Railway pode hibernar sem uso: a primeira abertura depois de um tempo parado pode demorar e mostrar a tela de conexão (timeout de 20 s). Basta tocar em TENTAR NOVAMENTE.
 
 Comportamento:
 - **Tokens:** o refresh token fica no Keychain (iOS) ou no Keystore (Android); o access token, só em memória. Nenhum token vai para o AsyncStorage, e a senha nunca é guardada.

@@ -115,9 +115,9 @@ Na entrega, backend e API ficaram fora do escopo (§5). Depois dela, o desenvolv
 | D-21 ✅ | App aberto sem conexão | A renovação falha por rede com a sessão salva | Tela de conexão (logo, mensagem e **TENTAR NOVAMENTE**). A sessão continua guardada e entra direto quando a conexão voltar |
 | D-22 ✅ | Login bloqueado (429) | A API limita as tentativas por CPF e por IP | Mensagem específica: "Muitas tentativas.\nTente novamente mais tarde." |
 | D-23 | Sessão expirada ou revogada | Refresh recusado pela API ao abrir o app | ~~Volta ao Login sem aviso~~. **Substituída pela D-31** (Login com toast) |
-| D-24 ✅ | URL da API em desenvolvimento | O aparelho físico não alcança o `localhost` do computador | Padrão por plataforma (`localhost` no simulador iOS, `10.0.2.2` no emulador Android). No aparelho físico, túnel HTTPS com `API_URL` injetada no bundle por `babel-plugin-transform-inline-environment-variables` (dependência de desenvolvimento) |
+| D-24 | URL da API em desenvolvimento | — | ~~Padrão por plataforma e túnel com `API_URL`~~. **Substituída pela D-37** |
 | D-25 | Timeout | A hospedagem gratuita pode hibernar | 20 s por requisição, revisto quando a API for publicada (T11 da API) |
-| D-26 | URL em release | A hospedagem ainda não foi escolhida | O release exige `API_URL` com `https://`; sem ela, falha na inicialização com erro claro. Sem exceções de ATS nem de tráfego sem TLS |
+| D-26 | URL em release | — | ~~Release exige `API_URL` com `https://`~~. **Substituída pela D-37** |
 
 ### Toast (2026-11-05)
 
@@ -145,3 +145,9 @@ Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design sy
 | ID | Tema | Observação | Decisão |
 |---|---|---|---|
 | D-36 ✅ | Launch screen até restaurar a sessão | Entre a launch screen e o primeiro conteúdo, o app ficava com a tela preta enquanto restaurava a sessão (renovação do token e `/me`) | `react-native-bootsplash` 7.3.3 (versão fixa; a 7.3.5 tinha 6 dias): a abertura continua na tela até o `BootSplashGate` chamar `BootSplash.hide({ fade: true })`, quando a sessão deixa de estar em `restoring`. No iOS, reaproveita o `LaunchScreen.storyboard`; no Android, o `BootTheme` usa o fundo preto e o `splash_icon`, e o `LaunchTheme` e o `launch_screen` foram removidos |
+
+### URL única da API (2026-11-05)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-37 ✅ | URL única | A API foi publicada na Railway (`https://fiap-school-api-production.up.railway.app`, com HTTPS e HSTS) | **Decisão do desenvolvedor:** essa é a única URL, em debug e em release. Saem o `API_URL` por variável, o plugin `babel-plugin-transform-inline-environment-variables` (dependência removida), o tipo `env.d.ts` e os padrões por plataforma. Rodar contra uma API local exige alterar `apiConfig.ts` |

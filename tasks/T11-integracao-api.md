@@ -113,3 +113,5 @@ Atualização (2026-11-05, D-35):
 - Os testes passaram a usar um fixture anonimizado e a API simulada `createFakeApi`.
 - O bundle de produção deixou de carregar CPFs e senhas.
 - Suíte: 34 suítes e 229 testes.
+
+Atualização (2026-11-05, D-37): a URL de produção virou a única. `apiConfig.ts` exporta só `API_URL`; o `API_URL` por variável, o plugin do Babel (removido do `package.json`), o `env.d.ts` e os padrões por plataforma saíram.

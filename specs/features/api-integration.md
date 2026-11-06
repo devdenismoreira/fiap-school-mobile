@@ -136,24 +136,12 @@ Só usa componentes e tokens existentes.
 - **Logs:** nenhum interceptador registra corpo, cabeçalhos ou tokens.
 - **Testes:** usam o `adapter` do próprio Axios, sem biblioteca extra de mock.
 
-## 7. URL da API (D-24, D-26)
+## 7. URL da API (D-37)
 
-- **`core/config/apiConfig.ts`:**
-  - lê `process.env.API_URL`, injetada no bundle pelo `babel-plugin-transform-inline-environment-variables`;
-  - o plugin é limitado à variável `API_URL`, para não vazar outras variáveis do ambiente.
-- **Sem `API_URL`, em debug:**
-  - simulador iOS: `http://localhost:3000`;
-  - emulador Android: `http://10.0.2.2:3000`.
-- **Aparelho físico:**
-  - túnel HTTPS (`cloudflared tunnel --url http://localhost:3000`);
-  - depois, `API_URL=https://… yarn start --reset-cache`.
-- **Release:**
-  - exige `API_URL` com `https://`;
-  - sem ela, falha na inicialização com erro claro (D-26).
-- **Nenhuma exceção nova de ATS ou de tráfego sem TLS:**
-  - o simulador iOS já tem `localhost` liberado (`NSAllowsLocalNetworking`);
-  - o Android de debug já permite HTTP (`usesCleartextTraffic` do template);
-  - o release só fala `https://`.
+- `core/config/apiConfig.ts` exporta uma única constante, `API_URL`, com a API em produção (`https://fiap-school-api-production.up.railway.app`), usada em debug e em release.
+- Não há `API_URL` por variável de ambiente, plugin do Babel, túnel nem padrões por plataforma (`localhost`, `10.0.2.2`). Eles existiam nas D-24 e D-26, substituídas pela D-37.
+- O tráfego é sempre `https://`, então não há exceção de ATS nem de tráfego sem TLS.
+- Rodar contra uma API local exige alterar a constante.
 
 ## 8. Composição
 
@@ -211,7 +199,6 @@ Pedem aprovação para instalar.
 |---|---|---|---|
 | `axios` | 1.20.0, fixa | runtime | Pedido do desenvolvedor (padrão dos projetos dele). A 1.21.0 foi publicada há 9 dias; fixar uma versão com semanas de uso reduz o risco de pacote comprometido |
 | `react-native-keychain` | 10.0.0 | runtime nativo (TurboModule, compatível com a New Architecture) | Refresh com proteção nativa. Exige `pod install` e rebuild nos dois sistemas. Última versão de março de 2025: o build no RN 0.88 precisa ser conferido |
-| `babel-plugin-transform-inline-environment-variables` | estável atual, conferida na instalação | desenvolvimento | `API_URL` no bundle, sem código nativo |
 
 ## 11. Limitações conhecidas
 
