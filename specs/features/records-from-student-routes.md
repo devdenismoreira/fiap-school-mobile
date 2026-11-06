@@ -31,4 +31,4 @@ Manuais (feitos pelo desenvolvedor em aparelho): carregamento ao trocar de aluno
 
 ## 5. Riscos
 
-- Mudança incompatível em `/v1` (sem `/v2`): versões antigas do app quebram com a API enxuta. Publicar o app antes de publicar a API enxuta.
+- Mudança incompatível em `/v1` (sem `/v2`). Sem impacto prático: o app não é publicado em loja, a entrega é só o repositório, e não há versões antigas em uso.

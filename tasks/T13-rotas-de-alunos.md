@@ -22,5 +22,3 @@ Os de `features/records-from-student-routes.md` §4.
 ## Status
 
 **Concluída em 2026-11-05.** Validada em aparelho pelo desenvolvedor. App: 273 testes em 42 suítes; API: 277 unitários e 139 de integração. `yarn typecheck` e `yarn lint` passando.
-
-Ordem de publicação: app primeiro, depois a API enxuta.
