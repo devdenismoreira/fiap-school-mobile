@@ -11,6 +11,8 @@ function setup({
   const guardians: GuardianRepository = {
     findByCredentials: jest.fn(),
     findById: jest.fn().mockResolvedValue(guardian),
+    findStudentSchedule: jest.fn(),
+    findStudentReportCards: jest.fn(),
   };
   const sessions: SessionRepository = {
     load: jest.fn().mockResolvedValue(stored),

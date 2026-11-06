@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 
 import { InvalidCredentialsError } from '@/core/errors/InvalidCredentialsError';
 import { NetworkError } from '@/core/errors/NetworkError';
+import { SessionExpiredError } from '@/core/errors/SessionExpiredError';
 import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import type { StoredSession } from '@/domain/entities/Session';
 import type { RestoredSession } from '@/domain/usecases/restoreSession';
@@ -24,6 +25,9 @@ function makeDependencies(restored: RestoredSession | null = null) {
       save: jest.fn().mockResolvedValue(undefined),
       clear: jest.fn().mockResolvedValue(undefined),
     },
+    loadStudentRecords: jest
+      .fn()
+      .mockResolvedValue({ schedule: [], reportCards: [] }),
     endSession: jest.fn().mockResolvedValue(undefined),
   } satisfies SessionDependencies;
   return dependencies;
@@ -229,6 +233,137 @@ describe('SessionProvider', () => {
 
     expect(dependencies.sessionRepository.clear).toHaveBeenCalled();
     expect(result.current.state.status).toBe('signedOut');
+  });
+
+  describe('dados do aluno (agenda e boletins pelas rotas de alunos)', () => {
+    const recordsOf = (label: string) => ({
+      schedule: [{ date: `2025-03-17-${label}`, classes: [] }],
+      reportCards: [{ year: '2025', className: label, terms: [] }],
+    });
+
+    it('ao restaurar, carrega só o aluno selecionado e o expõe em selectedStudent', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian(),
+        selectedStudentRm: 200,
+      });
+      dependencies.loadStudentRecords.mockResolvedValue(recordsOf('bia'));
+      const { result } = await renderSession(dependencies);
+
+      await waitFor(() => expect(result.current.recordsStatus).toBe('ready'));
+
+      expect(dependencies.loadStudentRecords).toHaveBeenCalledTimes(1);
+      expect(dependencies.loadStudentRecords).toHaveBeenCalledWith(200);
+      expect(result.current.selectedStudent?.schedule).toEqual(
+        recordsOf('bia').schedule,
+      );
+      expect(result.current.selectedStudent?.reportCards).toEqual(
+        recordsOf('bia').reportCards,
+      );
+    });
+
+    it('ao trocar de aluno, busca os dados do novo aluno e não reaproveita os do anterior', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian(),
+        selectedStudentRm: 100,
+      });
+      let finishSecond: () => void = () => undefined;
+      dependencies.loadStudentRecords.mockImplementation(
+        (rm: number) =>
+          new Promise(resolve => {
+            if (rm === 100) {
+              resolve(recordsOf('100'));
+              return;
+            }
+            finishSecond = () => resolve(recordsOf('200'));
+          }),
+      );
+      const { result } = await renderSession(dependencies);
+      await waitFor(() => expect(result.current.recordsStatus).toBe('ready'));
+
+      await act(() => result.current.selectStudent(200));
+
+      expect(result.current.recordsStatus).toBe('loading');
+      expect(result.current.selectedStudent?.schedule).toEqual([]);
+      await act(async () => finishSecond());
+      await waitFor(() => expect(result.current.recordsStatus).toBe('ready'));
+      expect(dependencies.loadStudentRecords).toHaveBeenLastCalledWith(200);
+      expect(result.current.selectedStudent?.reportCards[0].className).toBe(
+        '200',
+      );
+    });
+
+    it('falha ao carregar: status error; reloadRecords tenta de novo e recupera', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian(),
+        selectedStudentRm: 100,
+      });
+      dependencies.loadStudentRecords
+        .mockRejectedValueOnce(new NetworkError())
+        .mockResolvedValueOnce(recordsOf('rui'));
+      const { result } = await renderSession(dependencies);
+      await waitFor(() => expect(result.current.recordsStatus).toBe('error'));
+
+      await act(() => result.current.reloadRecords());
+
+      expect(result.current.recordsStatus).toBe('ready');
+      expect(result.current.selectedStudent?.schedule).toEqual(
+        recordsOf('rui').schedule,
+      );
+    });
+
+    it('reloadRecords que falha mantém os dados já carregados e rejeita', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian(),
+        selectedStudentRm: 100,
+      });
+      dependencies.loadStudentRecords
+        .mockResolvedValueOnce(recordsOf('rui'))
+        .mockRejectedValueOnce(new NetworkError());
+      const { result } = await renderSession(dependencies);
+      await waitFor(() => expect(result.current.recordsStatus).toBe('ready'));
+
+      await act(async () => {
+        await expect(result.current.reloadRecords()).rejects.toBeInstanceOf(
+          NetworkError,
+        );
+      });
+
+      expect(result.current.recordsStatus).toBe('ready');
+      expect(result.current.selectedStudent?.schedule).toEqual(
+        recordsOf('rui').schedule,
+      );
+    });
+
+    it('sessão recusada ao carregar os dados leva ao Login com o aviso de sessão expirada', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian(),
+        selectedStudentRm: 100,
+      });
+      dependencies.loadStudentRecords.mockRejectedValue(
+        new SessionExpiredError(),
+      );
+      const { result } = await renderSession(dependencies);
+
+      await waitFor(() =>
+        expect(result.current.state).toEqual({
+          status: 'signedOut',
+          sessionExpired: true,
+        }),
+      );
+      expect(dependencies.endSession).toHaveBeenCalled();
+    });
+
+    it('responsável sem alunos não carrega nada', async () => {
+      const dependencies = makeDependencies({
+        guardian: makeGuardian({ students: [] }),
+        selectedStudentRm: null,
+      });
+      const { result } = await renderSession(dependencies);
+      await waitFor(() => expect(result.current.state.status).toBe('signedIn'));
+
+      expect(result.current.recordsStatus).toBe('idle');
+      expect(dependencies.loadStudentRecords).not.toHaveBeenCalled();
+    });
   });
 
   it('useSession fora do provider lança erro explícito', async () => {

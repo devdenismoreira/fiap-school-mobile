@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 
-import { toGuardian } from '@/data/mappers/guardianMapper';
+import { toGuardianWithRecords } from '@/test-utils/fakeApi';
 import responsaveis from '@/test-utils/fixtures/responsaveis.json';
 import {
   makeSessionDependencies,
@@ -13,7 +13,7 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
-const guardian = toGuardian(responsaveis[0]);
+const guardian = toGuardianWithRecords(responsaveis[0]);
 const student = guardian.students[0];
 const monday = student.schedule.find(day => day.date === '2025-03-17')!;
 

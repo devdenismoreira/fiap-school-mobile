@@ -14,6 +14,12 @@ import {
   requestBody,
   type FakeRoute,
 } from './fakeHttp';
+import {
+  toGuardian,
+  toReportCard,
+  toScheduleDay,
+} from '@/data/mappers/guardianMapper';
+import type { Guardian } from '@/domain/entities/Guardian';
 import responsaveis from './fixtures/responsaveis.json';
 
 export type FixtureGuardian = (typeof responsaveis)[number];
@@ -26,8 +32,22 @@ export const withoutCredentials = (
   id: record.id,
   primeiroNome: record.primeiroNome,
   sobrenome: record.sobrenome,
-  alunos: record.alunos,
+  alunos: record.alunos.map(
+    ({ agenda: _agenda, boletim: _boletim, ...aluno }) => aluno,
+  ),
 });
+
+export function toGuardianWithRecords(record: FixtureGuardian): Guardian {
+  const guardian = toGuardian(withoutCredentials(record));
+  return {
+    ...guardian,
+    students: guardian.students.map((student, index) => ({
+      ...student,
+      schedule: record.alunos[index].agenda.map(toScheduleDay),
+      reportCards: record.alunos[index].boletim.map(toReportCard),
+    })),
+  };
+}
 
 const tokensFor = (guardianId: number, round: number) => ({
   accessToken: `access-${guardianId}-${round}`,
@@ -50,7 +70,31 @@ export function createFakeApi(records: FixtureGuardian[] = fixtureGuardians) {
   const byId = (id: number | null) => records.find(r => r.id === id);
   let round = 0;
 
+  const studentRoute = (request: Parameters<FakeRoute>[0]) => {
+    const match = request.url?.match(
+      /^\/v1\/alunos\/(\d+)\/(agenda|boletins)$/,
+    );
+    if (!match) {
+      return null;
+    }
+    const owner = byId(guardianIdIn(authHeader(request), 'access'));
+    if (!owner) {
+      return apiError(401, 'TOKEN_INVALIDO');
+    }
+    const student = owner.alunos.find(a => a.rm === Number(match[1]));
+    if (!student) {
+      return apiError(404, 'ALUNO_NAO_ENCONTRADO');
+    }
+    return match[2] === 'agenda'
+      ? { status: 200, data: { agenda: student.agenda } }
+      : { status: 200, data: { boletins: student.boletim } };
+  };
+
   const route: FakeRoute = request => {
+    const student = studentRoute(request);
+    if (student) {
+      return student;
+    }
     switch (request.url) {
       case LOGIN_PATH: {
         const { cpf, senha } = requestBody(request) as {

@@ -9,6 +9,8 @@ function makeRepository(result = makeGuardian()): GuardianRepository {
   return {
     findByCredentials: jest.fn().mockResolvedValue(result),
     findById: jest.fn(),
+    findStudentSchedule: jest.fn(),
+    findStudentReportCards: jest.fn(),
   };
 }
 

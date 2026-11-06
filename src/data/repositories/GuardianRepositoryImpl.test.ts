@@ -13,6 +13,12 @@ const fixtureDataSource: GuardianDataSource = {
     const record = fixtureGuardians.find(r => r.id === id);
     return record ? withoutCredentials(record) : null;
   },
+  getSchedule: async rm =>
+    fixtureGuardians.flatMap(g => g.alunos).find(a => a.rm === rm)?.agenda ??
+    [],
+  getReportCards: async rm =>
+    fixtureGuardians.flatMap(g => g.alunos).find(a => a.rm === rm)?.boletim ??
+    [],
 };
 
 describe('GuardianRepositoryImpl', () => {
@@ -25,6 +31,8 @@ describe('GuardianRepositoryImpl', () => {
         alunos: [],
       }),
       getById: jest.fn().mockResolvedValue(null),
+      getSchedule: jest.fn().mockResolvedValue([]),
+      getReportCards: jest.fn().mockResolvedValue([]),
     };
     const repository = new GuardianRepositoryImpl(dataSource);
 
@@ -50,7 +58,7 @@ describe('GuardianRepositoryImpl', () => {
     ).resolves.toBeNull();
   });
 
-  it('preserva a estrutura dos dados: alunos, dias, aulas, boletins e disciplinas', async () => {
+  it('preserva a estrutura dos dados: alunos pelo login e dias, aulas, boletins e disciplinas pelas rotas de alunos', async () => {
     const repository = new GuardianRepositoryImpl(fixtureDataSource);
 
     for (const record of fixtureGuardians) {
@@ -64,13 +72,15 @@ describe('GuardianRepositoryImpl', () => {
         record.alunos.map(a => a.rm),
       );
 
-      record.alunos.forEach((aluno, studentIndex) => {
-        const student = guardian!.students[studentIndex];
-        expect(student.schedule.map(d => [d.date, d.classes.length])).toEqual(
+      for (const aluno of record.alunos) {
+        const schedule = await repository.findStudentSchedule(aluno.rm);
+        const reportCards = await repository.findStudentReportCards(aluno.rm);
+
+        expect(schedule.map(d => [d.date, d.classes.length])).toEqual(
           aluno.agenda.map(d => [d.dia, d.aulas.length]),
         );
         expect(
-          student.reportCards.map(r => [
+          reportCards.map(r => [
             r.year,
             r.className,
             r.terms.map(t => [t.number, t.subjects.map(s => s.name)]),
@@ -85,7 +95,7 @@ describe('GuardianRepositoryImpl', () => {
             ]),
           ]),
         );
-      });
+      }
     }
   });
 });

@@ -15,6 +15,8 @@ import {
   GuardianRemoteDataSource,
   LOGIN_PATH,
   ME_PATH,
+  reportCardsPath,
+  schedulePath,
 } from './GuardianRemoteDataSource';
 
 const record = responsaveis[0];
@@ -169,6 +171,64 @@ describe('GuardianRemoteDataSource.getById', () => {
 
     await expect(dataSource.getById(record.id)).rejects.toBeInstanceOf(
       TooManyAttemptsError,
+    );
+  });
+});
+
+describe('GuardianRemoteDataSource: rotas de alunos', () => {
+  const student = record.alunos[0];
+  const route: FakeRoute = request => {
+    if (request.url === schedulePath(student.rm)) {
+      return { status: 200, data: { agenda: student.agenda } };
+    }
+    if (request.url === reportCardsPath(student.rm)) {
+      return { status: 200, data: { boletins: student.boletim } };
+    }
+    return apiError(404, 'ALUNO_NAO_ENCONTRADO');
+  };
+
+  it('getSchedule e getReportCards leem o objeto de uma chave com o Bearer do responsável', async () => {
+    const { dataSource, requests } = setup(route, {
+      accessToken: 'access-1',
+      refreshToken: 'refresh-1',
+    });
+
+    await expect(dataSource.getSchedule(student.rm)).resolves.toEqual(
+      student.agenda,
+    );
+    await expect(dataSource.getReportCards(student.rm)).resolves.toEqual(
+      student.boletim,
+    );
+    expect(requests.map(r => r.url)).toEqual([
+      `/v1/alunos/${student.rm}/agenda`,
+      `/v1/alunos/${student.rm}/boletins`,
+    ]);
+    expect(requests.map(authHeader)).toEqual([
+      'Bearer access-1',
+      'Bearer access-1',
+    ]);
+  });
+
+  it('aluno de outro responsável (404) propaga o erro da API, sem dados', async () => {
+    const { dataSource } = setup(route, {
+      accessToken: 'access-1',
+      refreshToken: 'refresh-1',
+    });
+
+    await expect(dataSource.getSchedule(999)).rejects.toMatchObject({
+      status: 404,
+      code: 'ALUNO_NAO_ENCONTRADO',
+    });
+  });
+
+  it('sem conexão vira NetworkError', async () => {
+    const { dataSource } = setup(() => 'network-error', {
+      accessToken: 'access-1',
+      refreshToken: 'refresh-1',
+    });
+
+    await expect(dataSource.getReportCards(student.rm)).rejects.toBeInstanceOf(
+      NetworkError,
     );
   });
 });

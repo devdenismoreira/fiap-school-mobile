@@ -3,7 +3,11 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import App from '../App';
 import { REFRESH_PATH } from '@/core/http/apiClient';
-import { ME_PATH } from '@/data/datasources/remote/GuardianRemoteDataSource';
+import {
+  ME_PATH,
+  reportCardsPath,
+  schedulePath,
+} from '@/data/datasources/remote/GuardianRemoteDataSource';
 import { LOGOUT_PATH } from '@/data/datasources/remote/remoteSession';
 import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
 import { requestBody } from '@/test-utils/fakeHttp';
@@ -67,7 +71,12 @@ describe('App com a FIAP School API (simulada)', () => {
     expect(
       await screen.findByRole('header', { name: 'AGENDA' }),
     ).toBeOnTheScreen();
-    expect(api.requests.map(r => r.url)).toEqual([REFRESH_PATH, ME_PATH]);
+    expect(api.requests.map(r => r.url)).toEqual([
+      REFRESH_PATH,
+      ME_PATH,
+      schedulePath(record.alunos[0].rm),
+      reportCardsPath(record.alunos[0].rm),
+    ]);
     expect(api.tokenStore.getAccessToken()).toBeTruthy();
   });
 

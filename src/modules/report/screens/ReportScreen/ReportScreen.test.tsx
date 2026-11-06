@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 
 import { theme } from '@/core/theme';
-import { toGuardian } from '@/data/mappers/guardianMapper';
+import { toGuardianWithRecords } from '@/test-utils/fakeApi';
 import responsaveis from '@/test-utils/fixtures/responsaveis.json';
 import {
   makeSessionDependencies,
@@ -14,8 +14,8 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
-const firstGuardian = toGuardian(responsaveis[0]);
-const singleStudentGuardian = toGuardian(responsaveis[1]);
+const firstGuardian = toGuardianWithRecords(responsaveis[0]);
+const singleStudentGuardian = toGuardianWithRecords(responsaveis[1]);
 
 async function renderReport(guardian = firstGuardian) {
   await renderWithSession(
@@ -149,27 +149,22 @@ describe('ReportScreen', () => {
   });
 
   it('sem boletins: mostra o estado vazio e TENTAR NOVAMENTE busca os dados de novo', async () => {
-    const semBoletim = {
-      ...firstGuardian,
-      students: firstGuardian.students.map(student => ({
-        ...student,
-        reportCards: [],
-      })),
-    };
-    const comBoletim = firstGuardian;
-    const restoreSession = jest
+    const loadStudentRecords = jest
       .fn()
+      .mockResolvedValueOnce({ schedule: [], reportCards: [] })
       .mockResolvedValueOnce({
-        guardian: semBoletim,
-        selectedStudentRm: semBoletim.students[0].rm,
-      })
-      .mockResolvedValueOnce({
-        guardian: comBoletim,
-        selectedStudentRm: comBoletim.students[0].rm,
+        schedule: [],
+        reportCards: firstGuardian.students[0].reportCards,
       });
     await renderWithSession(
       <ReportScreen />,
-      makeSessionDependencies({ restoreSession }),
+      makeSessionDependencies({
+        restoreSession: jest.fn().mockResolvedValue({
+          guardian: firstGuardian,
+          selectedStudentRm: firstGuardian.students[0].rm,
+        }),
+        loadStudentRecords,
+      }),
     );
 
     expect(
@@ -187,7 +182,39 @@ describe('ReportScreen', () => {
       await screen.findByRole('button', { name: /^Ano selecionado:/ }),
     ).toBeOnTheScreen();
     expect(screen.queryByText('Nenhum boletim encontrado')).toBeNull();
-    expect(restoreSession).toHaveBeenCalledTimes(2);
+    expect(loadStudentRecords).toHaveBeenCalledTimes(2);
+  });
+
+  it('carregando: mostra o indicador; falha: mostra o erro e permite tentar de novo', async () => {
+    const loadStudentRecords = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('falha'))
+      .mockResolvedValueOnce({
+        schedule: [],
+        reportCards: firstGuardian.students[0].reportCards,
+      });
+    await renderWithSession(
+      <ReportScreen />,
+      makeSessionDependencies({
+        restoreSession: jest.fn().mockResolvedValue({
+          guardian: firstGuardian,
+          selectedStudentRm: firstGuardian.students[0].rm,
+        }),
+        loadStudentRecords,
+      }),
+    );
+
+    expect(
+      await screen.findByText('Não foi possível carregar o boletim'),
+    ).toBeOnTheScreen();
+
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'TENTAR NOVAMENTE' }),
+    );
+
+    expect(
+      await screen.findByRole('button', { name: /^Ano selecionado:/ }),
+    ).toBeOnTheScreen();
   });
 
   it('não mostra média nem valores calculados', async () => {

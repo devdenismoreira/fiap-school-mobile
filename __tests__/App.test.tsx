@@ -9,6 +9,10 @@ import {
 import App from '../App';
 import { NetworkError } from '@/core/errors/NetworkError';
 import { onlyDigits } from '@/core/utils/cpf';
+import {
+  reportCardsPath,
+  schedulePath,
+} from '@/data/datasources/remote/GuardianRemoteDataSource';
 import { SESSION_STORAGE_KEY } from '@/data/repositories/AsyncStorageSessionRepository';
 import { createFakeApi, fixtureGuardians } from '@/test-utils/fakeApi';
 
@@ -178,6 +182,12 @@ describe('App (fluxo de sessão e navegação)', () => {
     expect(
       JSON.parse((await AsyncStorage.getItem(SESSION_STORAGE_KEY))!),
     ).toMatchObject({ selectedStudentRm: secondStudent.rm });
+    expect(api.requests.map(r => r.url)).toEqual(
+      expect.arrayContaining([
+        schedulePath(secondStudent.rm),
+        reportCardsPath(secondStudent.rm),
+      ]),
+    );
   });
 
   it('responsável com 1 aluno não vê TROCAR PERFIL', async () => {

@@ -31,8 +31,6 @@ export type AlunoDTO = {
   periodo: string;
   primeiroNome: string;
   sobrenome: string;
-  agenda: DiaAgendaDTO[];
-  boletim: BoletimDTO[];
 };
 
 export type ResponsavelDTO = {
@@ -40,4 +38,12 @@ export type ResponsavelDTO = {
   primeiroNome: string;
   sobrenome: string;
   alunos: AlunoDTO[];
+};
+
+export type AgendaRespostaDTO = {
+  agenda: DiaAgendaDTO[];
+};
+
+export type BoletinsRespostaDTO = {
+  boletins: BoletimDTO[];
 };

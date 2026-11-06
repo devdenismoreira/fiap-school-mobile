@@ -9,7 +9,7 @@ import type {
   ResponsavelDTO,
 } from '@/data/datasources/dtos';
 
-function toScheduleDay(dto: DiaAgendaDTO): ScheduleDay {
+export function toScheduleDay(dto: DiaAgendaDTO): ScheduleDay {
   return {
     date: dto.dia,
     classes: dto.aulas.map(aula => ({
@@ -19,7 +19,7 @@ function toScheduleDay(dto: DiaAgendaDTO): ScheduleDay {
   };
 }
 
-function toReportCard(dto: BoletimDTO): ReportCard {
+export function toReportCard(dto: BoletimDTO): ReportCard {
   return {
     year: dto.ano,
     className: dto.turma,
@@ -41,8 +41,8 @@ function toStudent(dto: AlunoDTO): Student {
     shift: dto.periodo,
     firstName: dto.primeiroNome,
     lastName: dto.sobrenome,
-    schedule: dto.agenda.map(toScheduleDay),
-    reportCards: dto.boletim.map(toReportCard),
+    schedule: [],
+    reportCards: [],
   };
 }
 

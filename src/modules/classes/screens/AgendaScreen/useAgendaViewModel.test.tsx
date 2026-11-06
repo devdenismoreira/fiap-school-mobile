@@ -3,6 +3,8 @@ import { ThemeProvider } from '@shopify/restyle';
 import type { PropsWithChildren } from 'react';
 
 import { SessionProvider, useSession } from '@/app/providers/SessionProvider';
+import { ToastProvider } from '@/app/providers/ToastProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { theme } from '@/core/theme';
 import type { Guardian } from '@/domain/entities/Guardian';
 import type { ScheduleDay } from '@/domain/entities/Schedule';
@@ -26,7 +28,13 @@ async function renderAgenda(guardian: Guardian, selectedStudentRm = 100) {
   });
   const wrapper = ({ children }: PropsWithChildren) => (
     <ThemeProvider theme={theme}>
-      <SessionProvider dependencies={dependencies}>{children}</SessionProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ToastProvider>
+          <SessionProvider dependencies={dependencies}>
+            {children}
+          </SessionProvider>
+        </ToastProvider>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
   const hook = await renderHook(
@@ -35,6 +43,9 @@ async function renderAgenda(guardian: Guardian, selectedStudentRm = 100) {
   );
   await waitFor(() =>
     expect(hook.result.current.session.state.status).toBe('signedIn'),
+  );
+  await waitFor(() =>
+    expect(hook.result.current.session.recordsStatus).toBe('ready'),
   );
   return hook;
 }

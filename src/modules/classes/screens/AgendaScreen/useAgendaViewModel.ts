@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { useSession } from '@/app/providers/SessionProvider';
 import { formatDayLabel } from '@/core/utils/formatDayLabel';
 import type { DropdownOption } from '@/shared/components/Dropdown';
+import { useRecordsReload } from '@/shared/hooks/useRecordsReload';
 
 export function useAgendaViewModel() {
-  const { selectedStudent } = useSession();
+  const { selectedStudent, recordsStatus } = useSession();
+  const { reload, isReloading } = useRecordsReload();
   const schedule = selectedStudent?.schedule ?? [];
 
   const [preferredDate, setPreferredDate] = useState<string | null>(null);
@@ -20,6 +22,9 @@ export function useAgendaViewModel() {
   }));
 
   return {
+    status: recordsStatus,
+    reload,
+    isReloading,
     hasSchedule: schedule.length > 0,
     days,
     selectedDate: selectedDay?.date ?? null,

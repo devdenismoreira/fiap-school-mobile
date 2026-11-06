@@ -5,10 +5,18 @@ import { TooManyAttemptsError } from '@/core/errors/TooManyAttemptsError';
 import { ApiError } from '@/core/http/apiErrors';
 import type { TokenStore } from '@/core/storage/tokenStore';
 import type { GuardianDataSource } from '@/data/datasources/GuardianDataSource';
-import type { ResponsavelDTO } from '@/data/datasources/dtos';
+import type {
+  AgendaRespostaDTO,
+  BoletimDTO,
+  BoletinsRespostaDTO,
+  DiaAgendaDTO,
+  ResponsavelDTO,
+} from '@/data/datasources/dtos';
 
 export const LOGIN_PATH = '/v1/auth/login';
 export const ME_PATH = '/v1/me';
+export const schedulePath = (rm: number) => `/v1/alunos/${rm}/agenda`;
+export const reportCardsPath = (rm: number) => `/v1/alunos/${rm}/boletins`;
 
 type LoginResponse = {
   accessToken: string;
@@ -64,5 +72,17 @@ export class GuardianRemoteDataSource implements GuardianDataSource {
       }
       throw error;
     }
+  }
+
+  async getSchedule(rm: number): Promise<DiaAgendaDTO[]> {
+    const { data } = await this.http.get<AgendaRespostaDTO>(schedulePath(rm));
+    return data.agenda;
+  }
+
+  async getReportCards(rm: number): Promise<BoletimDTO[]> {
+    const { data } = await this.http.get<BoletinsRespostaDTO>(
+      reportCardsPath(rm),
+    );
+    return data.boletins;
   }
 }

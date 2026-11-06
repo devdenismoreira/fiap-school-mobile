@@ -4,7 +4,12 @@ import {
   useRef,
   type PropsWithChildren,
 } from 'react';
-import { StyleSheet, View, type HostInstance } from 'react-native';
+import {
+  RefreshControl,
+  StyleSheet,
+  View,
+  type HostInstance,
+} from 'react-native';
 import Animated, {
   cancelAnimation,
   scrollTo,
@@ -18,6 +23,7 @@ import Animated, {
 import { Text, theme } from '@/core/theme';
 import { openTiming, screenSectionEntering } from '@/shared/animations';
 import { StudentGreeting } from '@/shared/components/StudentGreeting';
+import { useRecordsReload } from '@/shared/hooks/useRecordsReload';
 
 type ScrollFocus = {
   revealExpanding: (block: HostInstance | null, addedHeight: number) => void;
@@ -39,6 +45,7 @@ type TabScreenLayoutProps = PropsWithChildren<{
 }>;
 
 export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
+  const { reload, isReloading } = useRecordsReload();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollOffset(scrollRef);
   const contentRef = useRef<HostInstance>(null);
@@ -104,6 +111,7 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
   return (
     <ScrollFocusContext.Provider value={scrollFocus}>
       <Animated.ScrollView
+        testID="tab-scroll"
         ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -115,6 +123,15 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
           contentHeight.current = height;
         }}
         onScrollBeginDrag={stopFocusing}
+        refreshControl={
+          <RefreshControl
+            refreshing={isReloading}
+            onRefresh={reload}
+            tintColor={theme.colors.primary}
+            colors={[theme.colors.primary]}
+            progressBackgroundColor={theme.colors.surface}
+          />
+        }
       >
         <View ref={contentRef} collapsable={false}>
           <Animated.View entering={screenSectionEntering(0)}>

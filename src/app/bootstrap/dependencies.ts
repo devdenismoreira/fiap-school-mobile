@@ -8,6 +8,7 @@ import { GuardianRemoteDataSource } from '@/data/datasources/remote/GuardianRemo
 import { createEndSession } from '@/data/datasources/remote/remoteSession';
 import { AsyncStorageSessionRepository } from '@/data/repositories/AsyncStorageSessionRepository';
 import { GuardianRepositoryImpl } from '@/data/repositories/GuardianRepositoryImpl';
+import { createLoadStudentRecords } from '@/domain/usecases/loadStudentRecords';
 import { createAuthenticateGuardian } from '@/domain/usecases/authenticateGuardian';
 import { createRestoreSession } from '@/domain/usecases/restoreSession';
 
@@ -24,6 +25,7 @@ export function createRemoteDependencies(
     sessionRepository,
     authenticateGuardian: createAuthenticateGuardian(guardianRepository),
     restoreSession: createRestoreSession(guardianRepository, sessionRepository),
+    loadStudentRecords: createLoadStudentRecords(guardianRepository),
     endSession: createEndSession(http, tokenStore),
   };
 }
