@@ -1,6 +1,6 @@
 # Feature — Integração com a FIAP School API
 
-> Status: **aprovada e implementada em 2026-11-05** (T11; falta a validação manual em aparelho) · Branch: `feature/integrate-api` · Decisões: D-17 a D-26 · Contrato: `../FiapSchoolApi/specs/03-api-contract.md` e `../FiapSchoolApi/openapi.yaml` (Swagger em `http://localhost:3000/docs`) · Corresponde à T10 da API
+> Status: **aprovada, implementada e validada em aparelho** (T11, 2026-11-05; já na `develop`) · Decisões: D-17 a D-26, D-35 e D-37. A leitura de agenda e boletins mudou na D-38 (`records-from-student-routes.md`) · Contrato: `../FiapSchoolApi/specs/03-api-contract.md` e `../FiapSchoolApi/openapi.yaml` (Swagger em `http://localhost:3000/docs`) · Corresponde à T10 da API
 
 ## 1. Objetivo
 
@@ -21,7 +21,7 @@ Trocar o JSON local pela FIAP School API, sem mudar o que o responsável vê dep
 ## 2. O que continua igual
 
 - A API devolve o mesmo agregado do JSON (`ResponsavelDTO`) no login e no `/me`. A paridade é garantida por teste na API (T09 de lá).
-- Depois do login ou da restauração, os dados ficam em memória como hoje: Agenda, Boletim e Mudança de aluno não fazem requisições.
+- Depois do login ou da restauração, o responsável e a lista de alunos ficam em memória. A agenda e os boletins do aluno selecionado são buscados pelas rotas de alunos (D-38), não vêm mais do `/me`.
 - A sessão no AsyncStorage continua `{ version, guardianId, selectedStudentRm }`, **sem tokens**.
 - A troca de aluno continua local.
 
@@ -184,7 +184,7 @@ Automatizados:
 - [x] **`apiConfig`:** usa `API_URL` quando definida; usa o padrão por plataforma em debug; recusa release sem `https://`.
 - [x] typecheck e lint passam.
 
-Manuais (aparelho ou simulador, com a API local ou o túnel):
+Manuais (aparelho ou simulador, contra a API de produção; conferidos pelo desenvolvedor):
 - [ ] Login → Agenda → Boletim → trocar aluno → fechar e reabrir (entra sem login) → sair.
 - [ ] Modo avião ao abrir → tela de conexão. Ao voltar a internet, TENTAR NOVAMENTE entra direto.
 - [ ] Modo avião no login → mensagem de conexão.

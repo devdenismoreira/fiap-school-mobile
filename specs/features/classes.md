@@ -6,7 +6,7 @@
 
 Mostrar as aulas do aluno selecionado para um dia escolhido entre os dias disponíveis na agenda.
 
-## 2. Layout (abaixo do `AppHeader`)
+## 2. Layout (abaixo da `AppActionBar` e da `StudentGreeting`)
 
 | Elemento | Medidas | Estilo |
 |---|---|---|

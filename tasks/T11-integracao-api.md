@@ -67,7 +67,7 @@ Os de `features/api-integration.md` §9: automatizados e manuais.
 
 ## Status
 
-**Implementada em 2026-11-05.** Faltam o build nativo e o roteiro manual, que ficam com o desenvolvedor. Spec e plano aprovados no mesmo dia.
+**Concluída em 2026-11-05**, com build nativo e roteiro manual conferidos pelo desenvolvedor em aparelho. A URL única (D-37) e a leitura de dados pelas rotas de alunos (T13) vieram depois.
 
 Entregue:
 - **Dependências:**
@@ -104,9 +104,7 @@ Validação:
   - `/me` 200 idêntico ao JSON;
   - logout 204, e o `/me` seguinte → 401 `TOKEN_INVALIDO`.
 
-Pendente, com o desenvolvedor:
-1. Build nativo (`yarn ios` e `yarn android`) com o `react-native-keychain`.
-2. Roteiro manual da spec §9.
+Validação em aparelho: feita pelo desenvolvedor (iOS e Android).
 
 Atualização (2026-11-05, D-35):
 - O `GuardianLocalDataSource`, o `createLocalDependencies` e o JSON saíram do app. O JSON foi movido para a API (`prisma/data/responsaveis.json`).

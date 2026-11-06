@@ -4,7 +4,7 @@
 
 ## 1. Objetivo
 
-Permitir que o responsável entre com CPF e senha validados contra o JSON local, manter a sessão entre aberturas do app e encerrá-la por "SAIR".
+Permitir que o responsável entre com CPF e senha validados pela API (na entrega, contra o JSON local), manter a sessão entre aberturas do app e encerrá-la por "SAIR".
 
 ## 2. Layout (frame 414 × 736)
 

@@ -1,6 +1,6 @@
 # Feature — Toast (avisos discretos)
 
-> Status: **aprovada e implementada em 2026-11-05** (T12; falta a validação manual em aparelho) · Branch: `feature/integrate-api` · Decisões: D-27 a D-34 · Referência: o toast do Instagram, com os tokens do design system do projeto
+> Status: **aprovada, implementada e validada em aparelho** (T12, 2026-11-05; visual redesenhado depois, ver `launch-and-polish.md`) · Decisões: D-27 a D-34 · Referência: o toast do Instagram, com os tokens do design system do projeto
 
 ## 1. Objetivo
 

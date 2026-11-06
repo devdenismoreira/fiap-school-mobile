@@ -126,7 +126,7 @@ Decisões:
 
 Separação de responsabilidades:
 
-1. **Fonte de dados** (`GuardianLocalDataSource`): compara o CPF (11 dígitos exatos) e a senha, como um servidor, e devolve um `ResponsavelDTO` montado por lista explícita de campos, sem `cpf`, `senha` e `email`. Também devolve cópia profunda, simulando uma resposta serializada.
+1. **Fonte de dados** (na entrega, `GuardianLocalDataSource`; hoje a API faz isso): compara o CPF (11 dígitos exatos) e a senha, como um servidor, e devolve um `ResponsavelDTO` montado por lista explícita de campos, sem `cpf`, `senha` e `email`. Também devolve cópia profunda, simulando uma resposta serializada.
 2. **Mapper** (`toGuardian`): renomeia toda a estrutura para o vocabulário do domínio, sem alterar valores, `null` ou ordem dos arrays.
 
 Assim, as credenciais nunca chegam ao repositório, ao contexto ou à UI.

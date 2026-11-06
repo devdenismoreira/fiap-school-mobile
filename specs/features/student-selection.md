@@ -6,7 +6,7 @@
 
 Exibir quem está logado e qual aluno está sendo visualizado, e permitir trocar o aluno numa rota acima das abas, voltando à tela de origem com os dados atualizados.
 
-## 2. Cabeçalho (`AppHeader`) — Agenda e Boletim
+## 2. Cabeçalho (`AppActionBar` e `StudentGreeting`) — Agenda e Boletim
 
 | Elemento | Conteúdo | Estilo |
 |---|---|---|

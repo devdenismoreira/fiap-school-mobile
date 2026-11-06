@@ -6,7 +6,7 @@
 
 Exibir notas e faltas por disciplina, organizadas por ano letivo e trimestre, refletindo **exclusivamente** os dados do JSON.
 
-## 2. Layout (abaixo do `AppHeader`)
+## 2. Layout (abaixo da `AppActionBar` e da `StudentGreeting`)
 
 | Elemento | Medidas | Estilo |
 |---|---|---|

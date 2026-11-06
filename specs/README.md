@@ -14,5 +14,8 @@ Especificações escritas a partir do repositório, do Figma e do JSON real do d
 | [features/report.md](features/report.md) | Boletim por ano e trimestre |
 | [features/api-integration.md](features/api-integration.md) | Evolução depois da entrega: troca do JSON pela FIAP School API (tokens, interceptador, mensagens de conexão) |
 | [features/toast.md](features/toast.md) | Toast no estilo do Instagram com os tokens do projeto: sessão expirada, troca de aluno, conexão |
+| [features/records-from-student-routes.md](features/records-from-student-routes.md) | Agenda e boletins pelas rotas de alunos, carga ao trocar de aluno e puxar para atualizar |
+| [features/empty-states.md](features/empty-states.md) | `EmptyState`: sem alunos, boletim vazio ou com erro |
+| [features/launch-and-polish.md](features/launch-and-polish.md) | Bootsplash, toast redesenhado, teclado iOS, loading no botão, animações, URL única |
 
 Regras de manutenção: atualizar a spec quando uma decisão mudar, e não tratar documentação como substituta de testes.

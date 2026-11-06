@@ -6,7 +6,7 @@
 
 - Proporcional ao escopo: 4 telas, dados locais e um único "backend" simulado.
 - Camadas com dependência num só sentido: `presentation → domain ← data`. `core`/`shared` são transversais.
-- Repository Pattern para isolar o JSON local e permitir trocar por REST no futuro, sem criar API agora.
+- Repository Pattern para isolar a origem dos dados. Na entrega era o JSON local; a troca por REST aconteceu na T11, só com outra implementação de `GuardianDataSource`.
 - Context API apenas para **sessão** e **aluno selecionado**. Estado de tela (dia escolhido, trimestres abertos, dropdown aberto) fica no ViewModel/hook da feature.
 - Injeção manual de dependências num composition root. Sem container de DI, `BaseRepository` ou `BaseViewModel`.
 - UseCase só onde há regra real: **autenticar** e **restaurar sessão**. Leitura de agenda e boletim é seleção de dados já carregados e fica em funções puras/hook.
@@ -59,10 +59,10 @@ src/
 ├── domain/
 │   ├── entities/                → Guardian, Student, ScheduleDay, ClassSession, ReportCard, Term, SubjectGrade
 │   ├── repositories/            → GuardianRepository, SessionRepository (interfaces)
-│   └── usecases/                → authenticateGuardian.ts, restoreSession.ts
+│   └── usecases/                → authenticateGuardian.ts, restoreSession.ts, loadStudentRecords.ts
 ├── data/
 │   ├── datasources/             → GuardianDataSource.ts (contrato), dtos.ts (formato da "API")
-│   │   └── local/               → responsaveis.json, GuardianLocalDataSource.ts
+│   │   └── remote/              → GuardianRemoteDataSource.ts (API), remoteSession.ts (logout)
 │   ├── mappers/                 → guardianMapper.ts (DTO PT → entidade EN)
 │   └── repositories/            → GuardianRepositoryImpl.ts, AsyncStorageSessionRepository.ts
 ├── modules/
@@ -75,7 +75,7 @@ src/
 │   ├── RootNavigator.tsx, MainTabs.tsx, navigationTheme.ts, types.ts
 │   └── TabBar/
 ├── shared/
-│   ├── components/                        → AppHeader/, Icon/, PrimaryButton/, TabScreenLayout/
+│   ├── components/                        → AppActionBar/, StudentGreeting/, Dropdown/, Toast/, EmptyState/, Icon/, PrimaryButton/, TabScreenLayout/
 │   └── hooks/                             → useKeyboardVisible.ts
 └── test-utils/                            → fixtures, renderWithTheme, renderWithSession
 ```
@@ -91,7 +91,7 @@ src/
 ## 4. Domínio e dados
 
 - **Nomes**: identificadores de código em inglês (`Guardian`, `Student`, `ReportCard`); textos de UI em português. O mapper traduz o DTO (`ResponsavelDTO`) para entidades.
-- **Credenciais não saem da fonte de dados.** O `GuardianLocalDataSource.signIn` faz a comparação como um servidor faria e devolve o responsável numa lista explícita de campos, sem `cpf`, `email` e `senha`.
+- **Credenciais não saem da fonte de dados.** Na entrega, o `GuardianLocalDataSource.signIn` (removido na D-35) fazia a comparação como um servidor e devolvia o responsável numa lista explícita de campos, sem `cpf`, `email` e `senha`.
 - **O mapper se justifica** pela tradução PT → EN da estrutura inteira, preservando valores, `null` e ordem. Detalhes em `02-data-model.md`.
 - **GuardianRepository** (interface no domínio):
   - `findByCredentials(cpfDigits: string, password: string): Promise<Guardian | null>`
@@ -104,7 +104,7 @@ src/
   - `authenticateGuardian(cpfInput, password)`: normaliza o CPF, valida formato e dígito verificador, consulta o repositório e lança `InvalidCredentialsError` genérico em qualquer falha (não revela qual campo errou).
   - `restoreSession()`: lê a sessão salva, busca o responsável por id e valida se o aluno salvo ainda pertence a ele; senão cai para o primeiro aluno. Dados inválidos ou corrompidos → limpa e retorna `null`.
 - O `Guardian` contém os alunos com agenda e boletins (como no JSON). Após o login tudo fica em memória, sem novas consultas. É o suficiente para o escopo; um cliente REST futuro pode reimplementar o repositório.
-- **Simulação de dados (D-06)**: o JSON vira fixture da camada de dados. O `GuardianLocalDataSource` implementa o contrato `GuardianDataSource` como um cliente de API: `signIn` (equivale a um POST de login) e `getById`, assíncronos, devolvendo cópias serializadas. O `GuardianRepositoryImpl` só conhece o contrato; trocar por REST significa escrever outra implementação dele, sem mexer em domínio ou UI.
+- **Simulação de dados (D-06; histórico, substituída pela API na T11 e pela D-35)**: o JSON virou fixture da camada de dados. O `GuardianLocalDataSource` implementava o contrato `GuardianDataSource` como um cliente de API: `signIn` (equivale a um POST de login) e `getById`, assíncronos, devolvendo cópias serializadas. O `GuardianRepositoryImpl` só conhece o contrato; trocar por REST significa escrever outra implementação dele, sem mexer em domínio ou UI.
 - **Latência (D-04)**: **800 ms** em `signIn`, igual para sucesso e falha, configurada no composition root (`signInLatencyMs`); 0 ms nos testes. `getById`, usado na restauração da sessão, não tem latência, para o app abrir sem atraso artificial.
 
 ## 5. Sessão (Context API)
@@ -146,7 +146,7 @@ RootStack (native-stack, headerShown: false)
 - **Desvio do `CLAUDE.md`**: não haverá `AuthNavigator` separado, pois o fluxo de auth tem uma única tela e um navigator a mais não traria benefício. Se surgir outra tela de auth, o grupo vira navigator.
 - `StudentSelection` fica no RootStack, acima das abas. Ao fechar (FECHAR ou seleção), `goBack()` volta à aba de origem com o estado de navegação preservado.
 - Tipos em `navigation/types.ts`: `RootStackParamList`, `MainTabParamList` e `CompositeScreenProps` para as abas.
-- Cabeçalho (`AppHeader`) é componente compartilhado renderizado dentro do scroll de cada aba (D-10), não o header do navigator.
+- Cabeçalho: a `AppActionBar` (logo, TROCAR PERFIL e SAIR) é fixa acima das abas; a `StudentGreeting` (saudação e aluno) rola dentro de cada aba (D-10).
 
 ## 7. Erros
 

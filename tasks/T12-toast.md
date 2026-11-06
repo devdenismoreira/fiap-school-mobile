@@ -57,7 +57,7 @@ Os de `features/toast.md` §7: automatizados e manuais.
 
 ## Status
 
-**Implementada em 2026-11-05.** Faltam o build nativo e o roteiro manual, que ficam com o desenvolvedor. Spec, plano, NetInfo, D-33 e os textos foram aprovados quando o desenvolvedor pediu para começar a T12.
+**Concluída em 2026-11-05**, com build nativo e roteiro manual conferidos pelo desenvolvedor em aparelho. O visual foi redesenhado depois (variantes, ícone e barra de progresso). Spec, plano, NetInfo, D-33 e os textos foram aprovados quando o desenvolvedor pediu para começar a T12.
 
 Entregue:
 - **Dependência:**
@@ -93,6 +93,4 @@ Validação:
   - sessão expirada no Login e no fluxo completo com a API simulada;
   - toast da troca de aluno.
 
-Pendente, com o desenvolvedor:
-1. Build nativo (`yarn ios` e `yarn android`) com o NetInfo.
-2. Roteiro manual da spec §7.
+Validação em aparelho: feita pelo desenvolvedor (iOS e Android).
