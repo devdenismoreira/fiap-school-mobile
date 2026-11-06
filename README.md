@@ -26,11 +26,11 @@ Gravações em iPhone, com a API de produção.
 
 | Login e sessão | Agenda |
 |:---:|:---:|
-| <img src="docs/demo/login.gif" width="240" alt="Login com CPF mascarado e senha"> | <img src="docs/demo/agenda.gif" width="240" alt="Agenda com seletor de dia e aulas"> |
+| <img src="docs/demo/login.gif" width="260" alt="Login com CPF mascarado e senha"> | <img src="docs/demo/agenda.gif" width="260" alt="Agenda com seletor de dia e aulas"> |
 
 | Boletim | Troca de aluno |
 |:---:|:---:|
-| <img src="docs/demo/boletim.gif" width="240" alt="Boletim com anos e trimestres expansíveis"> | <img src="docs/demo/trocaperfil.gif" width="240" alt="Tela de mudança de aluno acima das abas"> |
+| <img src="docs/demo/boletim.gif" width="260" alt="Boletim com anos e trimestres expansíveis"> | <img src="docs/demo/trocaperfil.gif" width="260" alt="Tela de mudança de aluno acima das abas"> |
 
 ## Stack
 
