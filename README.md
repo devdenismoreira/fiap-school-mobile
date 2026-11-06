@@ -78,6 +78,7 @@ A Railway pode hibernar sem uso: a primeira abertura depois de um tempo parado p
 Comportamento:
 - **Tokens:** o refresh token fica no Keychain (iOS) ou no Keystore (Android); o access token, só em memória. Nenhum token vai para o AsyncStorage, e a senha nunca é guardada.
 - **Ao abrir o app:** ele renova a sessão com o refresh guardado e entra sem pedir login.
+- **Agenda e boletins:** vêm das rotas de alunos da API (`/v1/alunos/{rm}/agenda` e `/boletins`), que só entregam alunos vinculados ao responsável do token. São buscados ao abrir o app, ao trocar de aluno e ao puxar a tela para baixo (puxar para atualizar). Enquanto carregam, aparece um indicador; se falharem, a tela oferece TENTAR NOVAMENTE.
 - **Token vencido:** um 401 gera uma única renovação, compartilhada entre as requisições, e cada requisição é repetida uma vez.
 - **Sem conexão:**
   - no login, aparece uma mensagem de conexão;

@@ -151,3 +151,9 @@ Pedido do desenvolvedor: um toast como o do Instagram, com o estilo do design sy
 | ID | Tema | Observação | Decisão |
 |---|---|---|---|
 | D-37 ✅ | URL única | A API foi publicada na Railway (`https://fiap-school-api-production.up.railway.app`, com HTTPS e HSTS) | **Decisão do desenvolvedor:** essa é a única URL, em debug e em release. Saem o `API_URL` por variável, o plugin `babel-plugin-transform-inline-environment-variables` (dependência removida), o tipo `env.d.ts` e os padrões por plataforma. Rodar contra uma API local exige alterar `apiConfig.ts` |
+
+### Dados do aluno pelas rotas de alunos (2026-11-06)
+
+| ID | Tema | Observação | Decisão |
+|---|---|---|---|
+| D-38 ✅ | Agenda e boletins pelas rotas de alunos | Na revisão de código, o desenvolvedor notou que as rotas `GET /v1/alunos/{rm}/agenda` e `/boletins` não eram usadas: o app lia tudo do `/me`, e são essas rotas que garantem a autorização pelo vínculo entre o aluno e o responsável do token | A agenda e os boletins do aluno selecionado vêm **só** dessas rotas: ao abrir o app, ao trocar de aluno e ao puxar a tela para baixo (`reloadRecords`). O login e o `/me` continuam trazendo o responsável e a lista de alunos; a agenda e os boletins embutidos nessas respostas deixam de ser lidos. Estados novos: carregando, erro com TENTAR NOVAMENTE e toast de erro se o puxar para atualizar falhar. A API foi enxugada na D-28 dela: o login e o `/me` deixaram de devolver agenda e boletim, e o `AlunoDTO` perdeu esses campos |
