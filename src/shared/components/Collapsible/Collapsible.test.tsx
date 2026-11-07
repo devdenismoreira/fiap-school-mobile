@@ -43,6 +43,51 @@ describe('Collapsible', () => {
     expect(onContentHeight).toHaveBeenCalledWith(120);
   });
 
+  it('reabre e mede de novo depois de fechar por completo', async () => {
+    const onContentHeight = jest.fn();
+    const props = { testID: 'collapsible', onContentHeight };
+    const layout = {
+      nativeEvent: { layout: { x: 0, y: 0, width: 320, height: 90 } },
+    };
+    const view = await renderWithTheme(
+      <Collapsible {...props} expanded={false}>
+        <Text>Conteúdo</Text>
+      </Collapsible>,
+    );
+
+    await view.rerender(
+      <Collapsible {...props} expanded>
+        <Text>Conteúdo</Text>
+      </Collapsible>,
+    );
+    await fireEvent(
+      screen.getByTestId('collapsible-content'),
+      'layout',
+      layout,
+    );
+    await view.rerender(
+      <Collapsible {...props} expanded={false}>
+        <Text>Conteúdo</Text>
+      </Collapsible>,
+    );
+    await act(async () => jest.advanceTimersByTime(motion.open + 50));
+    expect(screen.queryByText('Conteúdo', hidden)).toBeNull();
+
+    await view.rerender(
+      <Collapsible {...props} expanded>
+        <Text>Conteúdo</Text>
+      </Collapsible>,
+    );
+    await fireEvent(
+      screen.getByTestId('collapsible-content'),
+      'layout',
+      layout,
+    );
+
+    expect(screen.getByText('Conteúdo')).toBeOnTheScreen();
+    expect(onContentHeight).toHaveBeenCalledTimes(2);
+  });
+
   it('ao fechar, some para leitores de tela na hora e só sai da árvore depois da animação', async () => {
     const view = await renderWithTheme(
       <Collapsible expanded>

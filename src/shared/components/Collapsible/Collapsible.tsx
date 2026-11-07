@@ -1,4 +1,10 @@
-import { useEffect, useState, type PropsWithChildren } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from 'react';
 import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -24,20 +30,32 @@ export function Collapsible({
   const [isRendered, setRendered] = useState(expanded);
   const progress = useSharedValue(expanded ? 1 : 0);
   const contentHeight = useSharedValue(0);
+  const isMeasured = useRef(expanded);
+  const isOpenPending = useRef(false);
+
+  const handleClosed = useCallback(() => {
+    isMeasured.current = false;
+    setRendered(false);
+  }, []);
 
   useEffect(() => {
     if (expanded) {
       setRendered(true);
-      progress.value = withTiming(1, openTiming);
+      if (isMeasured.current) {
+        progress.value = withTiming(1, openTiming);
+      } else {
+        isOpenPending.current = true;
+      }
       return;
     }
+    isOpenPending.current = false;
     progress.value = withTiming(0, openTiming, finished => {
       if (finished) {
         contentHeight.value = 0;
-        scheduleOnRN(setRendered, false);
+        scheduleOnRN(handleClosed);
       }
     });
-  }, [expanded, progress, contentHeight]);
+  }, [expanded, progress, contentHeight, handleClosed]);
 
   const clipStyle = useAnimatedStyle(() => ({
     height: contentHeight.value * progress.value,
@@ -48,6 +66,11 @@ export function Collapsible({
     const height = event.nativeEvent.layout.height;
     contentHeight.value =
       contentHeight.value === 0 ? height : withTiming(height, openTiming);
+    isMeasured.current = true;
+    if (isOpenPending.current) {
+      isOpenPending.current = false;
+      progress.value = withTiming(1, openTiming);
+    }
     onContentHeight?.(height);
   };
 
