@@ -5,6 +5,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import {
+  Platform,
   RefreshControl,
   StyleSheet,
   View,
@@ -15,8 +16,10 @@ import Animated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedStyle,
   useScrollOffset,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -39,6 +42,8 @@ const ScrollFocusContext = createContext<ScrollFocus>({
 export const useScrollFocus = () => useContext(ScrollFocusContext);
 
 const FOCUS_MARGIN = theme.spacing.m;
+const FOCUS_RELEASE_DELAY = 100;
+const IS_ANDROID = Platform.OS === 'android';
 
 type TabScreenLayoutProps = PropsWithChildren<{
   title: string;
@@ -53,6 +58,11 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
   const contentHeight = useRef(0);
   const focusY = useSharedValue(0);
   const isFocusing = useSharedValue(false);
+  const reservedSpace = useSharedValue(0);
+
+  const reservedSpaceStyle = useAnimatedStyle(() => ({
+    height: reservedSpace.value,
+  }));
 
   useAnimatedReaction(
     () => focusY.value,
@@ -65,13 +75,16 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
 
   const scrollAlong = (to: number) => {
     const from = scrollOffset.value;
-    if (Math.abs(to - from) < 1) {
+    if (Math.abs(to - from) < 2) {
       return;
     }
+    cancelAnimation(focusY);
     focusY.value = from;
     isFocusing.value = true;
-    focusY.value = withTiming(to, openTiming, () => {
-      isFocusing.value = false;
+    focusY.value = withTiming(to, openTiming, finished => {
+      if (finished) {
+        isFocusing.value = false;
+      }
     });
   };
 
@@ -86,6 +99,13 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
         const blockBottom = y + height + addedHeight + FOCUS_MARGIN;
         if (blockBottom <= visibleBottom) {
           return;
+        }
+        if (IS_ANDROID) {
+          reservedSpace.value = addedHeight;
+          reservedSpace.value = withDelay(
+            openTiming.duration + FOCUS_RELEASE_DELAY,
+            withTiming(0, { duration: 0 }),
+          );
         }
         scrollAlong(
           Math.min(y - FOCUS_MARGIN, blockBottom - viewportHeight.current),
@@ -151,6 +171,7 @@ export function TabScreenLayout({ title, children }: TabScreenLayoutProps) {
             {children}
           </Animated.View>
         </View>
+        {IS_ANDROID ? <Animated.View style={reservedSpaceStyle} /> : null}
       </Animated.ScrollView>
     </ScrollFocusContext.Provider>
   );
